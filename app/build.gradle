@@ -6,12 +6,12 @@ android {
     useLibrary  'org.apache.http.legacy'
 
 	defaultConfig {
-		applicationId "github.popeen.dsub"
+		applicationId "github.awsomefox.audiosonic"
 		minSdkVersion 14
 		targetSdkVersion 27
-		versionCode 16
-		versionName '1.0.13'
-		setProperty("archivesBaseName", "Booksonic $versionName")
+		versionCode 17
+		versionName '1.0.14'
+		setProperty("archivesBaseName", "AudioSonic $versionName")
 		resConfigs "sv"
 	}
 	buildTypes {

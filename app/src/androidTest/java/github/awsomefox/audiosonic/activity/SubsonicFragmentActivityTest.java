@@ -1,7 +1,6 @@
-package github.awsomefox.dsub.activity;
+package github.awsomefox.audiosonic.activity;
 
-import github.awsomefox.audiosonic.activity.SubsonicFragmentActivity;
-import github.awsomefox.dsub.R;
+import github.awsomefox.audiosonic.R;
 import android.test.ActivityInstrumentationTestCase2;
 
 public class SubsonicFragmentActivityTest extends

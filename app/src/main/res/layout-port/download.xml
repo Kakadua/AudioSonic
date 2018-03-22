@@ -2,7 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/download_layout_container"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:clipChildren="false"
+	android:clipToPadding="false">
 
 	<LinearLayout
 		android:id="@+id/download_layout"
@@ -32,7 +34,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content">
 
-						<github.popeen.dsub.view.RecyclingImageView
+						<github.awsomefox.audiosonic.view.RecyclingImageView
 							android:id="@+id/download_album_art_image"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
@@ -91,24 +93,23 @@
 
 				<TextView
 					android:id="@+id/download_status"
+					style="?attr/actionbarSubtitleStyle"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
-					android:layout_marginLeft="16dip"
-					android:layout_marginRight="16dip"
+					android:layout_margin="16dip"
 					android:layout_marginTop="6dp"
-					android:singleLine="true"
 					android:ellipsize="end"
-					style="?attr/actionbarSubtitleStyle"
-					android:textColor="?android:textColorSecondary"/>
+					android:singleLine="true"
+					android:textColor="?android:textColorSecondary"
+					android:textSize="20dp" />
 
 				<TextView
 					android:id="@+id/download_song_title"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
-					android:layout_marginLeft="16dip"
-					android:layout_marginRight="16dip"
+					android:layout_margin="16dip"
 					android:singleLine="true"
 					android:textStyle="bold"
 					style="?attr/actionbarTitleStyle"

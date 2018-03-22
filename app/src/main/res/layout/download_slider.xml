@@ -5,7 +5,8 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:background="@android:color/transparent"
-		android:paddingBottom="10dip">
+		android:paddingBottom="10dip"
+		android:paddingTop="10dip">
 			
 	<TextView
             android:id="@+id/download_position"

@@ -55,7 +55,7 @@
 				android:orientation="horizontal"
 				android:elevation="4dp">
 
-				<github.popeen.dsub.view.RecyclingImageView
+				<github.awsomefox.audiosonic.view.RecyclingImageView
 					android:id="@+id/album_art"
 					android:layout_width="?attr/actionBarSize"
 					android:layout_height="?attr/actionBarSize"

@@ -55,9 +55,9 @@
 			android:textColor="?android:textColorSecondary"/>
 	</LinearLayout>
 
-	<github.popeen.dsub.view.RecyclingImageView
+	<github.awsomefox.audiosonic.view.RecyclingImageView
 		android:id="@+id/chat_avatar"
-		android:src="@drawable/ic_social_person"
+		android:src="?attr/person_icon"
 		android:layout_width="@dimen/AlbumArt.Small"
 		android:layout_height="@dimen/AlbumArt.Small"
 		android:layout_gravity="right|center_vertical"/>

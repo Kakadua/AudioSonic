@@ -1,11 +1,9 @@
-package github.awsomefox.dsub.domain;
+package github.awsomefox.audiosonic.domain;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-
-import github.awsomefox.audiosonic.domain.Genre;
 
 public class GenreComparatorTest extends TestCase {
 

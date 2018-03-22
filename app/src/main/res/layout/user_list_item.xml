@@ -5,9 +5,9 @@
 			  android:layout_height="wrap_content"
 			  android:background="?attr/selectableItemBackground">
 
-	<github.popeen.dsub.view.RecyclingImageView
+	<github.awsomefox.audiosonic.view.RecyclingImageView
 		android:id="@+id/item_avatar"
-		android:src="@drawable/ic_social_person"
+		android:src="?attr/person_icon"
 		android:layout_width="@dimen/AlbumArt.Small"
 		android:layout_height="@dimen/AlbumArt.Small"
 		android:layout_gravity="left|center_vertical"/>

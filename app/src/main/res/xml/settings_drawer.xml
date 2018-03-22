@@ -54,7 +54,7 @@
 			android:entries="@array/defaultDrawerItems"
 			android:defaultValue="Home"/>
 
-		<github.popeen.dsub.view.SeekBarPreference
+		<github.awsomefox.audiosonic.view.SeekBarPreference
 			android:title="@string/settings.chat_refresh"
 			android:key="chatRefreshRate"
 			android:defaultValue="30"

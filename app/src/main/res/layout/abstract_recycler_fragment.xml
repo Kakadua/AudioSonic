@@ -24,7 +24,7 @@
 				android:layout_marginRight="@dimen/FastScroller.NormalBarMargin"
 				android:scrollbarStyle="outsideOverlay"/>
 
-			<github.popeen.dsub.view.FastScroller
+			<github.awsomefox.audiosonic.view.FastScroller
 				android:id="@+id/fragment_fast_scroller"
 				android:layout_width="wrap_content"
 				android:layout_height="fill_parent"

@@ -1,4 +1,4 @@
-package github.awsomefox.dsub;
+package github.awsomefox.audiosonic;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

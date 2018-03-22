@@ -10,7 +10,7 @@
 		android:layout_width="@dimen/AlbumArt.Small"
 		android:layout_height="@dimen/AlbumArt.Small">
 
-		<github.popeen.dsub.view.RecyclingImageView
+		<github.awsomefox.audiosonic.view.RecyclingImageView
 			android:id="@+id/album_coverart"
 			android:layout_width="@dimen/AlbumArt.Small"
 			android:layout_height="@dimen/AlbumArt.Small"

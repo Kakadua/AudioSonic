@@ -4,9 +4,9 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
 		
-	<github.popeen.dsub.view.RecyclingImageView
+	<github.awsomefox.audiosonic.view.RecyclingImageView
 		android:id="@+id/user_avatar"
-		android:src="@drawable/ic_social_person"
+		android:src="?attr/person_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"

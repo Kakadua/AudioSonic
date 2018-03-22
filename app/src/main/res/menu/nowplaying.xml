@@ -5,7 +5,7 @@
 
 	<item
 		android:id="@+id/menu_toggle_speed"
-		android:icon="@drawable/ic_av_timer_white_48dp"
+		android:icon="@drawable/ic_slow_motion_video_white_24dp"
 		android:title="@string/download.playback_speed"
 		compat:showAsAction="ifRoom|withText" />
 	<item

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="github.popeen.dsub"
+    package="github.awsomefox.audiosonic"
     android:installLocation="internalOnly"
-    android:versionCode="16"
-    android:versionName="1.0.13">
+    android:versionCode="18"
+    android:versionName="1.0.15">
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:label="Tests"
-        android:targetPackage="github.popeen.dsub" />
+        android:targetPackage="github.awsomefox.audiosonic" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
@@ -66,15 +66,15 @@
         android:xlargeScreens="true" />
 
     <application
-        android:backupAgent="github.popeen.dsub.util.SettingsBackupAgent"
-        android:icon="@drawable/launch"
+        android:backupAgent="github.awsomefox.audiosonic.util.SettingsBackupAgent"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/common.appname"
         android:theme="@style/Theme.DSub.Light">
 
         <uses-library android:name="android.test.runner" />
 
         <activity
-            android:name="github.popeen.dsub.activity.SubsonicFragmentActivity"
+            android:name="github.awsomefox.audiosonic.activity.SubsonicFragmentActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask">
             <intent-filter>
@@ -86,12 +86,12 @@
         </activity>
 
         <activity
-            android:name="github.popeen.dsub.activity.SettingsActivity"
+            android:name="github.awsomefox.audiosonic.activity.SettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />
 
         <activity
-            android:name="github.popeen.dsub.activity.VoiceQueryReceiverActivity"
+            android:name="github.awsomefox.audiosonic.activity.VoiceQueryReceiverActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
@@ -107,7 +107,7 @@
         </activity>
 
         <activity
-            android:name="github.popeen.dsub.activity.QueryReceiverActivity"
+            android:name="github.awsomefox.audiosonic.activity.QueryReceiverActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -118,8 +118,8 @@
         </activity>
 
         <activity
-            android:name="github.popeen.dsub.activity.EditPlayActionActivity"
-            android:icon="@drawable/launch"
+            android:name="github.awsomefox.audiosonic.activity.EditPlayActionActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/tasker.start_playing">
 
             <intent-filter>
@@ -128,11 +128,11 @@
         </activity>
 
         <service
-            android:name=".service.DownloadService"
+            android:name="github.awsomefox.audiosonic.service.DownloadService"
             android:label="DSub Playback Service" />
 
         <service
-            android:name=".service.AutoMediaBrowserService"
+            android:name="github.awsomefox.audiosonic.service.AutoMediaBrowserService"
             android:exported="true">
 
             <intent-filter>
@@ -141,7 +141,7 @@
         </service>
 
         <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
-        <service android:name="github.popeen.dsub.service.sync.AuthenticatorService">
+        <service android:name="github.awsomefox.audiosonic.service.sync.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -151,7 +151,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name="github.popeen.dsub.service.sync.PlaylistSyncService"
+            android:name="github.awsomefox.audiosonic.service.sync.PlaylistSyncService"
             android:exported="true"
             android:process=":sync">
 
@@ -163,7 +163,7 @@
                 android:resource="@xml/playlists_syncadapter" />
         </service>
         <service
-            android:name="github.popeen.dsub.service.sync.PodcastSyncService"
+            android:name="github.awsomefox.audiosonic.service.sync.PodcastSyncService"
             android:exported="true"
             android:process=":sync">
 
@@ -175,7 +175,7 @@
                 android:resource="@xml/podcasts_syncadapter" />
         </service>
         <service
-            android:name="github.popeen.dsub.service.sync.StarredSyncService"
+            android:name="github.awsomefox.audiosonic.service.sync.StarredSyncService"
             android:exported="true"
             android:process=":sync">
 
@@ -187,7 +187,7 @@
                 android:resource="@xml/starred_syncadapter" />
         </service>
         <service
-            android:name="github.popeen.dsub.service.sync.MostRecentSyncService"
+            android:name="github.awsomefox.audiosonic.service.sync.MostRecentSyncService"
             android:exported="true"
             android:process=":sync">
 
@@ -200,29 +200,29 @@
         </service>
 
         <service
-            android:name="github.popeen.dsub.service.HeadphoneListenerService"
+            android:name="github.awsomefox.audiosonic.service.HeadphoneListenerService"
             android:label="DSub Headphone Listener" />
 
-        <receiver android:name="github.popeen.dsub.receiver.BootReceiver">
+        <receiver android:name="github.awsomefox.audiosonic.receiver.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="github.popeen.dsub.receiver.MediaButtonIntentReceiver">
+        <receiver android:name="github.awsomefox.audiosonic.receiver.MediaButtonIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="github.popeen.dsub.receiver.AudioNoisyReceiver">
+        <receiver android:name="github.awsomefox.audiosonic.receiver.AudioNoisyReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </receiver>
 
 
-        <receiver android:name="github.popeen.dsub.receiver.A2dpIntentReceiver">
+        <receiver android:name="github.awsomefox.audiosonic.receiver.A2dpIntentReceiver">
             <intent-filter>
                 <action android:name="android.music.playstatusrequest" />
             </intent-filter>
@@ -230,7 +230,7 @@
 
         <receiver
 
-            android:name="github.popeen.dsub.provider.DSubWidget4x1"
+            android:name="github.awsomefox.audiosonic.provider.DSubWidget4x1"
             android:label="@string/widget.4x1">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -240,7 +240,7 @@
                 android:resource="@xml/appwidget4x1" />
         </receiver>
         <receiver
-            android:name="github.popeen.dsub.provider.DSubWidget4x2"
+            android:name="github.awsomefox.audiosonic.provider.DSubWidget4x2"
             android:label="@string/widget.4x2">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -251,7 +251,7 @@
         </receiver>
         <receiver
 
-            android:name="github.popeen.dsub.provider.DSubWidget4x3"
+            android:name="github.awsomefox.audiosonic.provider.DSubWidget4x3"
             android:label="@string/widget.4x3">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -262,7 +262,7 @@
         </receiver>
         <receiver
 
-            android:name="github.popeen.dsub.provider.DSubWidget4x4"
+            android:name="github.awsomefox.audiosonic.provider.DSubWidget4x4"
             android:label="@string/widget.4x4">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -272,7 +272,7 @@
                 android:resource="@xml/appwidget4x4" />
         </receiver>
 
-        <receiver android:name="github.popeen.dsub.receiver.PlayActionReceiver">
+        <receiver android:name="github.awsomefox.audiosonic.receiver.PlayActionReceiver">
 
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
@@ -280,35 +280,35 @@
         </receiver>
 
         <provider
-            android:name="github.popeen.dsub.provider.DSubSearchProvider"
-            android:authorities="github.popeen.dsub.provider.DSubSearchProvider" />
+            android:name="github.awsomefox.audiosonic.provider.DSubSearchProvider"
+            android:authorities="github.awsomefox.audiosonic.provider.DSubSearchProvider" />
         <provider
-            android:name="github.popeen.dsub.provider.PlaylistStubProvider"
-            android:authorities="github.popeen.dsub.playlists.provider"
+            android:name="github.awsomefox.audiosonic.provider.PlaylistStubProvider"
+            android:authorities="github.awsomefox.audiosonic.playlists.provider"
             android:exported="false"
             android:label="@string/button_bar.playlists"
             android:syncable="true" />
 
 
         <provider
-            android:name="github.popeen.dsub.provider.PodcastStubProvider"
-            android:authorities="github.popeen.dsub.podcasts.provider"
+            android:name="github.awsomefox.audiosonic.provider.PodcastStubProvider"
+            android:authorities="github.awsomefox.audiosonic.podcasts.provider"
             android:exported="false"
             android:label="@string/button_bar.podcasts"
             android:syncable="true" />
 
 
         <provider
-            android:name="github.popeen.dsub.provider.StarredStubProvider"
-            android:authorities="github.popeen.dsub.starred.provider"
+            android:name="github.awsomefox.audiosonic.provider.StarredStubProvider"
+            android:authorities="github.awsomefox.audiosonic.starred.provider"
             android:exported="false"
             android:label="@string/main.albums_starred"
             android:syncable="true" />
 
 
         <provider
-            android:name="github.popeen.dsub.provider.MostRecentStubProvider"
-            android:authorities="github.popeen.dsub.mostrecent.provider"
+            android:name="github.awsomefox.audiosonic.provider.MostRecentStubProvider"
+            android:authorities="github.awsomefox.audiosonic.mostrecent.provider"
             android:exported="false"
             android:label="@string/main.albums_newest"
             android:syncable="true" />
@@ -316,7 +316,7 @@
         <meta-data
             android:name="android.app.default_searchable"
 
-            android:value="github.popeen.dsub.activity.QueryReceiverActivity" />
+            android:value="github.awsomefox.audiosonic.activity.QueryReceiverActivity" />
 
         <meta-data
             android:name="com.google.android.backup.api_key"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="offline_icon" format="reference"/>
+	<attr name="person_icon" format="reference"/>
     <attr name="media_button_backward" format="reference"/>
     <attr name="media_button_forward" format="reference"/>
 	<attr name="media_button_rewind" format="reference"/>

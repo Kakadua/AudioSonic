@@ -51,7 +51,7 @@
 			android:entryValues="@array/replayGainTypeValues"
 			android:entries="@array/replayGainTypeNames"/>
 
-		<github.popeen.dsub.view.SeekBarPreference
+		<github.awsomefox.audiosonic.view.SeekBarPreference
 			android:key="replayGainBump2"
 			android:dialogLayout="@layout/seekbar_preference"
 			android:title="@string/settings.replay_gain_bump"
@@ -61,7 +61,7 @@
 			myns:stepSize="10"
 			myns:display="%+.1f dB"/>
 
-		<github.popeen.dsub.view.SeekBarPreference
+		<github.awsomefox.audiosonic.view.SeekBarPreference
 			android:key="replayGainUntagged2"
 			android:dialogLayout="@layout/seekbar_preference"
 			android:title="@string/settings.replay_gain_untagged"

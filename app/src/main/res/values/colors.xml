@@ -8,8 +8,8 @@
 	<color name="holo_green_light">#ff99cc00</color>
 	<color name="holo_red_light">#ffff4444</color>
 
-    <color name="lightPrimary">#3aa800</color>
-    <color name="lightPrimaryDark">#3aa800</color>
+    <color name="lightPrimary">#4caf50</color>
+    <color name="lightPrimaryDark">#4caf50</color>
     <color name="lightAccent">#42c100</color>
     <color name="lightBg">#eaf9fc</color>
 

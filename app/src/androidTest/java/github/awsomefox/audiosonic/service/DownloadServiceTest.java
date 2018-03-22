@@ -1,4 +1,4 @@
-package github.awsomefox.dsub.service;
+package github.awsomefox.audiosonic.service;
 
 import static github.awsomefox.audiosonic.domain.PlayerState.COMPLETED;
 import static github.awsomefox.audiosonic.domain.PlayerState.IDLE;
@@ -10,8 +10,6 @@ import java.util.List;
 import github.awsomefox.audiosonic.activity.SubsonicFragmentActivity;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.PlayerState;
-import github.awsomefox.audiosonic.service.DownloadFile;
-import github.awsomefox.audiosonic.service.DownloadService;
 
 import java.util.LinkedList;
 import android.test.ActivityInstrumentationTestCase2;

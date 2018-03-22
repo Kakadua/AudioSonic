@@ -2,6 +2,7 @@
 <resources>
 	<style name="Theme.DSub.Light.Base" parent="@style/Theme.AppCompat.Light.DarkActionBar">
 		<item name="offline_icon">@drawable/main_offline_light</item>
+		<item name="person_icon">@drawable/ic_person_outline_black_24dp</item>
 		<item name="media_button_backward">@drawable/ic_skip_previous_black_24dp</item>
 		<item name="media_button_forward">@drawable/ic_skip_next_black_24dp</item>
 		<item name="media_button_rewind">@drawable/ic_replay_30_black_24dp</item>
@@ -69,10 +70,11 @@
 		<item name="windowActionModeOverlay">true</item>
 		<item name="actionModeBackground">?attr/colorPrimary</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners_light</item>
-		<item name="drawerHeaderBackground">@drawable/drawer_header_light</item>
+		<item name="drawerHeaderBackground">@drawable/light_background</item>
 	</style>
 	<style name="Theme.DSub.Dark.Base" parent="@style/Theme.AppCompat">
 		<item name="offline_icon">@drawable/main_offline_dark</item>
+		<item name="person_icon">@drawable/ic_person_outline_white_48dp</item>
 		<item name="media_button_backward">@drawable/ic_skip_previous_white_24dp</item>
 		<item name="media_button_forward">@drawable/ic_skip_next_white_24dp</item>
 		<item name="media_button_rewind">@drawable/ic_replay_30_white_24dp</item>
@@ -140,7 +142,7 @@
 		<item name="windowActionModeOverlay">true</item>
 		<item name="actionModeBackground">?attr/colorPrimary</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners_dark</item>
-		<item name="drawerHeaderBackground">@drawable/drawer_header_dark</item>
+		<item name="drawerHeaderBackground">@drawable/dark_background</item>
 	</style>
 	<style name="Theme.DSub.Light" parent="Theme.DSub.Light.Base">
 	</style>

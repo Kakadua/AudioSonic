@@ -1,4 +1,4 @@
-package github.awsomefox.dsub.domain;
+package github.awsomefox.audiosonic.domain;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.TestCase;
-
-import github.awsomefox.audiosonic.domain.Bookmark;
 
 public class BookmarkTest extends TestCase {
 	

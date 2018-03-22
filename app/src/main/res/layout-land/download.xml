@@ -9,9 +9,11 @@
 		android:id="@+id/download_playlist_flipper"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_weight="1">
+		android:layout_weight="1"
+		android:clipChildren="false"
+		android:clipToPadding="false">
 
-		<github.popeen.dsub.view.RecyclingImageView
+		<github.awsomefox.audiosonic.view.RecyclingImageView
 			android:id="@+id/download_album_art_image"
 			android:src="@drawable/unknown_album_large"
 			android:layout_width="wrap_content"
