@@ -17,7 +17,9 @@ package github.awsomefox.audiosonic.fragments;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,6 +92,9 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 			refresh(false);
 		} else {
 			recyclerView.setAdapter(adapter = getAdapter(objects));
+			DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+					LinearLayoutManager.VERTICAL);
+			recyclerView.addItemDecoration(dividerItemDecoration);
 		}
 
 		return rootView;
@@ -198,6 +203,9 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 		public void done(List<T> result) {
 			if (result != null && !result.isEmpty()) {
 				recyclerView.setAdapter(adapter = getAdapter(result));
+				DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+						LinearLayoutManager.VERTICAL);
+				recyclerView.addItemDecoration(dividerItemDecoration);
 				if(!fastScroller.isAttached()) {
 					fastScroller.attachRecyclerView(recyclerView);
 				}

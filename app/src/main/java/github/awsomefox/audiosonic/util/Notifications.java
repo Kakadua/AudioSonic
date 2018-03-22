@@ -225,13 +225,15 @@ public final class Notifications {
 
         String currentDownloading, currentSize;
         if (file != null) {
-            currentDownloading = file.getSong().getTitle();
+            currentDownloading = file.getSong().getTitle() + " " + file.getSong().getTrack();
             currentSize = Util.formatLocalizedBytes(file.getEstimatedSize(), context);
         } else {
             currentDownloading = "none";
             currentSize = "0";
         }
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createChannel(context);
+        }
         NotificationCompat.Builder builder;
         builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)

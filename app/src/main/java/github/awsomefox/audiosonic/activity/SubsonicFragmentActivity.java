@@ -928,6 +928,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				if(strUsername.length() > 0 && strPassword.length() > 0 && strServer.length() > 0){
 					Util.setRestCredentials(SubsonicFragmentActivity.this, null, strUsername, strPassword, strServer);
 					login.dismiss();
+					populateTabs();
 					//recreate();
 					SubsonicFragmentActivity.super.restart();
 				}
@@ -938,6 +939,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			@Override
 			public void onClick(View view) {
 				login.dismiss();
+				populateTabs();
 			}
 		});
 

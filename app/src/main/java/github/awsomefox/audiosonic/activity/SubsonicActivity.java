@@ -323,6 +323,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	protected void onStart() {
 		super.onStart();
 		Util.registerMediaButtonEventReceiver(this);
+		populateTabs();
 
 		// Make sure to update theme
 		SharedPreferences prefs = Util.getPreferences(this);
@@ -682,17 +683,17 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 	}
 
-	private void populateTabs() {
+	protected void populateTabs() {
 		drawerList.getMenu().clear();
 		drawerList.inflateMenu(R.menu.drawer_navigation);
 
 		SharedPreferences prefs = Util.getPreferences(this);
-		boolean podcastsEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_PODCASTS_ENABLED, true);
+		boolean podcastsEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_PODCASTS_ENABLED, false);
 		boolean bookmarksEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_BOOKMARKS_ENABLED, true) && !Util.isOffline(this) && ServerInfo.canBookmark(this);
-		boolean internetRadioEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_INTERNET_RADIO_ENABLED, true) && !Util.isOffline(this) && ServerInfo.canInternetRadio(this);
-		boolean sharedEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_SHARED_ENABLED, true) && !Util.isOffline(this);
-		boolean chatEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_CHAT_ENABLED, true) && !Util.isOffline(this);
-		boolean adminEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_ADMIN_ENABLED, true) && !Util.isOffline(this);
+		boolean internetRadioEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_INTERNET_RADIO_ENABLED, false) && !Util.isOffline(this) && ServerInfo.canInternetRadio(this);
+		boolean sharedEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_SHARED_ENABLED, false) && !Util.isOffline(this);
+		boolean chatEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_CHAT_ENABLED, false) && !Util.isOffline(this);
+		boolean adminEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_ADMIN_ENABLED, false) && !Util.isOffline(this);
 
 		MenuItem offlineMenuItem = drawerList.getMenu().findItem(R.id.drawer_offline);
 		if(Util.isOffline(this)) {
