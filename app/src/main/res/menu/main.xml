@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:compat="http://schemas.android.com/apk/res-auto">
+	<item 
+		android:id="@+id/menu_global_search"
+		android:icon="?attr/search"
+		android:title="@string/menu.search"
+		compat:actionViewClass="android.support.v7.widget.SearchView"
+		compat:showAsAction="ifRoom|collapseActionView"/>
+	
+	<item
+		android:id="@+id/menu_global_shuffle"
+		android:icon="?attr/shuffle"
+		android:title="@string/menu.shuffle"
+		compat:showAsAction="always|withText"
+		android:visible="false"/>
+
+	<group android:id="@+id/rescan_server">
+		<item
+			android:id="@+id/menu_rescan"
+			android:title="@string/menu.rescan"/>
+	</group>
+		
+	<item 
+		android:id="@+id/menu_about"
+		android:title="@string/menu.about"/>
+
+	<item
+		android:id="@+id/menu_faq"
+		android:title="@string/menu.faq"/>
+		
+	<item 
+		android:id="@+id/menu_log"
+		android:title="@string/menu.log"/>
+
+    <item
+        android:id="@+id/menu_changelog"
+        android:title="@string/changelog_full_title"/>
+
+	<item
+		android:id="@+id/menu_export"
+		android:title="@string/menu.export"/>
+
+	<item
+		android:id="@+id/menu_import"
+		android:title="@string/menu.import"/>
+
+	<item
+		android:id="@+id/menu_exit"
+		android:title="@string/menu.exit"/>
+</menu>

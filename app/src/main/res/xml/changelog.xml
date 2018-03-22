@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+    <release version="1.0.13" versioncode="16" releasedate="2017-06-25">
+        <change>Fixed rewind/fastforward missing</change>
+        <change>Updated Chromecast app</change>
+    </release>
+    <release version="1.0.12" versioncode="15" releasedate="2017-06-25">
+        <change>Bugfixes</change>
+        <change>Updated to use DSub f863540</change>
+    </release>
+    <release version="1.0.11" versioncode="14" releasedate="2017-01-24">
+        <change>Bugfixes</change>
+        <change>Added login screen for easy setup (Thanks hjone72!)</change>
+        <change>Added support for emulated servers</change>
+        <change>Moved logs from Pastebin to my server for privacy</change>
+        <change>The demo server is now running Booksonic</change>
+        <change>Updated to use DSub 5.3.4 (Changes below are from DSub)</change>
+        <change>Variable playback speed (has been tweaked a bit)</change>
+        <change>Internet radio</change>
+        <change>Automatic Day/Night theme</change>
+        <change>Bugfixes and optimizations</change>
+    </release>
+    <release version="1.0.10" versioncode="12" releasedate="2016-06-22">
+        <change>Bugfixes</change>
+        <change>Updated DSub Sources</change>
+    </release>
+    <release version="1.0.9" versioncode="11" releasedate="2016-06-07">
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0.8" versioncode="10" releasedate="2016-06-06">
+        <change>Bugfixes</change>
+        <change>Menu and Now Playing tweaks</change>
+        <change>Updated DSub Sources</change>
+        <change>Tweaked some new DSub features</change>
+    </release>
+    <release version="1.0.7" versioncode="9" releasedate="2016-02-09">
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0.6" versioncode="8" releasedate="2016-02-09">
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0.5" versioncode="7" releasedate="2016-02-05">
+        <change>The app will tell you if the server is outdated</change>
+        <change>If app is in Swedish it will look at boktipset.se before checking Google Books if the server has no book description</change>
+        <change>Added a classic theme to bring back the old Booksonic design</change>
+        <change>Design tweaks to drawer (sidebar)</change>
+        <change>Sleeptimer will reset if you shake the phone</change>
+        <change>Server and account info can be included in import/export</change>
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0.4" versioncode="6" releasedate="2016-01-29">
+        <change>Heard status can now be imported/exported</change>
+        <change>Keeping track of played tracks should be much more reliable.</change>
+        <change>Updated DSub sources to 5.1.4</change>
+        <change>Other small bugfixes</change>
+    </release>
+    <release version="1.0.3" versioncode="5" releasedate="2015-12-25">
+        <change>Design tweaks</change>
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0.2" versioncode="4" releasedate="2015-12-25">
+        <change>Design change</change>
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0.1" versioncode="2" releasedate="2015-11-20">
+        <change>The app keeps track of what you have listened to</change>
+        <change>Improved tablet dual pane behavior (DSub update)</change>
+        <change>Bugfixes</change>
+    </release>
+    <release version="1.0" versioncode="1" releasedate="2015-11-09">
+        <change>Some of the new feautures requires server update to Booksonic 1.0 Beta1 or newer</change>
+        <change>Based on DSub 5.1</change>
+        <change>Added book descriton</change>
+        <change>Added narrator</change>
+        <change>Improved sleeptimer</change>
+        <change>Lots of other small things</change>
+    </release>
+</changelog>

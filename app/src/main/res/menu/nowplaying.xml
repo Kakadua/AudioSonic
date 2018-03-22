@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	  xmlns:compat="http://schemas.android.com/apk/res-auto"
+	  android:checkableBehavior="all">
+
+	<item
+		android:id="@+id/menu_toggle_speed"
+		android:icon="@drawable/ic_av_timer_white_48dp"
+		android:title="@string/download.playback_speed"
+		compat:showAsAction="ifRoom|withText" />
+	<item
+        android:id="@+id/menu_shuffle"
+        android:icon="@drawable/ic_schedule_white_24dp"
+        android:title="@string/menu.timer"
+        compat:showAsAction="ifRoom|withText"/>
+
+	<item
+		android:id="@+id/menu_mediaroute"
+		compat:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+		compat:actionViewClass="android.support.v7.app.MediaRouteButton"
+		compat:showAsAction="always"
+		android:title="@string/menu.cast"/>
+
+	<item
+		android:id="@+id/menu_equalizer"
+		android:title="@string/equalizer.label"
+		android:checkable="true"/>
+
+	<item
+		android:id="@+id/menu_exit"
+		android:title="@string/menu.exit"/>
+</menu>
