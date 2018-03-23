@@ -62,6 +62,7 @@ public class AlbumView extends UpdateView2<MusicDirectory.Entry, ImageLoader> {
 		starButton = (ImageButton) findViewById(R.id.album_star);
 		starButton.setFocusable(false);
 		moreButton = (ImageView) findViewById(R.id.item_more);
+		cacheButton = (ImageButton) findViewById(R.id.song_cached);
 
 		checkable = true;
 	}

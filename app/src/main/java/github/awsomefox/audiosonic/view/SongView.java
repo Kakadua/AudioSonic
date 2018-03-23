@@ -54,6 +54,7 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 	private ImageView statusImageView;
 	private ImageView bookmarkButton;
 	private ImageView playedButton;
+	private ImageView cachedButton;
 	private View bottomRowView;
 
 	private DownloadService downloadService;
@@ -73,6 +74,7 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 	private boolean isBookmarkedShown = false;
 	private boolean showPodcast = false;
 	private boolean isPlayed = false;
+	private boolean isCached = false;
 	private boolean isPlayedShown = false;
 	private boolean showAlbum = false;
 
@@ -95,28 +97,13 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		bookmarkButton = (ImageButton) findViewById(R.id.song_bookmark);
 		bookmarkButton.setFocusable(false);
 		playedButton = (ImageButton) findViewById(R.id.song_played);
+		cachedButton = (ImageButton) findViewById(R.id.song_cached);
 		moreButton = (ImageView) findViewById(R.id.item_more);
 		bottomRowView = findViewById(R.id.song_bottom);
 	}
 
 	public void setObjectImpl(MusicDirectory.Entry song, Boolean checkable) {
 		this.checkable = checkable;
-		ImageView heard = (ImageView) findViewById(R.id.track_heard);
-
-		try{ //Podcast will always catch
-			Long[] dates = SongDBHandler.getHandler(context).getLastPlayed(song);
-			if(dates[1] != null && dates[1] != 0){ //Check if it has been listened to
-				heard.setVisibility(VISIBLE);
-			}else{
-				heard.setVisibility(GONE);
-			}
-		}catch(Exception e){ //TODO, This will not always register as listened to but will have to do until I add support for podcast inside try
-			if(this.sqlh.getTrack(song.getId())[0] != null){
-				heard.setVisibility(VISIBLE);
-			}else{
-				heard.setVisibility(GONE);
-			}
-		}
 
 		StringBuilder artist = new StringBuilder(40);
 
@@ -273,13 +260,7 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 			}
 		}
 
-		if (isWorkDone) {
-			int moreImage = isSaved ? R.drawable.download_pinned : R.drawable.download_cached;
-			if(moreImage != this.moreImage) {
-				moreButton.setImageResource(moreImage);
-				this.moreImage = moreImage;
-			}
-		} else if(this.moreImage != R.drawable.download_none_light) {
+		if(this.moreImage != R.drawable.download_none_light) {
 			moreButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.download_none));
 			this.moreImage = R.drawable.download_none_light;
 		}
@@ -325,6 +306,14 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 				bookmarkButton.setVisibility(GONE);
 				isBookmarkedShown = false;
 			}
+		}
+		if (isWorkDone) {
+			if(cachedButton.getDrawable() == null) {
+				cachedButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_offline_pin_white_24dp));
+			}
+			cachedButton.setVisibility(VISIBLE);
+		} else {
+			cachedButton.setVisibility(GONE);
 		}
 
 		if(isPlayed) {

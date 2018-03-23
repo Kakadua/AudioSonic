@@ -39,6 +39,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.media.MediaRouter;
 import android.view.KeyEvent;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -584,10 +585,25 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 			} else if(CUSTOM_ACTION_STAR.equals(action)) {
 				downloadService.toggleStarred();
 			} else if(CUSTOM_ACTION_SLOW.equals(action)) {
-				downloadService.setPlaybackSpeed(downloadService.getPlaybackSpeed()-.1f);
+				if (downloadService.getPlaybackSpeed() <= .5f) {
+					Util.toast(downloadService.getApplicationContext(), "Playback at min speed");
+					return;
+				}
+				downloadService.setPlaybackSpeed(round(downloadService.getPlaybackSpeed()-.1f));
+				Util.toast(downloadService.getApplicationContext(), "Playback: " + ((Float)downloadService.getPlaybackSpeed()).toString());
 			} else if(CUSTOM_ACTION_FAST.equals(action)) {
-				downloadService.setPlaybackSpeed(downloadService.getPlaybackSpeed()+.1f);
+				if (downloadService.getPlaybackSpeed() >= 3.0f) {
+					Util.toast(downloadService.getApplicationContext(), "Playback at max speed");
+					return;
+				}
+				downloadService.setPlaybackSpeed(round(downloadService.getPlaybackSpeed()+.1f));
+				Util.toast(downloadService.getApplicationContext(), "Playback: " + ((Float)downloadService.getPlaybackSpeed()).toString());
 			}
+		}
+
+		private float round(float value) {
+			DecimalFormat twoDForm = new DecimalFormat("#.#");
+			return Float.valueOf(twoDForm.format(value));
 		}
 
 		@Override

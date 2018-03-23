@@ -82,6 +82,16 @@
 						android:background="@android:color/transparent"
 						android:focusable="false"
 						android:visibility="gone"/>
+
+					<ImageButton
+						android:id="@+id/song_cached"
+						android:layout_width="@dimen/Star.Small"
+						android:layout_height="@dimen/Star.Small"
+						android:scaleType="fitCenter"
+						android:layout_gravity="right|center_vertical"
+						android:background="@android:color/transparent"
+						android:focusable="false"
+						android:visibility="gone"/>
 				</LinearLayout>
 			</LinearLayout>
 

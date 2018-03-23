@@ -17,14 +17,6 @@
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical">
 
-
-            <ImageView
-                android:id="@+id/track_heard"
-                android:layout_width="24dip"
-                android:layout_height="24dip"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/heard"/>
-
 			<TextView
 				android:id="@+id/song_track"
 				android:layout_width="wrap_content"
@@ -71,6 +63,16 @@
 
 			<ImageButton
 				android:id="@+id/song_played"
+				android:layout_width="@dimen/SongStatusIcon"
+				android:layout_height="@dimen/SongStatusIcon"
+				android:scaleType="fitCenter"
+				android:layout_gravity="right|top"
+				android:background="@null"
+				android:focusable="false"
+				android:visibility="gone"/>
+
+			<ImageButton
+				android:id="@+id/song_cached"
 				android:layout_width="@dimen/SongStatusIcon"
 				android:layout_height="@dimen/SongStatusIcon"
 				android:scaleType="fitCenter"

@@ -493,7 +493,7 @@ public class MusicDirectory implements Serializable {
         }
 
         public void setDuration(Integer duration) {
-            this.duration = duration/2;
+            this.duration = duration;
         }
 
         public Integer getBitRate() {

@@ -261,7 +261,8 @@ public class DownloadService extends Service {
 		wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
 		wakeLock.setReferenceCounted(false);
 
-		WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
+		WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, "downloadServiceLock");
 
 		try {
@@ -1923,6 +1924,7 @@ public class DownloadService extends Service {
 								mediaPlayer.start();
 								applyPlaybackParamsMain();
 								setPlayerState(PlayerState.STARTED);
+								applyPlaybackParamsMain();
 
 								// Disable autoPlayStart after done
 								autoPlayStart = false;
@@ -2645,7 +2647,7 @@ public class DownloadService extends Service {
 			Util.getPreferences(this).edit().putFloat(Constants.PREFERENCES_KEY_SONG_PLAYBACK_SPEED, playbackSpeed).commit();
 		else
 			Util.getPreferences(this).edit().putFloat(Constants.PREFERENCES_KEY_PLAYBACK_SPEED, playbackSpeed).commit();
-		if(mediaPlayer != null && (playerState == PlayerState.PREPARED || playerState == PlayerState.STARTED || playerState == PlayerState.PAUSED || playerState == PlayerState.PAUSED_TEMP)) {
+		if(mediaPlayer != null && (playerState == PlayerState.STARTED )) {
 			applyPlaybackParamsMain();
 		}
 
@@ -2686,11 +2688,7 @@ public class DownloadService extends Service {
 			float playbackSpeed = getPlaybackSpeed();
 
 			try {
-				if (Math.abs(playbackSpeed - 1.0) > 0.01 || mediaPlayer.getPlaybackParams() != null) {
-					PlaybackParams playbackParams = new PlaybackParams();
-					playbackParams.setSpeed(playbackSpeed);
-					mediaPlayer.setPlaybackParams(playbackParams);
-				}
+				mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(playbackSpeed));
 			} catch(Exception e) {
 				Log.e(TAG, "Error while applying media player params", e);
 			}

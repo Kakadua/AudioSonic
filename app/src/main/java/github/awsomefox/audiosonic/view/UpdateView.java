@@ -55,6 +55,7 @@ public abstract class UpdateView<T> extends LinearLayout {
 	protected RatingBar ratingBar;
 	protected ImageButton starButton;
 	protected ImageView moreButton;
+	protected ImageButton cacheButton;
 	protected View coverArtView;
 	
 	protected boolean exists = false;
@@ -239,19 +240,21 @@ public abstract class UpdateView<T> extends LinearLayout {
 	}
 	protected void update() {
 		if(moreButton != null) {
-			if(exists || pinned) {
-				if(!shaded) {
-					moreButton.setImageResource(exists ? R.drawable.download_cached : R.drawable.download_pinned);
-					shaded = true;
+			moreButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.download_none));
+		}
+		if(cacheButton != null) {
+			if (exists || pinned) {
+				if(cacheButton.getDrawable() == null) {
+					cacheButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_offline_pin_white_24dp));
 				}
+				cacheButton.setVisibility(View.VISIBLE);
 			} else {
-				if(shaded) {
-					moreButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.download_none));
+				if (shaded) {
+					cacheButton.setVisibility(View.GONE);
 					shaded = false;
 				}
 			}
 		}
-		
 		if(starButton != null) {
 			if(isStarred) {
 				if(!starred) {

@@ -20,6 +20,7 @@ package github.awsomefox.audiosonic.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class PlaylistView extends UpdateView<Playlist> {
 		coverArtView = findViewById(R.id.item_art);
 		titleView = (TextView) findViewById(R.id.item_name);
 		moreButton = (ImageView) findViewById(R.id.item_more);
+		cacheButton = (ImageButton) findViewById(R.id.song_cached);
 
 		this.imageLoader = imageLoader;
 	}

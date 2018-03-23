@@ -60,6 +60,7 @@ public class PodcastChannelView extends UpdateView<PodcastChannel> {
 			starButton.setFocusable(false);
 		}
 		moreButton = (ImageView) findViewById(R.id.item_more);
+		cacheButton = (ImageButton) findViewById(R.id.song_cached);
 		moreButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.showContextMenu();

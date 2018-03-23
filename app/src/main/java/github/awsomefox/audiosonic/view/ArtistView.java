@@ -49,6 +49,8 @@ public class ArtistView extends UpdateView<Artist> {
 		starButton = (ImageButton) findViewById(R.id.item_star);
 		starButton.setFocusable(false);
 		moreButton = (ImageView) findViewById(R.id.item_more);
+
+		cacheButton = (ImageButton) findViewById(R.id.song_cached);
 		moreButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.showContextMenu();

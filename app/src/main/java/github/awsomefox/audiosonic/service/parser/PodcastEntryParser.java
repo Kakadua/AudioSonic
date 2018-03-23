@@ -111,6 +111,10 @@ public class PodcastEntryParser extends AbstractParser {
 						bogusId--;
 					}
 					episodes.addChild(episode);
+
+					if (episode.getSize() != null && episode.getBitRate() != null) {
+						episode.setDuration((int)(episode.getSize() * .008) /episode.getBitRate());
+					}
 				} else if ("error".equals(name)) {
 					handleError();
 				}
