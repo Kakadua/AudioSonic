@@ -42,10 +42,7 @@
 	<string name="button_bar.downloading">Laddar ner</string>
 	<string name="button_bar.offline">Offline</string>
 
-    <string name="main.welcome_title">Välkommen!</string>
-    <string name="main.welcome_text">Välkommen till Booksonic! Appen är för tillfället konfigurerad till att använda Booksonics demo server.
-        När du har satt upp din egen server (hämtas på <b>booksonic.org</b>), kan du gå till inställningar och ändra konfigurationen till att ansluta till den.</string>
-	<string name="main.about_title">Om Booksonic</string>
+    <string name="main.about_title">Om Booksonic</string>
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
@@ -59,11 +56,9 @@
 	]]>
 	</string>
 
-	<string name="main.shuffle">Slumpad uppspelning</string>
-	<string name="main.offline">Gå Offline</string>
+    <string name="main.offline">Gå Offline</string>
 	<string name="main.online">Gå Online</string>
-	<string name="main.settings">Inställningar</string>
-	<string name="main.albums_title">Listor</string>
+    <string name="main.albums_title">Listor</string>
 	<string name="main.albums_per_folder">Per bok</string>
 	<string name="main.albums_newest">Nyligen tillagt</string>
 	<string name="main.albums_recent">Nyligen spelat</string>
@@ -75,8 +70,7 @@
 	<string name="main.albums_year">Årtionden</string>
 	<string name="main.albums_alphabetical">Alfabetiskt</string>
 	<string name="main.videos">Videor</string>
-	<string name="main.songs_genres">@string/main.albums_genres</string>
-	<string name="main.back_confirm">Tryck bakåt igen för att avsluta</string>
+    <string name="main.back_confirm">Tryck bakåt igen för att avsluta</string>
 	<string name="main.scan_complete">Skanning av server klar</string>
 	<string name="main.artist">Författare</string>
 	<string name="main.title">Titel</string>
@@ -88,8 +82,7 @@
 	<string name="menu.play_last">Spela sista</string>
     <string name="menu.exit">Avsluta</string>
     <string name="menu.settings">Inställningar</string>
-    <string name="menu.help">Hjälp</string>
-	<string name="menu.about">Om</string>
+    <string name="menu.about">Om</string>
 	<string name="menu.add_playlist">Lägg till i spellista</string>
 	<string name="menu.remove_playlist">Ta bort från spellista</string>
 	<string name="menu.deleted_playlist">Tog bort spellistan  %s</string>
@@ -124,10 +117,7 @@
 	<string name="playlist.create_new">Skapa ny</string>
 	<string name="playlist.delete">Radera spellista</string>
 
-    <string name="search.label">Sök</string>
     <string name="search.title">Sök</string>
-    <string name="search.search">Klicka för att söka</string>
-    <string name="search.no_match">Inga träffar, försök igen</string>
     <string name="search.artists">Författare</string>
     <string name="search.albums">Bok</string>
     <string name="search.songs">Spår</string>
@@ -184,22 +174,14 @@
     <string name="download.menu_lyrics">Texter</string>
 	<string name="download.menu_remove_all">Ta bort allt</string>
     <string name="download.menu_screen_on">Skärmen är på</string>
-    <string name="download.menu_shuffle">Slumpa</string>
-	<string name="download.menu_toggle">Skifta</string>
-    <string name="download.menu_save">Spara spellista</string>
-    <string name="download.menu_shuffle_notification">Spellistan blandades om</string>
-	<string name="download.menu_remove_played_songs">Ta bort spelade spår</string>
+    <string name="download.menu_remove_played_songs">Ta bort spelade spår</string>
     <string name="download.playlist_title">Spara spellista</string>
     <string name="download.playlist_name">Spellistans namn:</string>
-    <string name="download.playlist_saving">Sparar spellista \"%s\"...</string>
     <string name="download.playlist_done">Spellistan sparades.</string>
     <string name="download.playlist_error">Misslyckades med att spara spellistan, försök igen senare.</string>
     <string name="download.repeat_off">Upprepa inte</string>
     <string name="download.repeat_all">Upprepa alla</string>
     <string name="download.repeat_single">Upprepa spåret</string>
-    <string name="download.jukebox_on">Startade fjärrkontroll. Musiken spelas upp på datorn.</string>
-    <string name="download.jukebox_off">Stängde av fjärrkontroll. Musiken spelas upp på telefonen.</string>
-    <string name="download.jukebox_volume">Fjärrkontroll volym</string>
     <string name="download.jukebox_server_too_old">Fjärrkontroll stöds inte. Uppdatera din Booksonic server.</string>
     <string name="download.jukebox_offline">Fjärrkontroll fungerar inte i offline läge.</string>
     <string name="download.jukebox_not_authorized">Fjärrkontroll acceptaras inte. Acceptera Jukebox läge i <b>Användare &gt; Inställningar</b> på din Booksonic server.</string>
@@ -320,18 +302,6 @@
     <string name="settings.max_bitrate_192">192 Kbps</string>
     <string name="settings.max_bitrate_256">256 Kbps</string>
     <string name="settings.max_bitrate_320">320 Kbps</string>
-	<string name="settings.max_video_bitrate_wifi">Max video bithastighet (bitrate) - Wi-Fi</string>
-    <string name="settings.max_video_bitrate_mobile">Max video bithastighet (bitrate) - Mobil data</string>
-	<string name="settings.max_video_bitrate_200">200 Kbps</string>
-    <string name="settings.max_video_bitrate_300">300 Kbps</string>
-    <string name="settings.max_video_bitrate_400">400 Kbps</string>
-    <string name="settings.max_video_bitrate_500">500 Kbps</string>
-    <string name="settings.max_video_bitrate_700">700 Kbps</string>
-    <string name="settings.max_video_bitrate_1000">1000 Kbps</string>
-    <string name="settings.max_video_bitrate_1500">1500 Kbps</string>
-    <string name="settings.max_video_bitrate_2000">2000 Kbps</string>
-    <string name="settings.max_video_bitrate_3000">3000 Kbps</string>
-    <string name="settings.max_video_bitrate_5000">5000 Kbps</string>
     <string name="settings.max_bitrate_unlimited">Oändlig</string>
     <string name="settings.wifi_required_title">Bara Wi-Fi streaming</string>
     <string name="settings.wifi_required_summary">Streama bara media om jag är ansluten till Wi-Fi</string>
@@ -348,8 +318,6 @@
     <string name="settings.preload_5">5 spår</string>
     <string name="settings.preload_10">10 spår</string>
 	<string name="settings.preload_unlimited">Oändlig</string>
-    <string name="settings.clear_search_history">Rensa sökhistoriken</string>
-    <string name="settings.search_history_cleared">Sökhistoriken har rensats</string>
     <string name="settings.other_title">Andra inställningar</string>
     <string name="settings.scrobble_title">Scrobble till Last.fm</string>
 
@@ -361,14 +329,7 @@
     <string name="settings.media_button_summary">Reagera på telefonen, headset och bluetooths media knappar</string>
     <string name="settings.screen_lit_title">Håll skärmen igång</string>
     <string name="settings.screen_lit_summary">Att hålla skärmen igång när man laddar ner ökar nerladdningshastigheten.</string>
-	<string name="settings.playlist_title">Spela</string>
-	<string name="settings.playlist_random_size_title">Slumpad spelliste storlek</string>
-	<string name="settings.sleep_timer_title">Sömntimer</string>
-	<string name="settings.sleep_timer_duration_title">Längd på sömntimer</string>
-	<string name="settings.sleep_timer_off">Av</string>
-	<string name="settings.sleep_timer_on">på</string>
-	<string name="settings.sleep_timer_always_on">Alltid på</string>
-	<string name="settings.temp_loss_title">Förlorade fokus temporärt</string>
+    <string name="settings.temp_loss_title">Förlorade fokus temporärt</string>
 	<string name="settings.temp_loss_pause">Pausa alltid</string>
 	<string name="settings.temp_loss_pause_lower">Pause, sänk volymen när tillsagd</string>
 	<string name="settings.temp_loss_lower">Alltid lägre volym</string>
@@ -381,21 +342,13 @@
 	<string name="settings.disconnect_pause_title">Pause när anslutningen bryts</string>
 	<string name="settings.disconnect_pause_both">Pause</string>
 	<string name="settings.disconnect_pause_neither">Gör ingenting</string>
-	<string name="settings.persistent_title">Ihållande notifikation</string>
-	<string name="settings.persistent_summary">Visa notifikationen även när jag har pausat.  Tryck stop för att ta bort den.</string>
-	<string name="settings.gapless_playback">Spela upp utan mellanrum</string>
+    <string name="settings.gapless_playback">Spela upp utan mellanrum</string>
 	<string name="settings.gapless_playback_summary">Om du märker några konstiga buggar när du lyssnar kan det hjälpa att slå av den här.</string>
 	<string name="settings.chat_refresh">Hur ofta ska chat uppdateras (sekunder)</string>
 	<string name="settings.chat_enabled">Chat aktiverad</string>
 	<string name="settings.chat_enabled_summary">Om chatten ska visas i menyn till vänster</string>
-	<string name="settings.video_title">Video</string>
-	<string name="settings.video_player">Video spelare</string>
 
-	<string name="settings.video_raw">Raw</string>
-	<string name="settings.video_hls">HTTP Live Stream (HLS)</string>
-	<string name="settings.video_transcode">Direct Transcode (kräver video -> mp4 eller liknande installerat på servern)</string>
-	<string name="settings.video_flash">Flash (kräver plugin)</string>
-	<string name="settings.cache_screen_title">Cache/Nätverk</string>
+    <string name="settings.cache_screen_title">Cache/Nätverk</string>
 	<string name="settings.playback_title">Uppspelning</string>
 	<string name="settings.hide_widget_title">Dölj widget</string>
 	<string name="settings.hide_widget_summary">Dölj widget efter att jag lämnat appen</string>
@@ -429,28 +382,21 @@
 	<string name="settings.sync_notification_summary">Visa notifikation efter att ny media har blivit synkroniserad</string>
 	<string name="settings.menu_options.title">Valfria menyalternativ</string>
 	<string name="settings.menu_options.play_now_summary">Visa nu i menyer</string>
-	<string name="settings.menu_options.play_shuffled_summary">Visa slumpat i menyer</string>
-	<string name="settings.menu_options.play_next_summary">Visa spela nästa i menyer</string>
-	<string name="settings.menu_options.play_last_summary">Visa spela senaste i menyer</string>
-	<string name="settings.menu_options.download_summary">Visa ladda ner i menyer</string>
+    <string name="settings.menu_options.download_summary">Visa ladda ner i menyer</string>
 	<string name="settings.menu_options.pin_summary">Visa permanent cache i menyer</string>
 	<string name="settings.menu_options.delete_summary">Visa ta bort i menyer</string>
 	<string name="settings.menu_options.star_summary">Visa favorit i menyer</string>
 	<string name="settings.menu_options.shared_summary">Visa dela i menyer</string>
 	<string name="settings.menu_options.rate_summary">Visa omdömme i menyer</string>
-	<string name="settings.browse_by_tags">Navigera via taggar</string>
 
-	<string name="settings.browse_by_tags_summary">Navigera via taggar istället för mappstruktur.</string>
-	<string name="settings.disable_exit_prompt">Avaktivera stäng ner rutan</string>
+    <string name="settings.disable_exit_prompt">Avaktivera stäng ner rutan</string>
 	<string name="settings.disable_exit_prompt_summary">Stäng appen direkt när jag trycker bakåt på hemskärmen</string>
 	<string name="settings.override_system_language">Ignorera systemspråket</string>
 
 	<string name="settings.override_system_language_summary">Visa appen på engelska även om systemet är på ett språk Booksonic har stöd för. Du kan eventuellt behöva rensa appen från minnet för att det ska ta effekt.</string>
 	<string name="settings.drawer_items_title">Sidoflikar</string>
-	<string name="settings.play_now_after">Spela nu - Efter</string>
 
-	<string name="settings.play_now_after_summary">Spela nu i context menyn spelar allt efter spåret (som i Booksonic webb GUI)</string>
-	<string name="settings.large_album_art">Stora bokomslag</string>
+    <string name="settings.large_album_art">Stora bokomslag</string>
 	<string name="settings.large_album_art_summary">Visa böcker med stora omslag istället för en lista</string>
 	<string name="settings.admin_enabled">Admin aktiverad</string>
 	<string name="settings.admin_enabled_summary">Om admin ska visas eller inte i menyn till vänster</string>
@@ -475,11 +421,7 @@
 	<string name="settings.color_action_bar">Färgad action bar</string>
 	<string name="settings.color_action_bar.summary">Om action baren ska färgas eller inte</string>
 
-	<string name="settings.shuffle_by_album">Slumba per bok</string>
-	<string name="settings.shuffle_by_album.true">Slumpa ordningen av böcker</string>
-	<string name="settings.shuffle_by_album.false">Slumpa alla spår tillsammans</string>
-
-	<string name="shuffle.title">Slumpa per</string>
+    <string name="shuffle.title">Slumpa per</string>
 	<string name="shuffle.startYear">Start år:</string>
 	<string name="shuffle.endYear">Slut år:</string>
 	<string name="shuffle.genre">Genre:</string>
@@ -605,8 +547,7 @@
 	<string name="details.title.podcast">Podcast detaljer</string>
 	<string name="details.title.playlist">Playlist detaljer</string>
 
-	<string name="details.title.artist">Författardetaljer</string>
-	<string name="details.podcast">Podcasts</string>
+    <string name="details.podcast">Podcasts</string>
 	<string name="details.status">Status</string>
 
 	<string name="details.artist">Författare</string>
@@ -666,15 +607,13 @@
 
 	<!--PopMod-->
 	<string name="main.author">Författare</string>
-	<string name="album.book_desc">noInfo</string>
-	<string name="menu.timer">Timer</string>
+    <string name="menu.timer">Timer</string>
 	<string name="album.book.length">Längd</string>
 	<string name="album.book.reader">Uppläsare</string>
 	<string name="playlist.reverse">Omvänt</string>
 	<string name="imported">Importerat</string>
 	<string name="exported">Exporterat till</string>
-	<string name="exported.password.warning">Varning, ditt lösenord finns i backupen. Förvara den säkert!</string>
-	<string name="menu.import">Importera</string>
+    <string name="menu.import">Importera</string>
 	<string name="menu.export">Exportera</string>
 	<string name="button.yes">JA</string>
 	<string name="button.no">NEJ</string>

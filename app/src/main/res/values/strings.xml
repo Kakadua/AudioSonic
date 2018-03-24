@@ -43,9 +43,7 @@
 	<string name="button_bar.downloading">Downloading</string>
 	<string name="button_bar.offline">Offline</string>
 
-    <string name="main.welcome_title">Welcome!</string>
-    <string name="main.welcome_text">Welcome to AudioSonic! The app is currently configured to use the Subsonic demo server.</string>
-	<string name="main.about_title">About AudioSonic</string>
+    <string name="main.about_title">About AudioSonic</string>
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
@@ -57,10 +55,8 @@
 		<br/>In the option menu, deselect "First level authors".  This will make it so that the entire first level of directories shown will be treated like groups of authors instead of the authors themselves.
 	]]>
 	</string>
-	<string name="main.shuffle">Shuffle play</string>
     <string name="main.offline">Go Offline</string>
 	<string name="main.online">Go Online</string>
-    <string name="main.settings">Settings</string>
     <string name="main.albums_title">Book Lists</string>
 	<string name="main.albums_per_folder">Per Folder</string>
     <string name="main.albums_newest">Recently added</string>
@@ -73,8 +69,7 @@
 	<string name="main.albums_year">Decades</string>
 	<string name="main.albums_alphabetical">Alphabetically</string>
 	<string name="main.videos">Videos</string>
-	<string name="main.songs_genres">@string/main.albums_genres</string>
-	<string name="main.songs_newest">@string/main.albums_newest</string>
+    <string name="main.songs_newest">@string/main.albums_newest</string>
 	<string name="main.songs_top_played">Top Played</string>
 	<string name="main.songs_recent">@string/main.albums_recent</string>
 	<string name="main.songs_frequent">@string/main.albums_frequent</string>
@@ -90,8 +85,7 @@
 	<string name="menu.play_last">Play Last</string>
     <string name="menu.exit">Exit</string>
     <string name="menu.settings">Settings</string>
-    <string name="menu.help">Help</string>
-	<string name="menu.about">About</string>
+    <string name="menu.about">About</string>
 	<string name="menu.add_playlist">Add To Playlist</string>
 	<string name="menu.remove_playlist">Remove From Playlist</string>
 	<string name="menu.deleted_playlist">Deleted playlist %s</string>
@@ -126,10 +120,7 @@
 	<string name="playlist.create_new">Create New</string>
 	<string name="playlist.delete">Delete Playlist</string>
 
-    <string name="search.label">Search</string>
     <string name="search.title">Search</string>
-    <string name="search.search">Click to search</string>
-    <string name="search.no_match">No matches, please try again</string>
     <string name="search.artists">Authors</string>
     <string name="search.albums">Books</string>
     <string name="search.songs">Tracks</string>
@@ -187,22 +178,14 @@
     <string name="download.menu_lyrics">Lyrics</string>
 	<string name="download.menu_remove_all">Remove all</string>
     <string name="download.menu_screen_on">Screen on</string>
-    <string name="download.menu_shuffle">Shuffle</string>
-	<string name="download.menu_toggle">Toggle</string>
-    <string name="download.menu_save">Save playlist</string>
-    <string name="download.menu_shuffle_notification">Playlist was shuffled</string>
-	<string name="download.menu_remove_played_songs">Remove played tracks</string>
+    <string name="download.menu_remove_played_songs">Remove played tracks</string>
     <string name="download.playlist_title">Save playlist</string>
     <string name="download.playlist_name">Enter the playlist name:</string>
-    <string name="download.playlist_saving">Saving playlist \"%s\"...</string>
     <string name="download.playlist_done">Playlist was successfully saved.</string>
     <string name="download.playlist_error">Failed to save playlist, please try later.</string>
     <string name="download.repeat_off">Repeat off</string>
     <string name="download.repeat_all">Repeat all</string>
     <string name="download.repeat_single">Repeat track</string>
-    <string name="download.jukebox_on">Turned on remote control. Music is played on the computer.</string>
-    <string name="download.jukebox_off">Turned off remote control. Music is played on the phone.</string>
-    <string name="download.jukebox_volume">Remote volume</string>
     <string name="download.jukebox_server_too_old">Remote control is not supported. Please upgrade your server.</string>
     <string name="download.jukebox_offline">Remote control is not available in offline mode.</string>
     <string name="download.jukebox_not_authorized">Remote control is not allowed. Please enable jukebox mode in <b>Users &gt; Settings</b> on your server.</string>
@@ -220,16 +203,12 @@
 		\nEstimated Size: %2$s</string>
 	<string name="download.failed_to_load">Failed to load</string>
 	<string name="download.restore_play_queue">continue from where you left off on another device at</string>
-	<string name="download.thumbs_up">Thumbs Up</string>
-	<string name="download.thumbs_down">Thumbs Down</string>
-	<string name="download.batch_mode">Batch Mode</string>
+    <string name="download.batch_mode">Batch Mode</string>
 	<string name="download.playback_speed_half">0.5x</string>
-	<string name="download.playback_speed_normal">1x</string>
-	<string name="download_playback_speed_one_p_two">1.2x</string>
+    <string name="download_playback_speed_one_p_two">1.2x</string>
 	<string name="download_playback_speed_one_p_five">1.5x</string>
 	<string name="download_playback_speed_two">2x</string>
-	<string name="download.playback_speed_custom">Custom</string>
-	<string name="download.playback_speed">Playback Speed</string>
+    <string name="download.playback_speed">Playback Speed</string>
 
 	<string name="sync.new_podcasts">New podcasts available</string>
 	<string name="sync.new_playlists">New tracks in playlists</string>
@@ -336,18 +315,6 @@
     <string name="settings.max_bitrate_192">192 Kbps</string>
     <string name="settings.max_bitrate_256">256 Kbps</string>
     <string name="settings.max_bitrate_320">320 Kbps</string>
-	<string name="settings.max_video_bitrate_wifi">Max Video bitrate - Wi-Fi</string>
-    <string name="settings.max_video_bitrate_mobile">Max Video bitrate - Mobile</string>
-	<string name="settings.max_video_bitrate_200">200 Kbps</string>
-    <string name="settings.max_video_bitrate_300">300 Kbps</string>
-    <string name="settings.max_video_bitrate_400">400 Kbps</string>
-    <string name="settings.max_video_bitrate_500">500 Kbps</string>
-    <string name="settings.max_video_bitrate_700">700 Kbps</string>
-    <string name="settings.max_video_bitrate_1000">1000 Kbps</string>
-    <string name="settings.max_video_bitrate_1500">1500 Kbps</string>
-    <string name="settings.max_video_bitrate_2000">2000 Kbps</string>
-    <string name="settings.max_video_bitrate_3000">3000 Kbps</string>
-    <string name="settings.max_video_bitrate_5000">5000 Kbps</string>
     <string name="settings.max_bitrate_unlimited">Unlimited</string>
     <string name="settings.wifi_required_title">Wi-Fi streaming only</string>
     <string name="settings.wifi_required_summary">Only stream media if connected to Wi-Fi</string>
@@ -364,8 +331,6 @@
     <string name="settings.preload_5">5 tracks</string>
     <string name="settings.preload_10">10 tracks</string>
 	<string name="settings.preload_unlimited">Unlimited</string>
-    <string name="settings.clear_search_history">Clear search history</string>
-    <string name="settings.search_history_cleared">Search history cleared</string>
     <string name="settings.other_title">Other settings</string>
     <string name="settings.scrobble_title">Scrobble to Last.fm</string>
 
@@ -377,14 +342,7 @@
     <string name="settings.media_button_summary">Respond to phone, headset and Bluetooth media buttons</string>
     <string name="settings.screen_lit_title">Keep screen on</string>
     <string name="settings.screen_lit_summary">Keeping the screen on while downloading improves download speed.</string>
-	<string name="settings.playlist_title">Play</string>
-	<string name="settings.playlist_random_size_title">Shuffle Playlist Size</string>
-	<string name="settings.sleep_timer_title">Sleep Timer</string>
-	<string name="settings.sleep_timer_duration_title">Sleep Timer Duration</string>
-	<string name="settings.sleep_timer_off">Off</string>
-	<string name="settings.sleep_timer_on">On</string>
-	<string name="settings.sleep_timer_always_on">Always On</string>
-	<string name="settings.temp_loss_title">Temporary Loss of Focus</string>
+    <string name="settings.temp_loss_title">Temporary Loss of Focus</string>
 	<string name="settings.temp_loss_pause">Always Pause</string>
 	<string name="settings.temp_loss_pause_lower">Pause, lower volume when requested</string>
 	<string name="settings.temp_loss_lower">Always lower volume</string>
@@ -402,13 +360,7 @@
 	<string name="settings.chat_refresh">Chat Refresh Rate (Secs)</string>
 	<string name="settings.chat_enabled">Chat Enabled</string>
 	<string name="settings.chat_enabled_summary">Whether or not to display the chat listing in the pull out drawer</string>
-	<string name="settings.video_title">Video</string>
-	<string name="settings.video_player">Video Player</string>
-	<string name="settings.video_raw">Raw (Requires Subsonic 4.8+)</string>
-	<string name="settings.video_hls">HTTP Live Stream (HLS) (Requires Subsonic 4.8+)</string>
-	<string name="settings.video_transcode">Direct Transcode (Requires video -> mp4 or similar setup on Server)</string>
-	<string name="settings.video_flash">Flash (Requires Plugin)</string>
-	<string name="settings.cache_screen_title">Cache/Network</string>
+    <string name="settings.cache_screen_title">Cache/Network</string>
 	<string name="settings.playback_title">Playback</string>
 	<string name="settings.hide_widget_title">Hide Widget</string>
 	<string name="settings.hide_widget_summary">Hide widget after exiting app</string>
@@ -442,18 +394,13 @@
 	<string name="settings.sync_notification_summary">Show a notification after new media has been synced</string>
 	<string name="settings.menu_options.title">Optional Menu Options</string>
 	<string name="settings.menu_options.play_now_summary">Show Now in menus</string>
-	<string name="settings.menu_options.play_shuffled_summary">Show Shuffled in menus</string>
-	<string name="settings.menu_options.play_next_summary">Show Play Next in menus</string>
-	<string name="settings.menu_options.play_last_summary">Show Play Last in menus</string>
-	<string name="settings.menu_options.download_summary">Show Download in menus</string>
+    <string name="settings.menu_options.download_summary">Show Download in menus</string>
 	<string name="settings.menu_options.pin_summary">Show Permanent Cache in menus</string>
 	<string name="settings.menu_options.delete_summary">Show Delete in menus</string>
 	<string name="settings.menu_options.star_summary">Show Star in menus</string>
 	<string name="settings.menu_options.shared_summary">Show Share in menus</string>
 	<string name="settings.menu_options.rate_summary">Show Rating in menus</string>
-	<string name="settings.browse_by_tags">Browse By Tags</string>
-	<string name="settings.browse_by_tags_summary">Browse by tags instead of by folder structure.</string>
-	<string name="settings.disable_exit_prompt">Disable Exit Prompt</string>
+    <string name="settings.disable_exit_prompt">Disable Exit Prompt</string>
 	<string name="settings.disable_exit_prompt_summary">Exit the app immediately upon pressing back from the home screen</string>
 	<string name="settings.override_system_language">Override System Language</string>
 	<string name="settings.override_system_language_summary">Display app in english even if the system language is something AudioSonic has a translation for.  May need to clear the app from memory for changes to take affect.</string>
@@ -484,14 +431,9 @@
 	<string name="settings.start_on_headphones_summary">Start when headphones are plugged in.  This requires the use of a service which starts on boot up to check for the headphone plug event even when AudioSonic is not running.</string>
 	<string name="settings.color_action_bar">Color Action Bar</string>
 	<string name="settings.color_action_bar.summary">Color the action bar and status bar or leave them alone</string>
-	<string name="settings.shuffle_by_album">Shuffle By Book</string>
-	<string name="settings.shuffle_by_album.true">Shuffle order of books</string>
-	<string name="settings.shuffle_by_album.false">Shuffle all tracks together</string>
-	<string name="settings.casting_stream_original">Stream original</string>
+    <string name="settings.casting_stream_original">Stream original</string>
 	<string name="settings.casting_stream_original_summary">Stream original files where supported by cast device</string>
-	<string name="settings.heads_up_notification">Heads Up Notifications (5.0+)</string>
-	<string name="settings.heads_up_notification_summary">Show playing notifications as Heads Up notifications (Android Lollipop+ only)</string>
-	<string name="settings.casting_cache">Cache While Casting</string>
+    <string name="settings.casting_cache">Cache While Casting</string>
 	<string name="settings.casting_cache_summary">Cache currently playing songs while casting</string>
 	<string name="settings.casting.dlna_casting_enabled">DLNA Enabled</string>
 	<string name="settings.casting.dlna_casting_enabled.summary">If you are having battery drain problems on Android 7.0 try turning this off</string>
@@ -621,8 +563,7 @@
 	<string name="details.title.album">Book Details</string>
 	<string name="details.title.podcast">Podcast Details</string>
 	<string name="details.title.playlist">Playlist Details</string>
-	<string name="details.title.artist">Author Details</string>
-	<string name="details.title.internet_radio_station">Internet Radio Details</string>
+    <string name="details.title.internet_radio_station">Internet Radio Details</string>
 	<string name="details.podcast">Podcast</string>
 	<string name="details.status">Status</string>
 	<string name="details.artist">Author</string>
@@ -688,16 +629,14 @@
 
 	<!--PopMod-->
 	<string name="main.author">Author</string>
-	<string name="album.book_desc">noInfo</string>
-	<string name="menu.timer">Timer</string>
+    <string name="menu.timer">Timer</string>
 	<string name="album.book.length">Length</string>
 	<string name="album.book.reader">Narrator</string>
 	<string name="playlist.reverse">Reverse</string>
     <string name="details.fork">Forked from</string>
 	<string name="imported">Imported</string>
 	<string name="exported">Exported to</string>
-	<string name="exported.password.warning">Warning, you password to the server is in the backup. Keep it safe!</string>
-	<string name="menu.import">Import</string>
+    <string name="menu.import">Import</string>
 	<string name="menu.export">Export</string>
 	<string name="button.yes">YES</string>
 	<string name="button.no">NO</string>

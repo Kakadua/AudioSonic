@@ -41,18 +41,6 @@
 		<item>@string/settings.theme_day_night</item>
 		<item>@string/settings.theme_day_black_night</item>
     </string-array>
-	
-	<string-array name="sleepTimerValues">
-		<item>0</item>
-		<item>1</item>
-		<item>2</item>
-	</string-array>
-
-	<string-array name="sleepTimerNames">
-		<item>@string/settings.sleep_timer_off</item>
-		<item>@string/settings.sleep_timer_on</item>
-		<item>@string/settings.sleep_timer_always_on</item>
-	</string-array>
 
     <string-array name="preloadCountValues">
 		<item>0</item>
@@ -103,36 +91,8 @@
         <item>@string/settings.max_bitrate_320</item>
         <item>@string/settings.max_bitrate_unlimited</item>
     </string-array>
-	
-	<string-array name="maxVideoBitrateValues">
-		<item>200</item>
-		<item>300</item>
-		<item>400</item>
-		<item>500</item>
-		<item>700</item>
-		<item>1000</item>
-		<item>1500</item>
-		<item>2000</item>
-		<item>3000</item>
-		<item>5000</item>
-		<item>0</item>
-	</string-array>
-	
-	<string-array name="maxVideoBitrateNames">
-		<item>@string/settings.max_video_bitrate_200</item>
-		<item>@string/settings.max_video_bitrate_300</item>
-		<item>@string/settings.max_video_bitrate_400</item>
-		<item>@string/settings.max_video_bitrate_500</item>
-		<item>@string/settings.max_video_bitrate_700</item>
-		<item>@string/settings.max_video_bitrate_1000</item>
-		<item>@string/settings.max_video_bitrate_1500</item>
-		<item>@string/settings.max_video_bitrate_2000</item>
-		<item>@string/settings.max_video_bitrate_3000</item>
-		<item>@string/settings.max_video_bitrate_5000</item>
-		<item>@string/settings.max_bitrate_unlimited</item>
-	</string-array>
-	
-	<string-array name="networkTimeoutValues">
+
+    <string-array name="networkTimeoutValues">
 		<item>10000</item>
 		<item>15000</item>
 		<item>30000</item>
@@ -182,20 +142,7 @@
 		<item>@string/settings.disconnect_pause_neither</item>
 	</string-array>
 
-	<string-array name="videoPlayerValues">
-		<item>raw</item>
-		<item>hls</item>
-		<item>transcode</item>
-		<item>flash</item>
-	</string-array>
-	<string-array name="videoPlayerNames">
-		<item>@string/settings.video_raw</item>
-		<item>@string/settings.video_hls</item>
-		<item>@string/settings.video_transcode</item>
-		<item>@string/settings.video_flash</item>
-	</string-array>
-
-	<string-array name="syncIntervalValues">
+    <string-array name="syncIntervalValues">
 		<item>15</item>
 		<item>30</item>
 		<item>60</item>
