@@ -9,8 +9,8 @@ android {
 		applicationId "github.awsomefox.audiosonic"
 		minSdkVersion 14
 		targetSdkVersion 27
-		versionCode 20
-		versionName '1.0.17'
+		versionCode 21
+		versionName '1.0.18'
 		setProperty("archivesBaseName", "AudioSonic $versionName")
 		resConfigs "sv"
 	}

@@ -957,7 +957,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	}
 
 	@Override
-	public void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward) {
+	public void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex) {
 		this.currentPlaying = currentPlaying;
 
 		MusicDirectory.Entry song = null;
@@ -987,10 +987,10 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			getImageLoader().loadImage(coverArtView, song, false, height, false);
 		}
 
-		updateMediaButtons(shouldFastForward);
+		updateMediaButtons();
 	}
 
-	private void updateMediaButtons(boolean shouldFastForward) {
+	private void updateMediaButtons() {
 		DownloadService downloadService = getDownloadService();
 		if(downloadService.isCurrentPlayingSingle()) {
 			previousButton.setVisibility(View.GONE);
@@ -1008,11 +1008,11 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	}
 
 	@Override
-	public void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward) {
+	public void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex) {
 		if(this.currentPlaying != currentPlaying || this.currentPlaying == null) {
-			onSongChanged(currentPlaying, currentPlayingIndex, shouldFastForward);
+			onSongChanged(currentPlaying, currentPlayingIndex);
 		} else {
-			updateMediaButtons(shouldFastForward);
+			updateMediaButtons();
 		}
 	}
 

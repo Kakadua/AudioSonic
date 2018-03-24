@@ -475,10 +475,12 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		if(downloadService != null && downloadService.getSleepTimer()) {
 			int timeRemaining = downloadService.getSleepTimeRemaining();
 			timerMenu = menu.findItem(R.id.menu_toggle_timer);
-			if(timeRemaining > 1){
-				timerMenu.setTitle(context.getResources().getString(R.string.download_stop_time_remaining, Util.formatDuration(timeRemaining)));
-			} else {
-				timerMenu.setTitle(R.string.menu_set_timer);
+			if (timerMenu != null) {
+				if (timeRemaining > 1) {
+					timerMenu.setTitle(context.getResources().getString(R.string.download_stop_time_remaining, Util.formatDuration(timeRemaining)));
+				} else {
+					timerMenu.setTitle(R.string.menu_set_timer);
+				}
 			}
 		}
 		if(downloadService != null && downloadService.getKeepScreenOn()) {
@@ -1244,7 +1246,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	}
 
 	@Override
-	public void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward) {
+	public void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex) {
 		try {
 			String track[] = new String[3];
 			track[0] = this.currentPlaying.getSong().getId();
@@ -1257,11 +1259,11 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		this.currentPlaying = currentPlaying;
 		setupSubtitle(currentPlayingIndex);
 
-		updateMediaButton(shouldFastForward);
+		updateMediaButton();
 		updateTitle();
 	}
 
-	private void updateMediaButton(boolean shouldFastForward) {
+	private void updateMediaButton() {
 		DownloadService downloadService = getDownloadService();
 		if(downloadService.isCurrentPlayingSingle()) {
 			previousButton.setVisibility(View.GONE);
@@ -1301,7 +1303,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	}
 
 	@Override
-	public void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward) {
+	public void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex) {
 		currentPlayingSize = songs.size();
 
 		DownloadService downloadService = getDownloadService();
@@ -1330,10 +1332,10 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		}
 
 		if(this.currentPlaying != currentPlaying) {
-			onSongChanged(currentPlaying, currentPlayingIndex, shouldFastForward);
+			onSongChanged(currentPlaying, currentPlayingIndex);
 			onMetadataUpdate(currentPlaying != null ? currentPlaying.getSong() : null, DownloadService.METADATA_UPDATED_ALL);
 		} else {
-			updateMediaButton(shouldFastForward);
+			updateMediaButton();
 			setupSubtitle(currentPlayingIndex);
 		}
 

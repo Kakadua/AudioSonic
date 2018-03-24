@@ -57,8 +57,6 @@ public final class Notifications {
     private static boolean downloadForeground = false;
     private static boolean persistentPlayingShowing = false;
 
-    private final static Pair<Integer, Integer> NOTIFICATION_TEXT_COLORS = new Pair<Integer, Integer>();
-
     @RequiresApi(Build.VERSION_CODES.O)
     private static void createChannel(final Context context) {
         NotificationManager
@@ -158,9 +156,6 @@ public final class Notifications {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, CHANNEL_ID);
         RemoteControlClientLP remoteControlClient = (RemoteControlClientLP) base;
-        Intent stop = new Intent("Stop");
-        stop.setComponent(new ComponentName(context, DownloadService.class));
-        stop.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_STOP));
         Intent notificationIntent = new Intent(context, SubsonicFragmentActivity.class);
         notificationIntent.putExtra(Constants.INTENT_EXTRA_VIEW_ALBUM, true);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -177,8 +172,7 @@ public final class Notifications {
                 .setGroup(CHANNEL_ID)
                 .setSubText(title)
                 .setLargeIcon(bitmap)
-                .setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0))
-                .setDeleteIntent(PendingIntent.getService(context, 0, stop, 0));
+                .setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0));
 
         builder.addAction( generateAction(context, R.drawable.ic_skip_previous_black_24dp, "Back", "KEYCODE_MEDIA_PREVIOUS", KeyEvent.KEYCODE_MEDIA_PREVIOUS ) );
         builder.addAction( generateAction(context, R.drawable.ic_replay_30_black_24dp, "Skip Back", "KEYCODE_MEDIA_REWIND", KeyEvent.KEYCODE_MEDIA_REWIND ) );

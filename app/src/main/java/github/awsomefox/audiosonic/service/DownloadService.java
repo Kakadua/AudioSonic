@@ -779,7 +779,7 @@ public class DownloadService extends Service {
 			currentDownloading.cancelDownload();
 			currentDownloading = null;
 		}
-		setCurrentPlaying(null, false);
+		setCurrentPlaying(null);
 
 		if (serialize) {
 			lifecycleSupport.serializeDownloadQueue();
@@ -811,7 +811,7 @@ public class DownloadService extends Service {
 		}
 		if (downloadFile == currentPlaying) {
 			reset();
-			setCurrentPlaying(null, false);
+			setCurrentPlaying(null);
 		}
 		downloadList.remove(downloadFile);
 		currentPlayingIndex = downloadList.indexOf(currentPlaying);
@@ -849,15 +849,15 @@ public class DownloadService extends Service {
 		}
 	}
 
-	synchronized void setCurrentPlaying(int currentPlayingIndex, boolean showNotification) {
+	synchronized void setCurrentPlaying(int currentPlayingIndex) {
 		try {
-			setCurrentPlaying(downloadList.get(currentPlayingIndex), showNotification);
+			setCurrentPlaying(downloadList.get(currentPlayingIndex));
 		} catch (IndexOutOfBoundsException x) {
 			// Ignored
 		}
 	}
 
-	synchronized void setCurrentPlaying(DownloadFile currentPlaying, boolean showNotification) {
+	synchronized void setCurrentPlaying(DownloadFile currentPlaying) {
 		if(this.currentPlaying != null) {
 			this.currentPlaying.setPlaying(false);
 		}
@@ -880,7 +880,6 @@ public class DownloadService extends Service {
 			}
 		} else {
 			Util.broadcastNewTrackInfo(this, null);
-			Notifications.hidePlayingNotification(this, this, handler);
 		}
 		onSongChanged();
 	}
@@ -1008,13 +1007,6 @@ public class DownloadService extends Service {
 			return false;
 		}
 	}
-	public boolean isCurrentPlayingStream() {
-		if(currentPlaying != null) {
-			return currentPlaying.isStream();
-		} else {
-			return false;
-		}
-	}
 
 	public synchronized boolean shouldFastForward() {
 		return size() == 1 || (currentPlaying != null && !currentPlaying.isSong());
@@ -1057,10 +1049,9 @@ public class DownloadService extends Service {
 		if (index < 0 || index >= size) {
 			reset();
 			if(index >= size && size != 0) {
-				setCurrentPlaying(0, false);
-				Notifications.hidePlayingNotification(this, this, handler);
+				setCurrentPlaying(0);
 			} else {
-				setCurrentPlaying(null, false);
+				setCurrentPlaying(null);
 			}
 			lifecycleSupport.serializeDownloadQueue();
 		} else {
@@ -1068,7 +1059,7 @@ public class DownloadService extends Service {
 				nextPlayingTask.cancel();
 				nextPlayingTask = null;
 			}
-			setCurrentPlaying(index, start);
+			setCurrentPlaying(index);
 			if (start && remoteState != RemoteControlState.LOCAL) {
 				remoteController.changeTrack(index, currentPlaying);
 			}
@@ -1112,7 +1103,7 @@ public class DownloadService extends Service {
 		MediaPlayer tmp = mediaPlayer;
 		mediaPlayer = nextMediaPlayer;
 		nextMediaPlayer = tmp;
-		setCurrentPlaying(nextPlaying, true);
+		setCurrentPlaying(nextPlaying);
 		setPlayerState(PlayerState.STARTED);
 		setupHandlers(currentPlaying, false, start);
 		applyPlaybackParamsMain();
@@ -1269,7 +1260,7 @@ public class DownloadService extends Service {
 	public void onNextStarted(DownloadFile nextPlaying) {
 		setPlayerStateCompleted();
 		postPlayCleanup();
-		setCurrentPlaying(nextPlaying, true);
+		setCurrentPlaying(nextPlaying);
 		setPlayerState(PlayerState.STARTED);
 		setNextPlayerState(PlayerState.IDLE);
 	}
@@ -1446,7 +1437,6 @@ public class DownloadService extends Service {
 
 		boolean show = playerState == PlayerState.STARTED;
 		boolean pause = playerState == PlayerState.PAUSED;
-		boolean hide = playerState == PlayerState.STOPPED;
 		Util.broadcastPlaybackStatusChange(this, (currentPlaying != null) ? currentPlaying.getSong() : null, playerState);
 
 		this.playerState = playerState;
@@ -1459,8 +1449,6 @@ public class DownloadService extends Service {
 			Notifications.showPlayingNotification(this, this, handler, currentPlaying.getSong());
 		} else if (pause) {
 			Notifications.showPlayingNotification(this, this, handler, currentPlaying.getSong());
-		} else if(hide) {
-			Notifications.hidePlayingNotification(this, this, handler);
 		}
 		if(mRemoteControl != null) {
 			mRemoteControl.setPlaybackState(playerState.getRemoteControlClientPlayState(), getCurrentPlayingIndex(), size());
@@ -2758,10 +2746,6 @@ public class DownloadService extends Service {
 	public void handleKeyEvent(KeyEvent keyEvent) {
 		lifecycleSupport.handleKeyEvent(keyEvent);
 	}
-
-	public void addOnSongChangedListener(OnSongChangedListener listener) {
-		addOnSongChangedListener(listener, false);
-	}
 	public void addOnSongChangedListener(OnSongChangedListener listener, boolean run) {
 		synchronized(onSongChangedListeners) {
 			int index = onSongChangedListeners.indexOf(listener);
@@ -2798,13 +2782,12 @@ public class DownloadService extends Service {
 	private void onSongChanged() {
 		final long atRevision = revision;
 		synchronized(onSongChangedListeners) {
-			final boolean shouldFastForward = shouldFastForward();
 			for (final OnSongChangedListener listener : onSongChangedListeners) {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
 						if (revision == atRevision && instance != null) {
-							listener.onSongChanged(currentPlaying, currentPlayingIndex, shouldFastForward);
+							listener.onSongChanged(currentPlaying, currentPlayingIndex);
 
 							MusicDirectory.Entry entry = currentPlaying != null ? currentPlaying.getSong() : null;
 							listener.onMetadataUpdate(entry, METADATA_UPDATED_ALL);
@@ -2826,13 +2809,12 @@ public class DownloadService extends Service {
 	private void onSongsChanged() {
 		final long atRevision = revision;
 		synchronized(onSongChangedListeners) {
-			final boolean shouldFastForward = shouldFastForward();
 			for (final OnSongChangedListener listener : onSongChangedListeners) {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
 						if (revision == atRevision && instance != null) {
-							listener.onSongsChanged(downloadList, currentPlaying, currentPlayingIndex, shouldFastForward);
+							listener.onSongsChanged(downloadList, currentPlaying, currentPlayingIndex);
 						}
 					}
 				});
@@ -2896,9 +2878,6 @@ public class DownloadService extends Service {
 				});
 			}
 		}
-	}
-	public void onMetadataUpdate() {
-		onMetadataUpdate(METADATA_UPDATED_ALL);
 	}
 	public void onMetadataUpdate(final int updateType) {
 		synchronized(onSongChangedListeners) {
@@ -3032,8 +3011,8 @@ public class DownloadService extends Service {
 	}
 
 	public interface OnSongChangedListener {
-		void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward);
-		void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward);
+		void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex);
+		void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex);
 		void onSongProgress(DownloadFile currentPlaying, int millisPlayed, Integer duration, boolean isSeekable);
 		void onStateUpdate(DownloadFile downloadFile, PlayerState playerState);
 		void onMetadataUpdate(MusicDirectory.Entry entry, int fieldChange);
