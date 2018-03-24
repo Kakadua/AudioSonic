@@ -669,7 +669,7 @@ public class ImageLoader {
 			if(mDrawable != null) {
 				mView.setImageDrawable(mDrawable);
 			} else {
-				mView.setImageResource(R.drawable.ic_social_person);
+				mView.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_social_person));
 			}
 		}
 	}
