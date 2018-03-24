@@ -103,7 +103,7 @@ public class CachedMusicService implements MusicService {
 
 				// Only save a copy license is valid
 				if(result) {
-					FileUtil.serialize(context, (Boolean) result, getCacheName(context, "license"));
+					FileUtil.serialize(context, result, getCacheName(context, "license"));
 				}
 			}
             cachedLicenseValid.set(result, result ? 30L * 60L : 2L * 60L, TimeUnit.SECONDS);
@@ -1611,8 +1611,9 @@ public class CachedMusicService implements MusicService {
 		public void updateResult(MusicDirectory.Entry result) {
 
 		}
-	};
-	private abstract class IndexesUpdater extends SerializeUpdater<Artist> {
+	}
+
+    private abstract class IndexesUpdater extends SerializeUpdater<Artist> {
 		Indexes indexes;
 
 		IndexesUpdater(Context context, String name) {

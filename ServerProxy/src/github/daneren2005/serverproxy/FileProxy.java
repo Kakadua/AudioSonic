@@ -58,12 +58,8 @@ public class FileProxy extends ServerProxy {
 			}
 
 			// Make sure to not try to read past where the file is downloaded
-			if(cbSkip != 0 && cbSkip >= file.length()) {
-				return false;
-			}
-
-			return true;
-		}
+            return !(cbSkip != 0 && cbSkip >= file.length());
+        }
 
 		File getFile(String path) {
 			return new File(path);

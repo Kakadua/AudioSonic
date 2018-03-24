@@ -227,8 +227,8 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 
 		theme = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_THEME);
 		maxBitrateWifi = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_MAX_BITRATE_WIFI);
-		maxBitrateMobile = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_MAX_BITRATE_MOBILE);;
-		//maxVideoBitrateWifi = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_MAX_VIDEO_BITRATE_WIFI);
+		maxBitrateMobile = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_MAX_BITRATE_MOBILE);
+        //maxVideoBitrateWifi = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_MAX_VIDEO_BITRATE_WIFI);
 		//maxVideoBitrateMobile = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_MAX_VIDEO_BITRATE_MOBILE);
 		networkTimeout = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_NETWORK_TIMEOUT);
 		cacheLocation = (CacheLocationPreference) this.findPreference(Constants.PREFERENCES_KEY_CACHE_LOCATION);
@@ -384,8 +384,8 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 
 		if(cacheSize != null) {
 			maxBitrateWifi.setSummary(maxBitrateWifi.getEntry());
-			maxBitrateMobile.setSummary(maxBitrateMobile.getEntry());;
-			//maxVideoBitrateWifi.setSummary(maxVideoBitrateWifi.getEntry());
+			maxBitrateMobile.setSummary(maxBitrateMobile.getEntry());
+            //maxVideoBitrateWifi.setSummary(maxVideoBitrateWifi.getEntry());
 			//maxVideoBitrateMobile.setSummary(maxVideoBitrateMobile.getEntry());
 			networkTimeout.setSummary(networkTimeout.getEntry());
 			cacheLocation.setSummary(cacheLocation.getText());

@@ -46,7 +46,9 @@ import java.util.List;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
+import github.awsomefox.audiosonic.fragments.MainFragment;
 import github.awsomefox.audiosonic.service.MusicService;
+import github.awsomefox.audiosonic.service.MusicServiceFactory;
 import github.awsomefox.audiosonic.util.ImageLoader;
 import github.awsomefox.audiosonic.util.SilentServiceTask;
 import github.awsomefox.audiosonic.R;
@@ -353,6 +355,21 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 		}.execute();
 	}
 
+	private void noResults() {
+		new SilentServiceTask<Void>(downloadService) {
+			@Override
+			protected Void doInBackground(MusicService musicService) throws Throwable {
+				try {
+					MusicDirectory musicDirectory = musicService.getAlbumList("random", 20, 0, true, downloadService, null);
+					playMusicDirectory(musicDirectory.getChildren().get(0), false, false, false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+		}.execute();
+	}
+
 	private void playPlaylist(final Playlist playlist, final boolean shuffle, final boolean append) {
 		new SilentServiceTask<Void>(downloadService) {
 			@Override
@@ -429,12 +446,6 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 		downloadService.download(entries, false, !append, false, shuffle, startIndex, startPosition);
 	}
 
-	private void noResults() {
-		// Keep getting emails from Google that not playing something with no results is bad
-		downloadService.clear();
-		downloadService.setShufflePlayEnabled(true);
-	}
-
 	private class EventCallback extends MediaSessionCompat.Callback {
 		@Override
 		public void onPlay() {
@@ -443,7 +454,7 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 
 		@Override
 		public void onStop() {
-			downloadService.pause();
+			downloadService.stop();
 		}
 
 		@Override
@@ -480,9 +491,8 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 		@Override
 		public void onPlayFromSearch (String query, Bundle extras) {
 			// User just asked to playing something
-			if("".equals(query)) {
-				downloadService.clear();
-				downloadService.setShufflePlayEnabled(true);
+			if("".equals(query) || "on audiosonic".equals(query)) {
+				noResults();
 			} else {
 				String mediaFocus = extras.getString(MediaStore.EXTRA_MEDIA_FOCUS);
 

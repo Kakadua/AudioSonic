@@ -367,7 +367,7 @@ public class SSLSocketFactory implements LayeredSocketFactory {
             final Socket sock,
             final InetSocketAddress remoteAddress,
             final InetSocketAddress localAddress,
-            final HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
+            final HttpParams params) throws IOException {
         if (remoteAddress == null) {
             throw new IllegalArgumentException("Remote address may not be null");
         }
@@ -441,7 +441,7 @@ public class SSLSocketFactory implements LayeredSocketFactory {
         final Socket socket,
         final String host,
         final int port,
-        final boolean autoClose) throws IOException, UnknownHostException {
+        final boolean autoClose) throws IOException {
         SSLSocket sslSocket = (SSLSocket) this.socketfactory.createSocket(
               socket,
               host,
@@ -477,7 +477,7 @@ public class SSLSocketFactory implements LayeredSocketFactory {
             final Socket socket,
             final String host, int port,
             final InetAddress localAddress, int localPort,
-            final HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
+            final HttpParams params) throws IOException {
         InetSocketAddress local = null;
         if (localAddress != null || localPort > 0) {
             // we need to bind explicitly
@@ -503,7 +503,7 @@ public class SSLSocketFactory implements LayeredSocketFactory {
     public Socket createSocket(
             final Socket socket,
             final String host, int port,
-            boolean autoClose) throws IOException, UnknownHostException {
+            boolean autoClose) throws IOException {
 		SSLSocket sslSocket = (SSLSocket) this.socketfactory.createSocket(socket, host, port, autoClose);
 		sslSocket.setEnabledProtocols(getProtocols(sslSocket));
 		sslSocket.setEnabledCipherSuites(getCiphers(sslSocket));

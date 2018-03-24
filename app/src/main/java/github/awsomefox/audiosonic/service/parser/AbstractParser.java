@@ -164,7 +164,7 @@ public abstract class AbstractParser {
 					server.setRestType(ServerInfo.TYPE_MADSONIC);
             	} if(AMPACHE.equals(get("type"))) {
                     server.setRestType(ServerInfo.TYPE_AMPACHE);
-                } else if(SUBSONIC.equals(get("type")) && server.checkServerVersion(context, "1.13")) {
+                } else if(SUBSONIC.equals(get("type")) && ServerInfo.checkServerVersion(context, "1.13")) {
                     // Oh am I going to regret this
                     server.setRestType(ServerInfo.TYPE_MADSONIC);
                     server.setRestVersion(new Version("2.0.0"));

@@ -53,14 +53,14 @@ public class PodcastChannelView extends UpdateView<PodcastChannel> {
 			LayoutInflater.from(context).inflate(R.layout.basic_list_item, this, true);
 		}
 
-		titleView = (TextView) findViewById(R.id.item_name);
+		titleView = findViewById(R.id.item_name);
 
-		starButton = (ImageButton) findViewById(R.id.item_star);
+		starButton = findViewById(R.id.item_star);
 		if(starButton != null) {
 			starButton.setFocusable(false);
 		}
-		moreButton = (ImageView) findViewById(R.id.item_more);
-		cacheButton = (ImageButton) findViewById(R.id.song_cached);
+		moreButton = findViewById(R.id.item_more);
+		cacheButton = findViewById(R.id.song_cached);
 		moreButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				v.showContextMenu();
