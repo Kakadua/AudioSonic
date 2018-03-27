@@ -36,7 +36,7 @@ public class MusicDirectoryEntryParser extends AbstractParser {
         entry.setId(get("id"));
 		entry.setParent(get("parent"));
 		entry.setArtistId(get("artistId"));
-        entry.setTitle(get("title"));
+        entry.setTitle(get("title").replaceAll("^\\d+ - ", ""));
 		if(entry.getTitle() == null) {
 			entry.setTitle(get("name"));
 		}
@@ -46,11 +46,11 @@ public class MusicDirectoryEntryParser extends AbstractParser {
         entry.setStarred(get("starred") != null);
         entry.setYear(getInteger("year"));
         entry.setGenre(get("genre"));
-		entry.setAlbum(get("album"));
+		entry.setAlbum(get("album").replaceAll("^\\d+ - ", ""));
 		entry.setRating(getInteger("userRating"));
 
         if (!entry.isDirectory()) {
-			entry.setAlbumId(get("albumId"));
+			entry.setAlbumId(get("albumId").replaceAll("^\\d+ - ", ""));
             entry.setTrack(getInteger("track"));
             entry.setContentType(get("contentType"));
             entry.setSuffix(get("suffix"));

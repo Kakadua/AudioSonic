@@ -69,7 +69,7 @@ public final class Notifications {
         CharSequence name = "Media playback";
         // The user-visible description of the channel.
         String description = "Media playback controls";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        int importance = NotificationManager.IMPORTANCE_LOW;
         NotificationChannel mChannel = new NotificationChannel(id, name, importance);
         // Configure the notification channel.
         mChannel.setDescription(description);
@@ -183,6 +183,7 @@ public final class Notifications {
             builder.addAction(generateAction(context, R.drawable.ic_play_arrow_black_24dp, "Play", "KEYCODE_MEDIA_PLAY_PAUSE", KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
             builder.setOngoing(false).setPriority(NotificationManagerCompat.IMPORTANCE_DEFAULT);
         }
+        builder.setDefaults(0);
         builder.addAction( generateAction(context, R.drawable.ic_forward_30_black_24dp, "Skip Forward", "KEYCODE_MEDIA_FAST_FORWARD", KeyEvent.KEYCODE_MEDIA_FAST_FORWARD ) );
         builder.addAction( generateAction(context, R.drawable.ic_skip_next_black_24dp, "Next", "KEYCODE_MEDIA_NEXT", KeyEvent.KEYCODE_MEDIA_NEXT ) );
 
