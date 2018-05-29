@@ -88,7 +88,7 @@ public class SelectBookmarkFragment extends SelectRecyclerFragment<MusicDirector
 			return;
 		}
 
-		boolean allowPlayAll = ((!Util.isTagBrowsing(context) && bookmark.getParent() != null) || (Util.isTagBrowsing(context) && bookmark.getAlbumId() != null)) && !bookmark.isPodcast();
+		boolean allowPlayAll = ((!Util.isTagBrowsing(context) && bookmark.getParent() != null) || (Util.isTagBrowsing(context) && bookmark.getAlbumId() != null));
 		if(allowPlayAll && "all".equals(Util.getSongPressAction(context))) {
 			new RecursiveLoader(context) {
 				@Override

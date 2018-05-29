@@ -17,17 +17,6 @@
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical">
 
-			<TextView
-				android:id="@+id/song_track"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="left|top"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="?android:textColorPrimary"
-				android:paddingLeft="6dip"
-				android:paddingRight="6dip"
-				android:drawablePadding="6dip"/>
-
             <TextView
 				android:id="@+id/song_title"
 				android:layout_width="0dip"

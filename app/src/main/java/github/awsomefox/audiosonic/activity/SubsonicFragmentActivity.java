@@ -54,17 +54,12 @@ import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
 import github.awsomefox.audiosonic.domain.PlayerState;
 import github.awsomefox.audiosonic.domain.ServerInfo;
-import github.awsomefox.audiosonic.fragments.ChatFragment;
 import github.awsomefox.audiosonic.fragments.DownloadFragment;
 import github.awsomefox.audiosonic.fragments.MainFragment;
 import github.awsomefox.audiosonic.fragments.NowPlayingFragment;
 import github.awsomefox.audiosonic.fragments.SearchFragment;
 import github.awsomefox.audiosonic.fragments.SelectArtistFragment;
 import github.awsomefox.audiosonic.fragments.SelectDirectoryFragment;
-import github.awsomefox.audiosonic.fragments.SelectInternetRadioStationFragment;
-import github.awsomefox.audiosonic.fragments.SelectPlaylistFragment;
-import github.awsomefox.audiosonic.fragments.SelectPodcastsFragment;
-import github.awsomefox.audiosonic.fragments.SelectShareFragment;
 import github.awsomefox.audiosonic.fragments.SubsonicFragment;
 import github.awsomefox.audiosonic.service.DownloadFile;
 import github.awsomefox.audiosonic.service.MusicService;
@@ -659,19 +654,9 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	private SubsonicFragment getNewFragment(String fragmentType) {
 		if("Artist".equals(fragmentType)) {
 			return new SelectArtistFragment();
-		} else if("Playlist".equals(fragmentType)) {
-			return new SelectPlaylistFragment();
-		} else if("Chat".equals(fragmentType)) {
-			return new ChatFragment();
-		} else if("Podcast".equals(fragmentType)) {
-			return new SelectPodcastsFragment();
 		} else if("Bookmark".equals(fragmentType)) {
 			return new SelectBookmarkFragment();
-		} else if("Internet Radio".equals(fragmentType)) {
-			return new SelectInternetRadioStationFragment();
-		} else if("Share".equals(fragmentType)) {
-			return new SelectShareFragment();
-		} else if("Admin".equals(fragmentType)) {
+		}else if("Admin".equals(fragmentType)) {
 			return new AdminFragment();
 		} else if("Download".equals(fragmentType)) {
 			return new DownloadFragment();
@@ -884,13 +869,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				SharedPreferences prefs = Util.getPreferences(context);
 				boolean syncEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_SYNC_ENABLED, true);
 				int syncInterval = Integer.parseInt(prefs.getString(Constants.PREFERENCES_KEY_SYNC_INTERVAL, "60"));
-
-				// Add enabled/frequency to playlist/podcasts syncing
-				ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_PLAYLIST_AUTHORITY, syncEnabled);
-				ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_PLAYLIST_AUTHORITY, new Bundle(), 60L * syncInterval);
-				ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_PODCAST_AUTHORITY, syncEnabled);
-				ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_PODCAST_AUTHORITY, new Bundle(), 60L * syncInterval);
-
 				// Add for starred/recently added
 				ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_STARRED_AUTHORITY, (syncEnabled && prefs.getBoolean(Constants.PREFERENCES_KEY_SYNC_STARRED, false)));
 				ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_STARRED_AUTHORITY, new Bundle(), 60L * syncInterval);
@@ -994,19 +972,11 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 
 	private void updateMediaButtons() {
 		DownloadService downloadService = getDownloadService();
-		if(downloadService.isCurrentPlayingSingle()) {
-			previousButton.setVisibility(View.GONE);
-			nextButton.setVisibility(View.GONE);
+		previousButton.setVisibility(View.GONE);
+		nextButton.setVisibility(View.GONE);
 
-			rewindButton.setVisibility(View.GONE);
-			fastforwardButton.setVisibility(View.GONE);
-		} else {
-			previousButton.setVisibility(View.GONE);
-			nextButton.setVisibility(View.GONE);
-
-			rewindButton.setVisibility(View.VISIBLE);
-			fastforwardButton.setVisibility(View.VISIBLE);
-		}
+		rewindButton.setVisibility(View.VISIBLE);
+		fastforwardButton.setVisibility(View.VISIBLE);
 	}
 
 	@Override

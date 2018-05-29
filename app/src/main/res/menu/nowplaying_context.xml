@@ -14,10 +14,6 @@
 		android:id="@+id/menu_show_album"
 		android:title="@string/download.menu_show_album"/>
 
-	<item 
-		android:id="@+id/menu_lyrics"
-		android:title="@string/download.menu_lyrics"/>
-
 	<group android:id="@+id/hide_delete">
 		<item
 			android:id="@+id/song_menu_delete"

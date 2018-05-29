@@ -245,7 +245,7 @@ public abstract class UpdateView<T> extends LinearLayout {
 		if(cacheButton != null) {
 			if (exists || pinned) {
 				if(cacheButton.getDrawable() == null) {
-					cacheButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_offline_pin_white_24dp));
+					cacheButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.baseline_offline_pin_white_24dp));
 				}
 				cacheButton.setVisibility(View.VISIBLE);
 			} else {

@@ -49,18 +49,14 @@ import github.awsomefox.audiosonic.domain.ArtistInfo;
 import github.awsomefox.audiosonic.domain.ChatMessage;
 import github.awsomefox.audiosonic.domain.Genre;
 import github.awsomefox.audiosonic.domain.Indexes;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
 import github.awsomefox.audiosonic.domain.Lyrics;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.MusicFolder;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastChannel;
 import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
 import github.awsomefox.audiosonic.domain.ServerInfo;
-import github.awsomefox.audiosonic.domain.Share;
 import github.awsomefox.audiosonic.domain.User;
 import github.awsomefox.audiosonic.domain.Version;
 import github.awsomefox.audiosonic.fragments.MainFragment;
@@ -70,20 +66,14 @@ import github.awsomefox.audiosonic.service.parser.ChatMessageParser;
 import github.awsomefox.audiosonic.service.parser.EntryListParser;
 import github.awsomefox.audiosonic.service.parser.ErrorParser;
 import github.awsomefox.audiosonic.service.parser.IndexesParser;
-import github.awsomefox.audiosonic.service.parser.InternetRadioStationParser;
 import github.awsomefox.audiosonic.service.parser.JukeboxStatusParser;
 import github.awsomefox.audiosonic.service.parser.LicenseParser;
 import github.awsomefox.audiosonic.service.parser.LyricsParser;
 import github.awsomefox.audiosonic.service.parser.MusicDirectoryParser;
 import github.awsomefox.audiosonic.service.parser.MusicFoldersParser;
-import github.awsomefox.audiosonic.service.parser.PlaylistParser;
-import github.awsomefox.audiosonic.service.parser.PlaylistsParser;
-import github.awsomefox.audiosonic.service.parser.PodcastChannelParser;
-import github.awsomefox.audiosonic.service.parser.PodcastEntryParser;
 import github.awsomefox.audiosonic.service.parser.RandomSongsParser;
 import github.awsomefox.audiosonic.service.parser.SearchResult2Parser;
 import github.awsomefox.audiosonic.service.parser.SearchResultParser;
-import github.awsomefox.audiosonic.service.parser.ShareParser;
 import github.awsomefox.audiosonic.service.parser.TopSongsParser;
 import github.awsomefox.audiosonic.service.parser.UserParser;
 import github.awsomefox.audiosonic.util.FileUtil;
@@ -372,136 +362,6 @@ public class RESTMusicService implements MusicService {
             Util.close(reader);
         }
     }
-
-    @Override
-    public MusicDirectory getPlaylist(boolean refresh, String id, String name, Context context, ProgressListener progressListener) throws Exception {
-        Reader reader = getReader(context, progressListener, "getPlaylist", "id", id, SOCKET_READ_TIMEOUT_GET_PLAYLIST);
-        try {
-			return new PlaylistParser(context, getInstance(context)).parse(reader, progressListener);
-        } finally {
-            Util.close(reader);
-        }
-    }
-
-    @Override
-    public List<Playlist> getPlaylists(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-        Reader reader = getReader(context, progressListener, "getPlaylists");
-        try {
-            return new PlaylistsParser(context, getInstance(context)).parse(reader, progressListener);
-        } finally {
-            Util.close(reader);
-        }
-    }
-
-    @Override
-    public void createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception {
-        List<String> parameterNames = new LinkedList<String>();
-        List<Object> parameterValues = new LinkedList<Object>();
-
-        if (id != null) {
-            parameterNames.add("playlistId");
-            parameterValues.add(id);
-        }
-        if (name != null) {
-            parameterNames.add("name");
-            parameterValues.add(name);
-        }
-        for (MusicDirectory.Entry entry : entries) {
-            parameterNames.add("songId");
-            parameterValues.add(getOfflineSongId(entry.getId(), context, progressListener));
-        }
-
-        Reader reader = getReader(context, progressListener, "createPlaylist", parameterNames, parameterValues);
-        try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-    }
-
-	@Override
-	public void deletePlaylist(String id, Context context, ProgressListener progressListener) throws Exception {
-		Reader reader = getReader(context, progressListener, "deletePlaylist", "id", id);
-		try {
-			new ErrorParser(context, getInstance(context)).parse(reader);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public void addToPlaylist(String id, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.8", "Updating playlists is not supported.");
-		List<String> names = new ArrayList<String>();
-		List<Object> values = new ArrayList<Object>();
-		names.add("playlistId");
-		values.add(id);
-		for(MusicDirectory.Entry song: toAdd) {
-			names.add("songIdToAdd");
-			values.add(getOfflineSongId(song.getId(), context, progressListener));
-		}
-		Reader reader = getReader(context, progressListener, "updatePlaylist", names, values);
-    	try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void removeFromPlaylist(String id, List<Integer> toRemove, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.8", "Updating playlists is not supported.");
-		List<String> names = new ArrayList<String>();
-		List<Object> values = new ArrayList<Object>();
-		names.add("playlistId");
-		values.add(id);
-		for(Integer song: toRemove) {
-			names.add("songIndexToRemove");
-			values.add(song);
-		}
-		Reader reader = getReader(context, progressListener, "updatePlaylist", names, values);
-    	try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void overwritePlaylist(String id, String name, int toRemove, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.8", "Updating playlists is not supported.");
-		List<String> names = new ArrayList<String>();
-		List<Object> values = new ArrayList<Object>();
-		names.add("playlistId");
-		values.add(id);
-		names.add("name");
-		values.add(name);
-		for(MusicDirectory.Entry song: toAdd) {
-			names.add("songIdToAdd");
-			values.add(song.getId());
-		}
-		for(int i = 0; i < toRemove; i++) {
-			names.add("songIndexToRemove");
-			values.add(i);
-		}
-		Reader reader = getReader(context, progressListener, "updatePlaylist", names, values);
-    	try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void updatePlaylist(String id, String name, String comment, boolean pub, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.8", "Updating playlists is not supported.");
-		Reader reader = getReader(context, progressListener, "updatePlaylist", Arrays.asList("playlistId", "name", "comment", "public"), Arrays.<Object>asList(id, name, comment, pub));
-		try {
-			new ErrorParser(context, getInstance(context)).parse(reader);
-		} finally {
-			Util.close(reader);
-		}
-	}
 
     @Override
     public Lyrics getLyrics(String artist, String title, Context context, ProgressListener progressListener) throws Exception {
@@ -1044,47 +904,6 @@ public class RESTMusicService implements MusicService {
     }
 
 	@Override
-	public List<Share> getShares(Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.6", "Shares not supported.");
-
-		Reader reader = getReader(context, progressListener, "getShares");
-		try {
-			return new ShareParser(context, getInstance(context)).parse(reader, progressListener);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public List<Share> createShare(List<String> ids, String description, Long expires, Context context, ProgressListener progressListener) throws Exception {
-		List<String> parameterNames = new LinkedList<String>();
-		List<Object> parameterValues = new LinkedList<Object>();
-
-		for (String id : ids) {
-			parameterNames.add("id");
-			parameterValues.add(id);
-		}
-
-		if (description != null) {
-			parameterNames.add("description");
-			parameterValues.add(description);
-		}
-
-		if (expires > 0) {
-			parameterNames.add("expires");
-			parameterValues.add(expires);
-		}
-
-		Reader reader = getReader(context, progressListener, "createShare", parameterNames, parameterValues);
-		try {
-			return new ShareParser(context, getInstance(context)).parse(reader, progressListener);
-		}
-		finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
 	public void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception {
 		checkServerVersion(context, "1.6", "Shares not supported.");
 
@@ -1231,112 +1050,6 @@ public class RESTMusicService implements MusicService {
 		} finally {
 			Util.close(reader);
 		}
-	}
-
-	@Override
-	public List<PodcastChannel> getPodcastChannels(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.6", "Podcasts not supported.");
-
-		Reader reader = getReader(context, progressListener, "getPodcasts", Arrays.asList("includeEpisodes"), Arrays.<Object>asList("false"));
-        try {
-            List<PodcastChannel> channels = new PodcastChannelParser(context, getInstance(context)).parse(reader, progressListener);
-
-			String content = "";
-			for(PodcastChannel channel: channels) {
-				content += channel.getName() + "\t" + channel.getUrl() + "\n";
-			}
-
-			File file = FileUtil.getPodcastFile(context, Util.getServerName(context, getInstance(context)));
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			bw.write(content);
-			bw.close();
-
-			return channels;
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public MusicDirectory getPodcastEpisodes(boolean refresh, String id, Context context, ProgressListener progressListener) throws Exception {
-		Reader reader = getReader(context, progressListener, "getPodcasts", Arrays.asList("id"), Arrays.<Object>asList(id));
-        try {
-            return new PodcastEntryParser(context, getInstance(context)).parse(id, reader, progressListener);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-
-	public MusicDirectory getNewestPodcastEpisodes(boolean refresh, Context context, ProgressListener progressListener, int count) throws Exception {
-		Reader reader = getReader(context, progressListener, "getNewestPodcasts", Arrays.asList("count"), Arrays.<Object>asList(count), true);
-
-		try {
-			return new PodcastEntryParser(context, getInstance(context)).parse(null, reader, progressListener);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-    @Override
-	public void refreshPodcasts(Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.9", "Refresh podcasts not supported.");
-
-		Reader reader = getReader(context, progressListener, "refreshPodcasts");
-		try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void createPodcastChannel(String url, Context context, ProgressListener progressListener) throws Exception{
-		checkServerVersion(context, "1.9", "Creating podcasts not supported.");
-
-		Reader reader = getReader(context, progressListener, "createPodcastChannel", "url", url);
-		try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void deletePodcastChannel(String id, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.9", "Deleting podcasts not supported.");
-
-		Reader reader = getReader(context, progressListener, "deletePodcastChannel", "id", id);
-		try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void downloadPodcastEpisode(String id, Context context, ProgressListener progressListener) throws Exception{
-		checkServerVersion(context, "1.9", "Downloading podcasts not supported.");
-
-		Reader reader = getReader(context, progressListener, "downloadPodcastEpisode", "id", id);
-		try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-	}
-
-	@Override
-	public void deletePodcastEpisode(String id, String parent, ProgressListener progressListener, Context context) throws Exception{
-		checkServerVersion(context, "1.9", "Deleting podcasts not supported.");
-
-		Reader reader = getReader(context, progressListener, "deletePodcastEpisode", "id", id);
-		try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
 	}
 
 	@Override
@@ -1602,18 +1315,6 @@ public class RESTMusicService implements MusicService {
 		Reader reader = getReader(context, progressListener, "getPlayQueue");
 		try {
 			return new PlayQueueParser(context, getInstance(context)).parse(reader, progressListener);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public List<InternetRadioStation> getInternetRadioStations(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.9", null);
-
-		Reader reader = getReader(context, progressListener, "getInternetRadioStations");
-		try {
-			return new InternetRadioStationParser(context, getInstance(context)).parse(reader, progressListener);
 		} finally {
 			Util.close(reader);
 		}

@@ -29,7 +29,6 @@ import github.awsomefox.audiosonic.util.DrawableTint;
 import github.awsomefox.audiosonic.util.SQLiteHandler;
 import github.awsomefox.audiosonic.util.SongDBHandler;
 import github.awsomefox.audiosonic.R;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 import github.awsomefox.audiosonic.service.DownloadService;
 import github.awsomefox.audiosonic.service.DownloadFile;
 import github.awsomefox.audiosonic.util.ThemeUtil;
@@ -45,7 +44,6 @@ import java.io.File;
 public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 	private static final String TAG = SongView.class.getSimpleName();
 
-	private TextView trackTextView;
 	private TextView titleTextView;
 	private TextView playingTextView;
 	private TextView artistTextView;
@@ -72,7 +70,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 	private boolean loaded = false;
 	private boolean isBookmarked = false;
 	private boolean isBookmarkedShown = false;
-	private boolean showPodcast = false;
 	private boolean isPlayed = false;
 	private boolean isCached = false;
 	private boolean isPlayedShown = false;
@@ -85,7 +82,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		super(context);
 		LayoutInflater.from(context).inflate(R.layout.song_list_item, this, true);
 
-		trackTextView = findViewById(R.id.song_track);
 		titleTextView = findViewById(R.id.song_title);
 		artistTextView = findViewById(R.id.song_artist);
 		durationTextView = findViewById(R.id.song_duration);
@@ -106,50 +102,14 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		this.checkable = checkable;
 
 		StringBuilder artist = new StringBuilder(40);
-
-		boolean isPodcast = song instanceof PodcastEpisode;
-		if(!song.isVideo() || isPodcast) {
-			if(isPodcast) {
-				PodcastEpisode episode = (PodcastEpisode) song;
-				if(showPodcast && episode.getArtist() != null) {
-					artist.append(episode.getArtist());
-				}
-
-				String date = episode.getDate();
-				if(date != null) {
-					if(artist.length() != 0) {
-						artist.append(" - ");
-					}
-					artist.append(Util.formatDate(context, date, false));
-				}
-			}
-			else if(song.getArtist() != null) {
+		if(!song.isVideo()) {
+			if(song.getArtist() != null) {
 				if(showAlbum) {
 					artist.append(song.getAlbum());
 				} else {
 					artist.append(song.getArtist());
 				}
 			}
-
-			if(isPodcast) {
-				String status = ((PodcastEpisode) song).getStatus();
-				int statusRes = -1;
-
-				if("error".equals(status)) {
-					statusRes = R.string.song_details_error;
-				} else if("skipped".equals(status)) {
-					statusRes = R.string.song_details_skipped;
-				} else if("downloading".equals(status)) {
-					statusRes = R.string.song_details_downloading;
-				}
-
-				if(statusRes != -1) {
-					artist.append(" (");
-					artist.append(getContext().getString(statusRes));
-					artist.append(")");
-				}
-			}
-
 			durationTextView.setText(Util.formatDuration(song.getDuration()));
 			bottomRowView.setVisibility(VISIBLE);
 		} else {
@@ -162,27 +122,12 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		if(song.getCustomOrder() != null) {
 			track = song.getCustomOrder();
 		}
-		TextView newPlayingTextView;
 		if(track != null && Util.getDisplayTrack(context)) {
-			trackTextView.setText(String.format("%02d", track));
-			trackTextView.setVisibility(VISIBLE);
-			newPlayingTextView = trackTextView;
-		} else {
-			trackTextView.setVisibility(GONE);
-			newPlayingTextView = titleTextView;
-		}
-
-		if(newPlayingTextView != playingTextView || playingTextView == null) {
-			if(playing) {
-				playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-				playing = false;
-			}
-
-			playingTextView = newPlayingTextView;
+			title = "Chapter " + String.format("%02d", song.getTrack());
 		}
 
 		titleTextView.setText(title);
-		artistTextView.setText(artist);
+		artistTextView.setText(song.getAlbum());
 
 		this.setBackgroundColor(0x00000000);
 		ratingBar.setVisibility(GONE);
@@ -229,10 +174,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		if(item.getBitRate() == null && item.getDuration() == null && item.getDiscNumber() == null && isWorkDone) {
 			item.loadMetadata(downloadFile.getCompleteFile());
 			loaded = true;
-		}
-
-		if(item instanceof PodcastEpisode || item.isAudioBook() || item.isPodcast()) {
-			isPlayed = SongDBHandler.getHandler(context).hasBeenCompleted(item);
 		}
 	}
 
@@ -283,12 +224,12 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		if (playing) {
 			if(!this.playing) {
 				this.playing = playing;
-				playingTextView.setCompoundDrawablesWithIntrinsicBounds(DrawableTint.getDrawableRes(context, R.attr.playing), 0, 0, 0);
+				//playingTextView.setCompoundDrawablesWithIntrinsicBounds(DrawableTint.getDrawableRes(context, R.attr.playing), 0, 0, 0);
 			}
 		} else {
 			if(this.playing) {
 				this.playing = playing;
-				playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+				//playingTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			}
 		}
 
@@ -309,7 +250,7 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		}
 		if (isWorkDone) {
 			if(cachedButton.getDrawable() == null) {
-				cachedButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_offline_pin_white_24dp));
+				cachedButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.baseline_offline_pin_white_24dp));
 			}
 			cachedButton.setVisibility(VISIBLE);
 		} else {
@@ -368,10 +309,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 
 	public MusicDirectory.Entry getEntry() {
 		return item;
-	}
-
-	public void setShowPodcast(boolean showPodcast) {
-		this.showPodcast = showPodcast;
 	}
 
 	public void setShowAlbum(boolean showAlbum) {

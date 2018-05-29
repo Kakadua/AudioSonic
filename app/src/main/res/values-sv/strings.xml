@@ -32,9 +32,7 @@
 
     <string name="button_bar.home">Hem</string>
     <string name="button_bar.browse">Bibliotek</string>
-	<string name="button_bar.playlists">Spellista</string>
     <string name="button_bar.now_playing">Spelar nu</string>
-	<string name="button_bar.podcasts">Podcasts</string>
 	<string name="button_bar.bookmarks">Bokmärken</string>
 	<string name="button_bar.shares">Delningar</string>
 	<string name="button_bar.chat">Chat</string>
@@ -89,8 +87,6 @@
 	<string name="menu.deleted_playlist_error">Misslyckades med att ta bort spellistan %s</string>
 	<string name="menu.log">Skicka Logg</string>
 	<string name="menu.set_timer">Starta timer</string>
-	<string name="menu.check_podcasts">Leta efter nya avsnitt</string>
-	<string name="menu.add_podcast">Lägg till kanal</string>
 	<string name="menu.keep_synced">Håll synkroniserad</string>
 	<string name="menu.stop_sync">Sluta synkronisera</string>
 	<string name="menu.show_all">Visa all media</string>
@@ -150,20 +146,6 @@
 
 	<string name="select_genre.albums">%d böcker</string>
 
-	<string name="select_podcasts.error">Den här podcasten stötte på ett fel när servern laddade ner den.  Servern måste ladda ner den först.</string>
-	<string name="select_podcasts.skipped">Den här podcasten har inte laddats ner på servern.  Servern måste ladda ner den först.</string>
-    <string name="select_podcasts.initializing">Den här podcast kanalen håller på att initieras på server.  Ladda om sidan om några minuter.</string>
-	<string name="select_podcasts.server_download">Ladda ner på servern</string>
-	<string name="select_podcasts.server_delete">Radera på servern</string>
-	<string name="select_podcasts.downloading">Laddar ner %s på servern</string>
-	<string name="select_podcasts.refreshing">Servern letar efter nya podcasts nu</string>
-	<string name="select_podcasts.deleted">Raderade podcasten %s</string>
-	<string name="select_podcasts.deleted_error">Misslyckades med att radera podcasten %s</string>
-	<string name="select_podcasts.add_url">URL:</string>
-	<string name="select_podcasts.created_error">Misslyckades med att lägga till podcasten</string>
-	<string name="select_podcasts.invalid_podcast_channel">Ogiltig podcast kanal: %s</string>
-	<string name="select_podcasts.delete">Radera podcast</string>
-
     <string name="download.empty">Spellistan är tom</string>
 	<string name="download.shuffle_loading">Slumpad lista laddas...</string>
     <string name="download.playerstate_downloading">Laddar ner - %s</string>
@@ -199,9 +181,6 @@
 		\nBeräknad storlek: %2$s</string>
 	<string name="download.failed_to_load">Misslyckades med att ladda</string>
 	<string name="download.restore_play_queue">Fortsätt där du slutade på en annan enhet</string>
-
-	<string name="sync.new_podcasts">Nya podcasts tillgängliga</string>
-	<string name="sync.new_playlists">Nya spår i spellistan</string>
 
 	<string name="sync.new_albums">Nya böcker tillgängliga</string>
 	<string name="sync.new_starred">Nya favoritspår tillgängliga</string>
@@ -352,15 +331,12 @@
 	<string name="settings.playback_title">Uppspelning</string>
 	<string name="settings.hide_widget_title">Dölj widget</string>
 	<string name="settings.hide_widget_summary">Dölj widget efter att jag lämnat appen</string>
-	<string name="settings.podcasts_enabled">Podcasts Aktiverad</string>
-	<string name="settings.podcasts_enabled_summary">Om podcast ska visas eller inte i menyn till vänster</string>
 	<string name="settings.bookmarks_enabled">Bokmärken aktiverade</string>
 	<string name="settings.bookmarks_enabled_summary">Om bokmärken ska visas eller inte i menyn till vänster</string>
 	<string name="settings.shares_enabled">Delningar aktiverade</string>
 	<string name="settings.shares_enabled_summary">Om delningar ska visas eller inte i menyn till vänster</string>
 	<string name="settings.sync_title">Synkronisering</string>
 	<string name="settings.sync_enabled">Synkronisering aktiverad</string>
-	<string name="settings.sync_enabled_summary">Om spellistor och podcasts ska kolla efter uppdateringar då och då</string>
 	<string name="settings.sync_interval">Synkroniserings interval</string>
 	<string name="settings.sync_interval_15">15 minuter</string>
 	<string name="settings.sync_interval_30">30 minuter</string>
@@ -471,7 +447,6 @@
 	<string name="admin.role.upload">Ladda upp till servern</string>
 	<string name="admin.role.coverArt">Byt omslagsbild</string>
 	<string name="admin.role.comment">Lägg till kommentar</string>
-	<string name="admin.role.podcast">Hantera podcasts</string>
 	<string name="admin.role.stream">Streama musik</string>
 	<string name="admin.role.jukebox">Kontrolera jukeboxen</string>
 	<string name="admin.role.share">Hantera delningar</string>
@@ -544,10 +519,8 @@
 	<string name="details.title.song">Spår detaljer</string>
 
 	<string name="details.title.album">Bokdetaljer</string>
-	<string name="details.title.podcast">Podcast detaljer</string>
 	<string name="details.title.playlist">Playlist detaljer</string>
 
-    <string name="details.podcast">Podcasts</string>
 	<string name="details.status">Status</string>
 
 	<string name="details.artist">Författare</string>

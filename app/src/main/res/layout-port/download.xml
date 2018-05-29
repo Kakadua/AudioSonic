@@ -33,6 +33,7 @@
 
 						<github.awsomefox.audiosonic.view.RecyclingImageView
 							android:id="@+id/download_album_art_image"
+							android:src="@drawable/unknown_album_large"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:scaleType="fitCenter"
@@ -94,8 +95,18 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
-					android:layout_margin="16dip"
-					android:layout_marginTop="6dp"
+					android:ellipsize="end"
+					android:layout_marginTop="8dp"
+					android:singleLine="true"
+					android:textColor="?android:textColorSecondary"
+					android:textSize="20dp" />
+
+				<TextView
+					android:id="@+id/download_status2"
+					style="?attr/actionbarSubtitleStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
 					android:ellipsize="end"
 					android:singleLine="true"
 					android:textColor="?android:textColorSecondary"
@@ -106,7 +117,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center"
-					android:layout_margin="16dip"
+					android:layout_margin="8dip"
 					android:singleLine="true"
 					android:textStyle="bold"
 					style="?attr/actionbarTitleStyle"

@@ -32,9 +32,7 @@
 
     <string name="button_bar.home">Home</string>
     <string name="button_bar.browse">Library</string>
-	<string name="button_bar.playlists">Playlists</string>
     <string name="button_bar.now_playing">Now Playing</string>
-	<string name="button_bar.podcasts">Podcasts</string>
 	<string name="button_bar.bookmarks">Bookmarks</string>
 	<string name="button_bar.internet_radio">Internet Radio</string>
 	<string name="button_bar.shares">Shares</string>
@@ -86,14 +84,8 @@
     <string name="menu.exit">Exit</string>
     <string name="menu.settings">Settings</string>
     <string name="menu.about">About</string>
-	<string name="menu.add_playlist">Add To Playlist</string>
-	<string name="menu.remove_playlist">Remove From Playlist</string>
-	<string name="menu.deleted_playlist">Deleted playlist %s</string>
-	<string name="menu.deleted_playlist_error">Failed to delete playlist %s</string>
 	<string name="menu.log">Send Log</string>
 	<string name="menu.set_timer">Set Timer</string>
-	<string name="menu.check_podcasts">Check For New Episodes</string>
-	<string name="menu.add_podcast">Add Channel</string>
 	<string name="menu.keep_synced">Keep Synced</string>
 	<string name="menu.stop_sync">Stop syncing</string>
 	<string name="menu.show_all">Show all songs</string>
@@ -110,15 +102,6 @@
 	<string name="menu.similar_artists.missing">Missing Artists</string>
 	<string name="menu.start_radio">Start Radio</string>
 	<string name="menu.first_level_artist">First level authors</string>
-
-    <string name="playlist.label">Playlists</string>
-	<string name="playlist.update_info">Update Information</string>
-	<string name="playlist.updated_info">Updated playlist information for %s</string>
-	<string name="playlist.updated_info_error">Failed to update playlist information for %s</string>
-	<string name="playlist.overwrite">Overwrite existing playlist</string>
-	<string name="playlist.add_to">Add to Playlist</string>
-	<string name="playlist.create_new">Create New</string>
-	<string name="playlist.delete">Delete Playlist</string>
 
     <string name="search.title">Search</string>
     <string name="search.artists">Authors</string>
@@ -152,22 +135,7 @@
 	<string name="select_genre.songs">%d tracks</string>
 	<string name="select_genre.albums">%d books</string>
 
-	<string name="select_podcasts.error">This podcast had an error while downloading on the server.  The server must download it first.</string>
-	<string name="select_podcasts.skipped">This podcast has not been downloaded on the server.  The server must download it first.</string>
-    <string name="select_podcasts.initializing">This podcast channel is being initialized on the server.  Please reload after a moment.</string>
-	<string name="select_podcasts.server_download">Download on server</string>
-	<string name="select_podcasts.server_delete">Delete from server</string>
-	<string name="select_podcasts.downloading">Now downloading %s on the server</string>
-	<string name="select_podcasts.refreshing">The server is checking for new podcasts now</string>
-	<string name="select_podcasts.deleted">Deleted podcast %s</string>
-	<string name="select_podcasts.deleted_error">Failed to delete podcast %s</string>
-	<string name="select_podcasts.add_url">URL:</string>
-	<string name="select_podcasts.created_error">Failed to add podcast</string>
-	<string name="select_podcasts.invalid_podcast_channel">Invalid podcast channel: %s</string>
-	<string name="select_podcasts.delete">Delete podcast</string>
-	<string name="select_podcasts.channels">Podcast Channels</string>
-
-    <string name="download.empty">Playlist is empty</string>
+	<string name="download.empty">Download is empty</string>
 	<string name="download.shuffle_loading">Shuffle list is loading...</string>
     <string name="download.playerstate_downloading">Downloading - %s</string>
 	<string name="download.playerstate_mobile_disabled">Waiting for WiFi network to download</string>
@@ -179,10 +147,6 @@
 	<string name="download.menu_remove_all">Remove all</string>
     <string name="download.menu_screen_on">Screen on</string>
     <string name="download.menu_remove_played_songs">Remove played tracks</string>
-    <string name="download.playlist_title">Save playlist</string>
-    <string name="download.playlist_name">Enter the playlist name:</string>
-    <string name="download.playlist_done">Playlist was successfully saved.</string>
-    <string name="download.playlist_error">Failed to save playlist, please try later.</string>
     <string name="download.repeat_off">Repeat off</string>
     <string name="download.repeat_all">Repeat all</string>
     <string name="download.repeat_single">Repeat track</string>
@@ -209,22 +173,12 @@
 	<string name="download_playback_speed_one_p_five">1.5x</string>
 	<string name="download_playback_speed_two">2x</string>
     <string name="download.playback_speed">Playback Speed</string>
-
-	<string name="sync.new_podcasts">New podcasts available</string>
-	<string name="sync.new_playlists">New tracks in playlists</string>
 	<string name="sync.new_albums">New books available</string>
 	<string name="sync.new_starred">New starred tracks available</string>
 
 	<string name="starring_content_starred">Starred \"%s\"</string>
 	<string name="starring_content_unstarred">Unstarred \"%s\"</string>
     <string name="starring_content_error">Failed to update \"%s\", please try later.</string>
-
-	<string name="playlist.mine">My Playlists</string>
-	<string name="playlist.shared">Shared Playlists</string>
-	<string name="playlist_error">Failed to grab list of playlists</string>
-	<string name="updated_playlist">Added %1$s tracks to \"%2$s\"</string>
-    <string name="updated_playlist_error">Failed to update \"%s\", please try later.</string>
-	<string name="removed_playlist">Removed %1$s tracks from \"%2$s\"</string>
 
 	<string name="bookmark.delete">Delete bookmark</string>
 	<string name="bookmark.delete_title">Delete the bookmark for</string>
@@ -364,8 +318,6 @@
 	<string name="settings.playback_title">Playback</string>
 	<string name="settings.hide_widget_title">Hide Widget</string>
 	<string name="settings.hide_widget_summary">Hide widget after exiting app</string>
-	<string name="settings.podcasts_enabled">Podcasts Enabled</string>
-	<string name="settings.podcasts_enabled_summary">Whether or not to display the podcast listing in the pull out drawer</string>
 	<string name="settings.bookmarks_enabled">Bookmarks Enabled</string>
 	<string name="settings.bookmarks_enabled_summary">Whether or not to display the bookmarks listing in the pull out drawer</string>
 	<string name="settings.internet_radio_enabled">Internet Radio Enabled</string>
@@ -374,7 +326,7 @@
 	<string name="settings.shares_enabled_summary">Whether or not to display the shares listing in the pull out drawer</string>
 	<string name="settings.sync_title">Sync</string>
 	<string name="settings.sync_enabled">Sync Enabled</string>
-	<string name="settings.sync_enabled_summary">Whether or not playlists or podcasts are periodically checked for changes</string>
+	<string name="settings.sync_enabled_summary">Whether or not played books are periodically checked for changes</string>
 	<string name="settings.sync_interval">Sync Interval</string>
 	<string name="settings.sync_interval_15">15 Minutes</string>
 	<string name="settings.sync_interval_30">30 Minutes</string>
@@ -490,7 +442,6 @@
 	<string name="admin.role.upload">Upload to server</string>
 	<string name="admin.role.coverArt">Change cover art</string>
 	<string name="admin.role.comment">Add comments</string>
-	<string name="admin.role.podcast">Manage podcasts</string>
 	<string name="admin.role.stream">Stream music</string>
 	<string name="admin.role.jukebox">Control jukebox</string>
 	<string name="admin.role.share">Manage shares</string>
@@ -561,10 +512,7 @@
 
 	<string name="details.title.song">Track Details</string>
 	<string name="details.title.album">Book Details</string>
-	<string name="details.title.podcast">Podcast Details</string>
-	<string name="details.title.playlist">Playlist Details</string>
     <string name="details.title.internet_radio_station">Internet Radio Details</string>
-	<string name="details.podcast">Podcast</string>
 	<string name="details.status">Status</string>
 	<string name="details.artist">Author</string>
 	<string name="details.album">Book</string>
@@ -632,7 +580,6 @@
     <string name="menu.timer">Timer</string>
 	<string name="album.book.length">Length</string>
 	<string name="album.book.reader">Narrator</string>
-	<string name="playlist.reverse">Reverse</string>
     <string name="details.fork">Forked from</string>
 	<string name="imported">Imported</string>
 	<string name="exported">Exported to</string>

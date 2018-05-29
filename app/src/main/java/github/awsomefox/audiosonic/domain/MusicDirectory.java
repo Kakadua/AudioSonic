@@ -222,7 +222,6 @@ public class MusicDirectory implements Serializable {
 
     public static class Entry implements Serializable {
 		public static final int TYPE_SONG = 0;
-		public static final int TYPE_PODCAST = 1;
 		public static final int TYPE_AUDIO_BOOK = 2;
 
 		private String id;
@@ -578,9 +577,6 @@ public class MusicDirectory implements Serializable {
 		}
 		public boolean isSong() {
 			return type == TYPE_SONG;
-		}
-		public boolean isPodcast() {
-			return this instanceof PodcastEpisode || type == TYPE_PODCAST;
 		}
 		public boolean isAudioBook() {
 			return type == TYPE_AUDIO_BOOK;

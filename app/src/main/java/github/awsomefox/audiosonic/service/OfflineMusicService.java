@@ -36,13 +36,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import github.awsomefox.audiosonic.domain.Genre;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
 import github.awsomefox.audiosonic.domain.Lyrics;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.MusicFolder;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastChannel;
 import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
@@ -55,8 +52,6 @@ import github.awsomefox.audiosonic.domain.Artist;
 import github.awsomefox.audiosonic.domain.ArtistInfo;
 import github.awsomefox.audiosonic.domain.ChatMessage;
 import github.awsomefox.audiosonic.domain.Indexes;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
-import github.awsomefox.audiosonic.domain.Share;
 import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.ProgressListener;
 import github.awsomefox.audiosonic.util.Util;
@@ -105,9 +100,6 @@ public class OfflineMusicService implements MusicService {
 
     @Override
     public MusicDirectory getMusicDirectory(String id, String artistName, boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-        return getMusicDirectory(id, artistName, refresh, context, progressListener, false);
-    }
-	private MusicDirectory getMusicDirectory(String id, String artistName, boolean refresh, Context context, ProgressListener progressListener, boolean isPodcast) throws Exception {
 		File dir = new File(id);
 		MusicDirectory result = new MusicDirectory();
 		result.setName(dir.getName());
@@ -118,7 +110,7 @@ public class OfflineMusicService implements MusicService {
 			String name = getName(file);
 			if (name != null & !names.contains(name)) {
 				names.add(name);
-				result.addChild(createEntry(context, file, name, true, isPodcast));
+				result.addChild(createEntry(context, file, name, true));
 			}
 		}
 		result.sortChildren(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_CUSTOM_SORT_ENABLED, true));
@@ -156,17 +148,8 @@ public class OfflineMusicService implements MusicService {
 		return createEntry(context, file, name, true);
 	}
     private MusicDirectory.Entry createEntry(Context context, File file, String name, boolean load) {
-        return createEntry(context, file, name, load, false);
-    }
-	private MusicDirectory.Entry createEntry(Context context, File file, String name, boolean load, boolean isPodcast) {
 		MusicDirectory.Entry entry;
-		if(isPodcast) {
-			PodcastEpisode episode = new PodcastEpisode();
-			episode.setStatus("completed");
-			entry = episode;
-		} else {
-			entry = new MusicDirectory.Entry();
-		}
+		entry = new MusicDirectory.Entry();
 		entry.setDirectory(file.isDirectory());
 		entry.setId(file.getPath());
 		entry.setParent(file.getParent());
@@ -376,168 +359,6 @@ public class OfflineMusicService implements MusicService {
 	}
 
     @Override
-    public List<Playlist> getPlaylists(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-        List<Playlist> playlists = new ArrayList<Playlist>();
-        File root = FileUtil.getPlaylistDirectory(context);
-		String lastServer = null;
-		boolean removeServer = true;
-        for (File folder : FileUtil.listFiles(root)) {
-			if(folder.isDirectory()) {
-				String server = folder.getName();
-				SortedSet<File> fileList = FileUtil.listFiles(folder);
-				for(File file: fileList) {
-					if(FileUtil.isPlaylistFile(file)) {
-						String id = file.getName();
-						String filename = FileUtil.getBaseName(id);
-						String name = server + ": " + filename;
-						Playlist playlist = new Playlist(server, name);
-						playlist.setComment(filename);
-
-						Reader reader = null;
-						BufferedReader buffer = null;
-						int songCount = 0;
-						try {
-							reader = new FileReader(file);
-							buffer = new BufferedReader(reader);
-
-							String line = buffer.readLine();
-							while( (line = buffer.readLine()) != null ){
-								// No matter what, end file can't have .complete in it
-								line = line.replace(".complete", "");
-								File entryFile = new File(line);
-
-								// Don't add file to playlist if it doesn't exist as cached or pinned!
-								File checkFile = entryFile;
-								if(!checkFile.exists()) {
-									// If normal file doens't exist, check if .complete version does
-									checkFile = new File(entryFile.getParent(), FileUtil.getBaseName(entryFile.getName())
-											+ ".complete." + FileUtil.getExtension(entryFile.getName()));
-								}
-
-								String entryName = getName(entryFile);
-								if(checkFile.exists() && entryName != null){
-									songCount++;
-								}
-							}
-
-							playlist.setSongCount(Integer.toString(songCount));
-						} catch(Exception e) {
-							Log.w(TAG, "Failed to count songs in playlist", e);
-						} finally {
-							Util.close(buffer);
-							Util.close(reader);
-						}
-
-						if(songCount > 0) {
-							playlists.add(playlist);
-						}
-					}
-				}
-				
-				if(!server.equals(lastServer) && fileList.size() > 0) {
-					if(lastServer != null) {
-						removeServer = false;
-					}
-					lastServer = server;
-				}
-			} else {
-				// Delete legacy playlist files
-				try {
-					folder.delete();
-				} catch(Exception e) {
-					Log.w(TAG, "Failed to delete old playlist file: " + folder.getName());
-				}
-			}
-        }
-		
-		if(removeServer) {
-			for(Playlist playlist: playlists) {
-				playlist.setName(playlist.getName().substring(playlist.getId().length() + 2));
-			}
-		}
-        return playlists;
-    }
-
-    @Override
-    public MusicDirectory getPlaylist(boolean refresh, String id, String name, Context context, ProgressListener progressListener) throws Exception {
-		DownloadService downloadService = DownloadService.getInstance();
-        if (downloadService == null) {
-            return new MusicDirectory();
-        }
-		
-        Reader reader = null;
-		BufferedReader buffer = null;
-		try {
-			int firstIndex = name.indexOf(id);
-			if(firstIndex != -1) {
-				name = name.substring(id.length() + 2);
-			}
-			
-			File playlistFile = FileUtil.getPlaylistFile(context, id, name);
-			reader = new FileReader(playlistFile);
-			buffer = new BufferedReader(reader);
-			
-			MusicDirectory playlist = new MusicDirectory();
-			String line = buffer.readLine();
-	    	if(!"#EXTM3U".equals(line)) return playlist;
-			
-			while( (line = buffer.readLine()) != null ){
-				// No matter what, end file can't have .complete in it
-				line = line.replace(".complete", "");
-				File entryFile = new File(line);
-				
-				// Don't add file to playlist if it doesn't exist as cached or pinned!
-				File checkFile = entryFile;
-				if(!checkFile.exists()) {
-					// If normal file doens't exist, check if .complete version does
-					checkFile = new File(entryFile.getParent(), FileUtil.getBaseName(entryFile.getName())
-						+ ".complete." + FileUtil.getExtension(entryFile.getName()));
-				}
-				
-				String entryName = getName(entryFile);
-				if(checkFile.exists() && entryName != null){
-					playlist.addChild(createEntry(context, entryFile, entryName, false));
-				}
-			}
-			
-			return playlist;
-		} finally {
-			Util.close(buffer);
-			Util.close(reader);
-		}
-    }
-
-    @Override
-    public void createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
-	
-	@Override
-	public void deletePlaylist(String id, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void addToPlaylist(String id, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void removeFromPlaylist(String id, List<Integer> toRemove, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void overwritePlaylist(String id, String name, int toRemove, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void updatePlaylist(String id, String name, String comment, boolean pub, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-    @Override
     public Lyrics getLyrics(String artist, String title, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
     }
@@ -667,16 +488,6 @@ public class OfflineMusicService implements MusicService {
 	}
 
 	@Override
-	public List<Share> getShares(Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public List<Share> createShare(List<String> ids, String description, Long expires, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
 	public void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
@@ -731,75 +542,6 @@ public class OfflineMusicService implements MusicService {
 
 	@Override
 	public String getCoverArtUrl(Context context, MusicDirectory.Entry entry) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public List<PodcastChannel> getPodcastChannels(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
-		List<PodcastChannel> channels = new ArrayList<PodcastChannel>();
-		
-		File dir = FileUtil.getPodcastDirectory(context);
-		String line;
-		for(File file: dir.listFiles()) {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			while ((line = br.readLine()) != null && !"".equals(line)) {
-				String[] parts = line.split("\t");
-
-				PodcastChannel channel = new PodcastChannel();
-				channel.setId(parts[0]);
-				channel.setName(parts[0]);
-				channel.setStatus("completed");
-				File albumArt = FileUtil.getAlbumArtFile(context, channel);
-				if (albumArt.exists()) {
-					channel.setCoverArt(albumArt.getPath());
-				}
-
-				if(parts.length > 1) {
-					channel.setUrl(parts[1]);
-				}
-				
-				if(FileUtil.getPodcastDirectory(context, channel).exists() && !channels.contains(channel)) {
-					channels.add(channel);
-				}
-			}
-			br.close();
-		}
-		
-		return channels;
-	}
-	
-	@Override
-	public MusicDirectory getPodcastEpisodes(boolean refresh, String id, Context context, ProgressListener progressListener) throws Exception {
-		return getMusicDirectory(FileUtil.getPodcastDirectory(context, id).getPath(), null, false, context, progressListener, true);
-	}
-
-	@Override
-	public MusicDirectory getNewestPodcastEpisodes(boolean refresh, Context context, ProgressListener progressListener, int count) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public void refreshPodcasts(Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void createPodcastChannel(String url, Context context, ProgressListener progressListener) throws Exception{
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void deletePodcastChannel(String id, Context context, ProgressListener progressListener) throws Exception{
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void downloadPodcastEpisode(String id, Context context, ProgressListener progressListener) throws Exception{
-		throw new OfflineException(ERRORMSG);
-	}
-	
-	@Override
-	public void deletePodcastEpisode(String id, String parent, ProgressListener progressListener, Context context) throws Exception{
 		throw new OfflineException(ERRORMSG);
 	}
 
@@ -885,11 +627,6 @@ public class OfflineMusicService implements MusicService {
 
 	@Override
 	public PlayerQueue getPlayQueue(Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public List<InternetRadioStation> getInternetRadioStations(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
 

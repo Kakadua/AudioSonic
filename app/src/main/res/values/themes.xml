@@ -19,11 +19,8 @@
 		<item name="actionbar_stop">@drawable/ic_stop_white_24dp</item>
 		<item name="actionbar_rewind">@drawable/ic_replay_30_white_24dp</item>
 		<item name="actionbar_fastforward">@drawable/ic_forward_30_white_24dp</item>
-		<item name="chat_send">@drawable/ic_menu_chat_send_light</item>
 		<item name="add">@drawable/ic_action_add_dark</item>
 		<item name="download_none">@drawable/download_none_light</item>
-		<item name="shuffle">@drawable/ic_menu_shuffle_dark</item>
-		<item name="shuffle_button">@drawable/ic_menu_shuffle_light</item>
 		<item name="refresh">@drawable/ic_menu_refresh_dark</item>
 		<item name="search">@drawable/ic_menu_search_dark</item>
 		<item name="remove">@drawable/ic_menu_remove_dark</item>
@@ -35,7 +32,6 @@
 		<item name="playing">@drawable/playing_light</item>
 		<item name="downloading">@drawable/downloading_light</item>
 		<item name="bookmark">@drawable/ic_menu_bookmark_light</item>
-		<item name="share">@drawable/ic_menu_share_light</item>
 		<item name="add_person">@drawable/ic_menu_add_person_dark</item>
 		<item name="password">@drawable/ic_menu_password_dark</item>
 		<item name="rating_bad">@drawable/ic_action_rating_bad_light</item>
@@ -46,12 +42,7 @@
 		<item name="playback_speed">@drawable/ic_av_timer_white_48dp</item>
 		<item name="drawerHome">@drawable/main_offline_light</item>
 		<item name="drawerLibrary">@drawable/ic_menu_library_light</item>
-		<item name="drawerPlaylists">@drawable/ic_menu_playlist_light</item>
-		<item name="drawerPodcasts">@drawable/ic_menu_podcast_light</item>
 		<item name="drawerBookmarks">@drawable/ic_menu_bookmark_light</item>
-		<item name="drawerInternetRadioStations">@drawable/ic_menu_radio_light</item>
-		<item name="drawerShares">@drawable/ic_menu_share_light</item>
-		<item name="drawerChat">@drawable/ic_menu_chat_light</item>
 		<item name="drawerAdmin">@drawable/ic_menu_admin_light</item>
 		<item name="drawerDownloading">@drawable/ic_menu_download_light</item>
 		<item name="drawerSettings">@drawable/ic_menu_settings_light</item>
@@ -92,11 +83,8 @@
 		<item name="actionbar_stop">@drawable/ic_stop_white_24dp</item>
 		<item name="actionbar_rewind">@drawable/ic_replay_30_white_24dp</item>
 		<item name="actionbar_fastforward">@drawable/ic_forward_30_white_24dp</item>
-		<item name="chat_send">@drawable/ic_menu_chat_send_dark</item>
 		<item name="add">@drawable/ic_action_add_dark</item>
 		<item name="download_none">@drawable/download_none_dark</item>
-		<item name="shuffle">@drawable/ic_menu_shuffle_dark</item>
-		<item name="shuffle_button">@drawable/ic_menu_shuffle_dark</item>
 		<item name="refresh">@drawable/ic_menu_refresh_dark</item>
 		<item name="search">@drawable/ic_menu_search_dark</item>
 		<item name="remove">@drawable/ic_menu_remove_dark</item>
@@ -108,7 +96,6 @@
 		<item name="playing">@drawable/playing_dark</item>
 		<item name="downloading">@drawable/downloading_dark</item>
 		<item name="bookmark">@drawable/ic_menu_bookmark_dark</item>
-		<item name="share">@drawable/ic_menu_share_dark</item>
 		<item name="add_person">@drawable/ic_menu_add_person_dark</item>
 		<item name="password">@drawable/ic_menu_password_dark</item>
 		<item name="rating_bad">@drawable/ic_action_rating_bad_dark</item>
@@ -119,12 +106,7 @@
 		<item name="playback_speed">@drawable/ic_av_timer_white_48dp</item>
 		<item name="drawerHome">@drawable/main_offline_dark</item>
 		<item name="drawerLibrary">@drawable/ic_menu_library_dark</item>
-		<item name="drawerPlaylists">@drawable/ic_menu_playlist_dark</item>
-		<item name="drawerPodcasts">@drawable/ic_menu_podcast_dark</item>
 		<item name="drawerBookmarks">@drawable/ic_menu_bookmark_dark</item>
-		<item name="drawerInternetRadioStations">@drawable/ic_menu_radio_dark</item>
-		<item name="drawerShares">@drawable/ic_menu_share_dark</item>
-		<item name="drawerChat">@drawable/ic_menu_chat_dark</item>
 		<item name="drawerAdmin">@drawable/ic_menu_admin_dark</item>
 		<item name="drawerDownloading">@drawable/ic_menu_download_dark</item>
 		<item name="drawerSettings">@drawable/ic_menu_settings_dark</item>
@@ -201,7 +183,6 @@
 		<item name="actionbar_rewind">@drawable/media_rewind_light</item>
 		<item name="actionbar_fastforward">@drawable/media_fastforward_light</item>
 		<item name="add">@drawable/ic_action_add_light</item>
-		<item name="shuffle">@drawable/ic_menu_shuffle_light</item>
 		<item name="refresh">@drawable/ic_menu_refresh_light</item>
 		<item name="search">@drawable/ic_menu_search_light</item>
 		<item name="remove">@drawable/ic_menu_remove_light</item>

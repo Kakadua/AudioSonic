@@ -80,10 +80,7 @@ import github.awsomefox.audiosonic.adapter.SectionAdapter;
 import github.awsomefox.audiosonic.domain.Artist;
 import github.awsomefox.audiosonic.domain.Bookmark;
 import github.awsomefox.audiosonic.domain.Genre;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 import github.awsomefox.audiosonic.domain.ServerInfo;
-import github.awsomefox.audiosonic.domain.Share;
 import github.awsomefox.audiosonic.service.DownloadFile;
 import github.awsomefox.audiosonic.service.DownloadService;
 import github.awsomefox.audiosonic.service.MusicService;
@@ -95,11 +92,9 @@ import github.awsomefox.audiosonic.util.FileUtil;
 import github.awsomefox.audiosonic.util.MenuUtil;
 import github.awsomefox.audiosonic.util.ProgressListener;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
-import github.awsomefox.audiosonic.util.UserUtil;
 import github.awsomefox.audiosonic.util.Util;
 import github.awsomefox.audiosonic.util.importExport;
 import github.awsomefox.audiosonic.view.GridSpacingDecoration;
-import github.awsomefox.audiosonic.view.PlaylistSongView;
 import github.awsomefox.audiosonic.view.UpdateView;
 
 public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -119,7 +114,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	protected boolean invalidated = false;
 	protected static Random random = new Random();
 	protected GestureDetector gestureScanner;
-	protected Share share;
 	protected boolean artist = false;
 	protected boolean artistOverride = false;
 	protected SwipeRefreshLayout refreshLayout;
@@ -249,11 +243,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				delete();
 				clearSelected();
 				return true;
-			case R.id.menu_add_playlist:
-				List<MusicDirectory.Entry> songs = getSelectedEntries();
-				addToPlaylist(songs);
-				clearSelected();
-				return true;
 			case R.id.menu_star:case R.id.menu_unstar:
 				toggleSelectedStarred();
 				return true;
@@ -265,36 +254,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	public void onCreateContextMenuSupport(Menu menu, MenuInflater menuInflater, UpdateView updateView, Object selected) {
 		if(selected instanceof MusicDirectory.Entry) {
 			MusicDirectory.Entry entry = (MusicDirectory.Entry) selected;
-			if(entry instanceof PodcastEpisode) {
-				if(Util.isOffline(context)) {
-					if(entry.isVideo()) {
-						menuInflater.inflate(R.menu.select_video_context_offline, menu);
-					} else {
-						menuInflater.inflate(R.menu.select_podcast_episode_context_offline, menu);
-					}
-				}
-				else {
-					if(entry.isVideo()) {
-						menuInflater.inflate(R.menu.select_podcast_episode_video_context, menu);
-					} else {
-						menuInflater.inflate(R.menu.select_podcast_episode_context, menu);
-					}
-
-					if(entry.getBookmark() == null) {
-						menu.removeItem(R.id.bookmark_menu_delete);
-					}
-					if(UserUtil.canPodcast()) {
-						String status = ((PodcastEpisode)entry).getStatus();
-						if("completed".equals(status)) {
-							menu.removeItem(R.id.song_menu_server_download);
-						}
-					} else {
-						menu.removeItem(R.id.song_menu_server_download);
-						menu.removeItem(R.id.song_menu_server_delete);
-					}
-				}
-			}
-			else if (entry.isDirectory()) {
+			if (entry.isDirectory()) {
 				if(Util.isOffline(context)) {
 					menuInflater.inflate(R.menu.select_album_context_offline, menu);
 				}
@@ -440,9 +400,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			case R.id.album_menu_show_artist:
 				showAlbumArtist((MusicDirectory.Entry) selectedItem);
 				break;
-			case R.id.album_menu_share:
-				createShare(songs);
-				break;
 			case R.id.song_menu_play_now:
 				playNow(songs);
 				break;
@@ -461,9 +418,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			case R.id.song_menu_delete:
 				deleteSongs(songs);
 				break;
-			case R.id.song_menu_add_playlist:
-				addToPlaylist(songs);
-				break;
 			case R.id.song_menu_star:
 				UpdateHelper.toggleStarred(context, entry);
 				break;
@@ -476,20 +430,11 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			case R.id.song_menu_stream_external:
 				streamExternalPlayer(entry);
 				break;
-			case R.id.song_menu_share:
-				createShare(songs);
-				break;
 			case R.id.song_menu_show_album:
 				showAlbum((MusicDirectory.Entry) selectedItem);
 				break;
 			case R.id.song_menu_show_artist:
 				showArtist((MusicDirectory.Entry) selectedItem);
-				break;
-			case R.id.song_menu_server_download:
-				downloadPodcastEpisode((PodcastEpisode) entry);
-				break;
-			case R.id.song_menu_server_delete:
-				deletePodcastEpisode((PodcastEpisode) entry);
 				break;
 			case R.id.bookmark_menu_delete:
 				deleteBookmark(entry, null);
@@ -918,18 +863,10 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			protected Boolean doInBackground() throws Throwable {
 				musicService = MusicServiceFactory.getMusicService(context);
 				MusicDirectory root;
-				if(share != null) {
-					root = share.getMusicDirectory();
-				}
-				else if(isDirectory) {
-					if(id != null) {
-						root = getMusicDirectory(id, name, false, musicService, this);
-					} else {
-						root = musicService.getStarredList(context, this);
-					}
-				}
-				else {
-					root = musicService.getPlaylist(true, id, name, context, this);
+				if(id != null) {
+					root = getMusicDirectory(id, name, false, musicService, this);
+				} else {
+					root = musicService.getStarredList(context, this);
 				}
 
 				boolean shuffleByAlbum = Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_SHUFFLE_BY_ALBUM, true);
@@ -1028,239 +965,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		}
 	}
 
-	protected void addToPlaylist(final List<MusicDirectory.Entry> songs) {
-		Iterator<MusicDirectory.Entry> it = songs.iterator();
-		while(it.hasNext()) {
-			MusicDirectory.Entry entry = it.next();
-			if(entry.isDirectory()) {
-				it.remove();
-			}
-		}
-
-		if(songs.isEmpty()) {
-			Util.toast(context, "No songs selected");
-			return;
-		}
-
-		new LoadingTask<List<Playlist>>(context, true) {
-			@Override
-			protected List<Playlist> doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				List<Playlist> playlists = new ArrayList<Playlist>();
-				playlists.addAll(musicService.getPlaylists(false, context, this));
-
-				// Iterate through and remove all non owned public playlists
-				Iterator<Playlist> it = playlists.iterator();
-				while(it.hasNext()) {
-					Playlist playlist = it.next();
-					if(playlist.getPublic() == true && playlist.getId().indexOf(".m3u") == -1 && !UserUtil.getCurrentUsername(context).equals(playlist.getOwner())) {
-						it.remove();
-					}
-				}
-
-				return playlists;
-			}
-
-			@Override
-			protected void done(final List<Playlist> playlists) {
-				// Create adapter to show playlists
-				Playlist createNew = new Playlist("-1", context.getResources().getString(R.string.playlist_create_new));
-				playlists.add(0, createNew);
-				ArrayAdapter playlistAdapter = new ArrayAdapter<Playlist>(context, R.layout.basic_count_item, playlists) {
-					@Override
-					public View getView(int position, View convertView, ViewGroup parent) {
-						Playlist playlist = getItem(position);
-
-						// Create new if not getting a convert view to use
-						PlaylistSongView view;
-						if(convertView instanceof PlaylistSongView) {
-							view = (PlaylistSongView) convertView;
-						} else {
-							view =  new PlaylistSongView(context);
-						}
-
-						view.setObject(playlist, songs);
-
-						return view;
-					}
-				};
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setTitle(R.string.playlist_add_to)
-						.setAdapter(playlistAdapter, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								if (which > 0) {
-									addToPlaylist(playlists.get(which), songs);
-								} else {
-									createNewPlaylist(songs, false);
-								}
-							}
-						});
-				AlertDialog dialog = builder.create();
-				dialog.show();
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(R.string.playlist_error) + " " + getErrorMessage(error);
-				}
-
-				Util.toast(context, msg, false);
-			}
-		}.execute();
-	}
-
-	private void addToPlaylist(final Playlist playlist, final List<MusicDirectory.Entry> songs) {
-		new SilentBackgroundTask<Void>(context) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.addToPlaylist(playlist.getId(), songs, context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, context.getResources().getString(R.string.updated_playlist, String.valueOf(songs.size()), playlist.getName()));
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(R.string.updated_playlist_error, playlist.getName()) + " " + getErrorMessage(error);
-				}
-
-				Util.toast(context, msg, false);
-			}
-		}.execute();
-	}
-
-	protected void createNewPlaylist(final List<MusicDirectory.Entry> songs, final boolean getSuggestion) {
-		View layout = context.getLayoutInflater().inflate(R.layout.save_playlist, null);
-		final EditText playlistNameView = layout.findViewById(R.id.save_playlist_name);
-		final CheckBox overwriteCheckBox = layout.findViewById(R.id.save_playlist_overwrite);
-		if(getSuggestion) {
-			DownloadService downloadService = getDownloadService();
-			String playlistName = null;
-			String playlistId = null;
-			if(downloadService != null) {
-				playlistName = downloadService.getSuggestedPlaylistName();
-				playlistId = downloadService.getSuggestedPlaylistId();
-			}
-			if (playlistName != null) {
-				playlistNameView.setText(playlistName);
-				if(playlistId != null) {
-					try {
-						if (ServerInfo.checkServerVersion(context, "1.8.0") && Integer.parseInt(playlistId) != -1) {
-							overwriteCheckBox.setChecked(true);
-							overwriteCheckBox.setVisibility(View.VISIBLE);
-						}
-					} catch (Exception e) {
-						Log.i(TAG, "Playlist id isn't a integer, probably MusicCabinet", e);
-					}
-				}
-			} else {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				playlistNameView.setText(dateFormat.format(new Date()));
-			}
-		} else {
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			playlistNameView.setText(dateFormat.format(new Date()));
-		}
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(R.string.download_playlist_title)
-				.setMessage(R.string.download_playlist_name)
-				.setView(layout)
-				.setPositiveButton(R.string.common_save, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						String playlistName = String.valueOf(playlistNameView.getText());
-						if(overwriteCheckBox.isChecked()) {
-							overwritePlaylist(songs, playlistName, getDownloadService().getSuggestedPlaylistId());
-						} else {
-							createNewPlaylist(songs, playlistName);
-
-							if(getSuggestion) {
-								DownloadService downloadService = getDownloadService();
-								if(downloadService != null) {
-									downloadService.setSuggestedPlaylistName(playlistName, null);
-								}
-							}
-						}
-					}
-				})
-				.setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				})
-				.setCancelable(true);
-
-		AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-	private void createNewPlaylist(final List<MusicDirectory.Entry> songs, final String name) {
-		new SilentBackgroundTask<Void>(context) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.createPlaylist(null, name, songs, context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, R.string.download_playlist_done);
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg = context.getResources().getString(R.string.download_playlist_error) + " " + getErrorMessage(error);
-				Log.e(TAG, "Failed to create playlist", error);
-				Util.toast(context, msg);
-			}
-		}.execute();
-	}
-	private void overwritePlaylist(final List<MusicDirectory.Entry> songs, final String name, final String id) {
-		new SilentBackgroundTask<Void>(context) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				MusicDirectory playlist = musicService.getPlaylist(true, id, name, context, null);
-				List<MusicDirectory.Entry> toDelete = playlist.getChildren();
-				musicService.overwritePlaylist(id, name, toDelete.size(), songs, context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, R.string.download_playlist_done);
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(R.string.download_playlist_error) + " " + getErrorMessage(error);
-				}
-
-				Log.e(TAG, "Failed to overwrite playlist", error);
-				Util.toast(context, msg, false);
-			}
-		}.execute();
-	}
-
 	public void displaySongInfo(final MusicDirectory.Entry song) {
 		Integer duration = null;
 		Integer bitrate = null;
@@ -1311,13 +1015,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			details.add(song.getTitle());
 		}
 
-		if(song instanceof PodcastEpisode) {
-			headers.add(R.string.details_podcast);
-			details.add(song.getArtist());
-
-			headers.add(R.string.details_status);
-			details.add(((PodcastEpisode)song).getStatus());
-		} else if(!song.isVideo()) {
+		if(!song.isVideo()) {
 			if(song.getArtist() != null && !"".equals(song.getArtist())) {
 				headers.add(R.string.details_artist);
 				details.add(song.getArtist());
@@ -1385,17 +1083,9 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		} catch(Exception e) {
 			Log.e(TAG, "Failed to get last played", e);
 		}
-
-		if(song instanceof PodcastEpisode) {
-			headers.add(R.string.details_description);
-			details.add(song.getAlbum());
-		}
-
 		int title;
 		if(song.isDirectory()) {
 			title = R.string.details_title_album;
-		} else if(song instanceof PodcastEpisode) {
-			title = R.string.details_title_podcast;
 		} else {
 			title = R.string.details_title_song;
 		}
@@ -1594,49 +1284,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		replaceFragment(fragment, true);
 	}
 
-	public void createShare(final List<MusicDirectory.Entry> entries) {
-		new LoadingTask<List<Share>>(context, true) {
-			@Override
-			protected List<Share> doInBackground() throws Throwable {
-				List<String> ids = new ArrayList<String>(entries.size());
-				for(MusicDirectory.Entry entry: entries) {
-					ids.add(entry.getId());
-				}
-
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				return musicService.createShare(ids, null, 0L, context, this);
-			}
-
-			@Override
-			protected void done(final List<Share> shares) {
-				if(shares.size() > 0) {
-					Share share = shares.get(0);
-					shareExternal(share);
-				} else {
-					Util.toast(context, context.getResources().getString(R.string.playlist_error), false);
-				}
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(R.string.playlist_error) + " " + getErrorMessage(error);
-				}
-
-				Util.toast(context, msg, false);
-			}
-		}.execute();
-	}
-	public void shareExternal(Share share) {
-		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_TEXT, share.getUrl());
-		context.startActivity(Intent.createChooser(intent, context.getResources().getString(R.string.share_via)));
-	}
-
 	public GestureDetector getGestureDetector() {
 		return gestureScanner;
 	}
@@ -1792,7 +1439,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 		downloadService.clear();
 		downloadService.download(entries, false, true, true, false, entries.indexOf(song), position);
-		downloadService.setSuggestedPlaylistName(playlistName, playlistId);
 	}
 
 	protected void deleteBookmark(final MusicDirectory.Entry entry, final SectionAdapter adapter) {
@@ -1844,59 +1490,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		});
 	}
 
-	public void downloadPodcastEpisode(final PodcastEpisode episode) {
-		new LoadingTask<Void>(context, true) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.downloadPodcastEpisode(episode.getEpisodeId(), context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, context.getResources().getString(R.string.select_podcasts_downloading, episode.getTitle()));
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				Util.toast(context, getErrorMessage(error), false);
-			}
-		}.execute();
-	}
-
-	public void deletePodcastEpisode(final PodcastEpisode episode) {
-		Util.confirmDialog(context, R.string.common_delete, episode.getTitle(), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				new LoadingTask<Void>(context, true) {
-					@Override
-					protected Void doInBackground() throws Throwable {
-						MusicService musicService = MusicServiceFactory.getMusicService(context);
-						musicService.deletePodcastEpisode(episode.getEpisodeId(), episode.getParent(), null, context);
-						if (getDownloadService() != null) {
-							List<MusicDirectory.Entry> episodeList = new ArrayList<MusicDirectory.Entry>(1);
-							episodeList.add(episode);
-							getDownloadService().delete(episodeList);
-						}
-						return null;
-					}
-
-					@Override
-					protected void done(Void result) {
-						getCurrentAdapter().removeItem(episode);
-					}
-
-					@Override
-					protected void error(Throwable error) {
-						Log.w(TAG, "Failed to delete podcast episode", error);
-						Util.toast(context, getErrorMessage(error), false);
-					}
-				}.execute();
-			}
-		});
-	}
-
 	public SectionAdapter getCurrentAdapter() { return null; }
 	public void stopActionMode() {
 		SectionAdapter adapter = getCurrentAdapter();
@@ -1923,11 +1516,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			clearSelected();
 		}
 	}
-
-	protected void download(List<MusicDirectory.Entry> entries, boolean append, boolean save, boolean autoplay, boolean playNext, boolean shuffle) {
-		download(entries, append, save, autoplay, playNext, shuffle, null, null);
-	}
-	protected void download(final List<MusicDirectory.Entry> entries, final boolean append, final boolean save, final boolean autoplay, final boolean playNext, final boolean shuffle, final String playlistName, final String playlistId) {
+	protected void download(final List<MusicDirectory.Entry> entries, final boolean append, final boolean save, final boolean autoplay, final boolean playNext, final boolean shuffle) {
 		final DownloadService downloadService = getDownloadService();
 		if (downloadService == null) {
 			return;
@@ -1937,7 +1526,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		// Conditions for using play now button
 		if(!append && !save && autoplay && !playNext && !shuffle) {
 			// Call playNow which goes through and tries to use bookmark information
-			playNow(entries, playlistName, playlistId);
+			playNow(entries);
 			return;
 		}
 
@@ -1950,11 +1539,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				getSongsRecursively(entries, songs);
 
 				downloadService.download(songs, save, autoplay, playNext, shuffle);
-				if (playlistName != null) {
-					downloadService.setSuggestedPlaylistName(playlistName, playlistId);
-				} else {
-					downloadService.setSuggestedPlaylistName(null, null);
-				}
 				return null;
 			}
 

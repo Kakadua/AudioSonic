@@ -35,9 +35,6 @@ import github.awsomefox.audiosonic.domain.Artist;
 import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.MusicFolder;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastChannel;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.SilentServiceTask;
 import github.awsomefox.audiosonic.util.Util;
@@ -50,11 +47,7 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 	private static final String BROWSER_ROOT = "root";
 	private static final String BROWSER_ALBUM_LISTS = "albumLists";
 	private static final String BROWSER_LIBRARY = "library";
-	private static final String BROWSER_PLAYLISTS = "playlists";
-	private static final String BROWSER_PODCASTS = "podcasts";
 	private static final String BROWSER_BOOKMARKS = "bookmarks";
-	private static final String PLAYLIST_PREFIX = "pl-";
-	private static final String PODCAST_PREFIX = "po-";
 	private static final String ALBUM_TYPE_PREFIX = "ty-";
 	private static final String MUSIC_DIRECTORY_PREFIX = "md-";
 	private static final String MUSIC_FOLDER_PREFIX = "mf-";
@@ -96,17 +89,6 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 		}  else if(parentId.startsWith(MUSIC_DIRECTORY_CONTENTS_PREFIX)) {
 			String id = parentId.substring(MUSIC_DIRECTORY_CONTENTS_PREFIX.length());
 			getMusicDirectory(result, id);
-		} else if(BROWSER_PLAYLISTS.equals(parentId)) {
-			getPlaylists(result);
-		} else if(parentId.startsWith(PLAYLIST_PREFIX)) {
-
-			String id = parentId.substring(PLAYLIST_PREFIX.length());
-			getPlayOptions(result, id, Constants.INTENT_EXTRA_NAME_PLAYLIST_ID);
-		} else if(BROWSER_PODCASTS.equals(parentId)) {
-			getPodcasts(result);
-		} else if(parentId.startsWith(PODCAST_PREFIX)) {
-			String id = parentId.substring(PODCAST_PREFIX.length());
-			getPodcastEpisodes(result, id);
 		} else if(BROWSER_BOOKMARKS.equals(parentId)) {
 			getBookmarks(result);
 		} else {
@@ -128,18 +110,6 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 		library.setTitle(downloadService.getString(R.string.button_bar_browse))
 			.setMediaId(BROWSER_LIBRARY);
 		mediaItems.add(new MediaBrowserCompat.MediaItem(library.build(), MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
-
-		MediaDescriptionCompat.Builder playlists = new MediaDescriptionCompat.Builder();
-		playlists.setTitle(downloadService.getString(R.string.button_bar_playlists))
-				.setMediaId(BROWSER_PLAYLISTS);
-		mediaItems.add(new MediaBrowserCompat.MediaItem(playlists.build(), MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
-
-		if(Util.getPreferences(downloadService).getBoolean(Constants.PREFERENCES_KEY_PODCASTS_ENABLED, true)) {
-			MediaDescriptionCompat.Builder podcasts = new MediaDescriptionCompat.Builder();
-			podcasts.setTitle(downloadService.getString(R.string.button_bar_podcasts))
-					.setMediaId(BROWSER_PODCASTS);
-			mediaItems.add(new MediaBrowserCompat.MediaItem(podcasts.build(), MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
-		}
 
 		if(Util.getPreferences(downloadService).getBoolean(Constants.PREFERENCES_KEY_BOOKMARKS_ENABLED, true)) {
 			MediaDescriptionCompat.Builder bookmarks = new MediaDescriptionCompat.Builder();
@@ -323,93 +293,6 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 
 					mediaItems.add(new MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
 				}
-				result.sendResult(mediaItems);
-			}
-		}.execute();
-
-		result.detach();
-	}
-
-	private void getPlaylists(final Result<List<MediaBrowserCompat.MediaItem>> result) {
-		new SilentServiceTask<List<Playlist>>(downloadService) {
-			@Override
-			protected List<Playlist> doInBackground(MusicService musicService) throws Throwable {
-				return musicService.getPlaylists(false, downloadService, null);
-			}
-
-			@Override
-			protected void done(List<Playlist> playlists) {
-				List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
-
-				for(Playlist playlist: playlists) {
-					MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-							.setTitle(playlist.getName())
-							.setMediaId(PLAYLIST_PREFIX + playlist.getId())
-							.build();
-
-					mediaItems.add(new MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
-				}
-
-				result.sendResult(mediaItems);
-			}
-		}.execute();
-
-		result.detach();
-	}
-
-	private void getPodcasts(final Result<List<MediaBrowserCompat.MediaItem>> result) {
-		new SilentServiceTask<List<PodcastChannel>>(downloadService) {
-			@Override
-			protected List<PodcastChannel> doInBackground(MusicService musicService) throws Throwable {
-				return musicService.getPodcastChannels(false, downloadService, null);
-			}
-
-			@Override
-			protected void done(List<PodcastChannel> podcasts) {
-				List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
-
-				for(PodcastChannel podcast: podcasts) {
-					MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-							.setTitle(podcast.getName())
-							.setMediaId(PODCAST_PREFIX + podcast.getId())
-							.build();
-
-					mediaItems.add(new MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
-				}
-
-				result.sendResult(mediaItems);
-			}
-		}.execute();
-
-		result.detach();
-	}
-	private void getPodcastEpisodes(final Result<List<MediaBrowserCompat.MediaItem>> result, final String podcastId) {
-		new SilentServiceTask<MusicDirectory>(downloadService) {
-			@Override
-			protected MusicDirectory doInBackground(MusicService musicService) throws Throwable {
-				return musicService.getPodcastEpisodes(false, podcastId, downloadService, null);
-			}
-
-			@Override
-			protected void done(MusicDirectory podcasts) {
-				List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
-
-				for(MusicDirectory.Entry entry: podcasts.getChildren(false, true)) {
-					PodcastEpisode podcast = (PodcastEpisode) entry;
-					Bundle podcastExtras = new Bundle();
-					podcastExtras.putSerializable(Constants.INTENT_EXTRA_ENTRY, podcast);
-					podcastExtras.putString(Constants.INTENT_EXTRA_NAME_PODCAST_ID, podcast.getId());
-
-					MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-							.setTitle(podcast.getTitle())
-							.setSubtitle(Util.formatDate(downloadService, podcast.getDate(), false))
-							.setMediaId(PODCAST_PREFIX + podcast.getId())
-							.setExtras(podcastExtras)
-							.build();
-
-					mediaItems.add(new MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
-				}
-
 				result.sendResult(mediaItems);
 			}
 		}.execute();

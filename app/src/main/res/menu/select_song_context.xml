@@ -67,12 +67,6 @@
 			android:title="@string/common.star"/>
 	</group>
 
-	<group android:id="@+id/hide_share">
-		<item
-			android:id="@+id/song_menu_share"
-			android:title="@string/menu.share"/>
-	</group>
-
 	<group android:id="@+id/hide_rating">
 		<item
 			android:id="@+id/menu_rate"

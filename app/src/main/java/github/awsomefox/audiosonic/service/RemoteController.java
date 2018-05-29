@@ -129,9 +129,7 @@ public abstract class RemoteController {
 
 		String url;
 		// In offline mode or playing offline song
-		if(downloadFile.isStream()) {
-			url = downloadFile.getStream();
-		} else if(Util.isOffline(downloadService) || song.getId().indexOf(rootLocation) != -1) {
+		if(Util.isOffline(downloadService) || song.getId().indexOf(rootLocation) != -1) {
 			if(proxy == null) {
 				proxy = new FileProxy(downloadService);
 				proxy.start();

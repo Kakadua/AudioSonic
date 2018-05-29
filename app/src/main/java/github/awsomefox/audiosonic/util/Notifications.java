@@ -91,9 +91,8 @@ public final class Notifications {
     public static void showPlayingNotification(final Context context, final DownloadService downloadService, final Handler handler, MusicDirectory.Entry song) {
         final boolean playing = downloadService.getPlayerState() == PlayerState.STARTED;
         boolean remote = downloadService.isRemoteEnabled();
-        boolean isSingle = downloadService.isCurrentPlayingSingle();
         boolean shouldFastForward = downloadService.shouldFastForward();
-        setupViews(downloadService.getRemoteControlClient(), context, song, false, downloadService.getPlayerState(), remote, isSingle, shouldFastForward);
+        setupViews(downloadService.getRemoteControlClient(), context, song, false, downloadService.getPlayerState(), remote, shouldFastForward);
 
         playShowing = true;
         if (downloadForeground && downloadShowing) {
@@ -130,9 +129,12 @@ public final class Notifications {
         DSubWidgetProvider.notifyInstances(context, downloadService, playing);
     }
 
-    private static void setupViews(RemoteControlClientBase base, Context context, MusicDirectory.Entry song, boolean expanded, PlayerState state, boolean remote, boolean isSingleFile, boolean shouldFastForward) {
+    private static void setupViews(RemoteControlClientBase base, Context context, MusicDirectory.Entry song, boolean expanded, PlayerState state, boolean remote, boolean shouldFastForward) {
         // Use the same text for the ticker and the expanded notification
         String title = song.getTitle();
+        if(song.getTrack() != null) {
+            title = "Chapter " + String.format("%02d", song.getTrack());
+        }
         String arist = song.getArtist();
         String album = song.getAlbum();
         Bitmap bitmap = null;
@@ -167,10 +169,10 @@ public final class Notifications {
                 .setSmallIcon(R.drawable.stat_notify_playing)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
-                .setContentTitle(album)
-                .setContentText(arist)
+                .setContentTitle(title)
+                .setContentText(album)
                 .setGroup(CHANNEL_ID)
-                .setSubText(title)
+                .setSubText(arist)
                 .setLargeIcon(bitmap)
                 .setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0));
 
@@ -316,12 +318,6 @@ public final class Notifications {
             switch (stringId) {
                 case R.string.sync_new_albums:
                     type = "newest";
-                    break;
-                case R.string.sync_new_playlists:
-                    tab = "Playlist";
-                    break;
-                case R.string.sync_new_podcasts:
-                    tab = "Podcast";
                     break;
                 case R.string.sync_new_starred:
                     type = "starred";

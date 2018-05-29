@@ -298,8 +298,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 					Boolean syncEnabled = (Boolean) newValue;
 
 					Account account = new Account(Constants.SYNC_ACCOUNT_NAME, Constants.SYNC_ACCOUNT_TYPE);
-					ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_PLAYLIST_AUTHORITY, syncEnabled);
-					ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_PODCAST_AUTHORITY, syncEnabled);
 
 					return true;
 				}
@@ -310,8 +308,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 					Integer syncInterval = Integer.parseInt(((String) newValue));
 
 					Account account = new Account(Constants.SYNC_ACCOUNT_NAME, Constants.SYNC_ACCOUNT_TYPE);
-					ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_PLAYLIST_AUTHORITY, new Bundle(), 60L * syncInterval);
-					ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_PODCAST_AUTHORITY, new Bundle(), 60L * syncInterval);
 
 					return true;
 				}

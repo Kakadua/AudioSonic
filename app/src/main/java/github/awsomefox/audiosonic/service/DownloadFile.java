@@ -31,7 +31,6 @@ import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.util.Log;
 
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.util.CacheCleaner;
 import github.awsomefox.audiosonic.util.FileUtil;
@@ -368,18 +367,6 @@ public class DownloadFile implements BufferFile {
 			mediaStoreService.renameInMediaStore(start, end);
 		} catch(Exception e) {
 			Log.w(TAG, "Failed to rename in store", e);
-		}
-	}
-
-	public boolean isStream() {
-		return song != null && song instanceof InternetRadioStation;
-	}
-	public String getStream() {
-		if(song != null && song instanceof InternetRadioStation) {
-			InternetRadioStation station = (InternetRadioStation) song;
-			return station.getStreamUrl();
-		} else {
-			return null;
 		}
 	}
 

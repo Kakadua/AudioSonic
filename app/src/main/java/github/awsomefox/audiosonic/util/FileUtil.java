@@ -52,9 +52,6 @@ import github.awsomefox.audiosonic.domain.MusicFolder;
 import github.awsomefox.audiosonic.service.MediaStoreService;
 import github.awsomefox.audiosonic.domain.Artist;
 import github.awsomefox.audiosonic.domain.Indexes;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastChannel;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -81,8 +78,6 @@ public class FileUtil {
 		kryo.register(Indexes.class);
 		kryo.register(Artist.class);
 		kryo.register(MusicFolder.class);
-		kryo.register(PodcastChannel.class);
-		kryo.register(Playlist.class);
 		kryo.register(Genre.class);
 	}
 	
@@ -151,70 +146,20 @@ public class FileUtil {
         return new File(dir, fileName.toString());
     }
 
-	public static File getPlaylistFile(Context context, String server, String name) {
-		File playlistDir = getPlaylistDirectory(context, server);
-		return new File(playlistDir, fileSystemSafe(name) + ".m3u");
-	}
-	public static void writePlaylistFile(Context context, File file, MusicDirectory playlist) throws IOException {
-		FileWriter fw = new FileWriter(file);
-		BufferedWriter bw = new BufferedWriter(fw);
-		try {
-			fw.write("#EXTM3U\n");
-			for (MusicDirectory.Entry e : playlist.getChildren()) {
-				String filePath = FileUtil.getSongFile(context, e).getAbsolutePath();
-				if(! new File(filePath).exists()){
-					String ext = FileUtil.getExtension(filePath);
-					String base = FileUtil.getBaseName(filePath);
-					filePath = base + ".complete." + ext;
-				}
-				fw.write(filePath + "\n");
-			}
-		} catch(Exception e) {
-			Log.w(TAG, "Failed to save playlist: " + playlist.getName());
-		} finally {
-			bw.close();
-			fw.close();
-		}
-	}
-	public static File getPlaylistDirectory(Context context) {
-		File playlistDir = new File(getSubsonicDirectory(context), "playlists");
-		ensureDirectoryExistsAndIsReadWritable(playlistDir);
-		return playlistDir;
-	}
-	public static File getPlaylistDirectory(Context context, String server) {
-		File playlistDir = new File(getPlaylistDirectory(context), server);
-		ensureDirectoryExistsAndIsReadWritable(playlistDir);
-		return playlistDir;
-	}
-
-	public static File getAlbumArtFile(Context context, PodcastChannel channel) {
-		MusicDirectory.Entry entry = new MusicDirectory.Entry();
-		entry.setId(channel.getId());
-		entry.setTitle(channel.getName());
-		return getAlbumArtFile(context, entry);
-	}
     public static File getAlbumArtFile(Context context, MusicDirectory.Entry entry) {
-		if(entry.getId().indexOf(ImageLoader.PLAYLIST_PREFIX) != -1) {
-			File dir = getAlbumArtDirectory(context);
-			return  new File(dir, Util.md5Hex(ImageLoader.PLAYLIST_PREFIX + entry.getTitle()) + ".jpeg");
-		} else if(entry.getId().indexOf(ImageLoader.PODCAST_PREFIX) != -1) {
-			File dir = getAlbumArtDirectory(context);
-			return  new File(dir, Util.md5Hex(ImageLoader.PODCAST_PREFIX + entry.getTitle()) + ".jpeg");
-		} else {
-			File albumDir = getAlbumDirectory(context, entry);
-			File artFile;
-			File albumFile = getAlbumArtFile(albumDir);
-			File hexFile = getHexAlbumArtFile(context, albumDir);
-			if (albumDir.exists()) {
-				if (hexFile.exists()) {
-					hexFile.renameTo(albumFile);
-				}
-				artFile = albumFile;
-			} else {
-				artFile = hexFile;
+		File albumDir = getAlbumDirectory(context, entry);
+		File artFile;
+		File albumFile = getAlbumArtFile(albumDir);
+		File hexFile = getHexAlbumArtFile(context, albumDir);
+		if (albumDir.exists()) {
+			if (hexFile.exists()) {
+				hexFile.renameTo(albumFile);
 			}
-			return artFile;
+			artFile = albumFile;
+		} else {
+			artFile = hexFile;
 		}
+		return artFile;
     }
 
     public static File getAlbumArtFile(File albumDir) {
@@ -407,27 +352,6 @@ public class FileUtil {
 		}
 
 		return null;
-	}
-	
-	public static String getPodcastPath(Context context, PodcastEpisode episode) {
-		return fileSystemSafe(episode.getArtist()) + "/" + fileSystemSafe(episode.getTitle());
-	}
-	public static File getPodcastFile(Context context, String server) {
-		File dir = getPodcastDirectory(context);
-		return new File(dir.getPath() + "/" +  fileSystemSafe(server));
-	}
-	public static File getPodcastDirectory(Context context) {
-		File dir = new File(context.getCacheDir(), "podcasts");
-		ensureDirectoryExistsAndIsReadWritable(dir);
-		return dir;
-	}
-	public static File getPodcastDirectory(Context context, PodcastChannel channel) {
-		File dir = new File(getMusicDirectory(context).getPath() + "/" + fileSystemSafe(channel.getName()));
-		return dir;
-	}
-	public static File getPodcastDirectory(Context context, String channel) {
-		File dir = new File(getMusicDirectory(context).getPath() + "/" + fileSystemSafe(channel));
-		return dir;
 	}
 
     public static void createDirectoryForParent(File file) {

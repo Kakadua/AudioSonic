@@ -5,8 +5,6 @@ import android.util.Log;
 
 
 import github.awsomefox.audiosonic.util.SongDBHandler;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
 import github.awsomefox.audiosonic.util.Util;
 
@@ -72,10 +70,6 @@ public class Scrobbler {
 				}
 				// Ignore if online with no network access
 				else if(!Util.isOffline(context) && !Util.isNetworkConnected(context)) {
-					return null;
-				}
-				// Ignore podcasts
-				else if(song.getSong() instanceof PodcastEpisode || song.getSong() instanceof InternetRadioStation) {
 					return null;
 				}
 

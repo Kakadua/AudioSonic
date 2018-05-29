@@ -70,6 +70,7 @@
 		android:padding="5dp"
 		app:elevation="0dp"
 		app:fabSize="normal"
+		app:rippleColor="@color/lightPrimaryDark"
 		app:srcCompat="?attr/media_button_start" />
 
 	<github.awsomefox.audiosonic.view.AutoRepeatButton

@@ -27,7 +27,6 @@ public final class Constants {
 	public static final boolean EXPORT_REQUIRES_PASS = true;
 
 	public static final boolean PLAY_VERSION = true;
-	public static final String PREFERENCES_KEY_REVERSE = "playlistReverse";
 
     // Character encoding used throughout.
     public static final String UTF_8 = "UTF-8";
@@ -50,9 +49,6 @@ public final class Constants {
     public static final String INTENT_EXTRA_NAME_TITLE = "subsonic.title";
     public static final String INTENT_EXTRA_NAME_AUTOPLAY = "subsonic.playall";
     public static final String INTENT_EXTRA_NAME_QUERY = "subsonic.query";
-    public static final String INTENT_EXTRA_NAME_PLAYLIST_ID = "subsonic.playlist.id";
-    public static final String INTENT_EXTRA_NAME_PLAYLIST_NAME = "subsonic.playlist.name";
-    public static final String INTENT_EXTRA_NAME_PLAYLIST_OWNER = "subsonic.playlist.isOwner";
     public static final String INTENT_EXTRA_NAME_ALBUM_LIST_TYPE = "subsonic.albumlisttype";
 	public static final String INTENT_EXTRA_NAME_ALBUM_LIST_EXTRA = "subsonic.albumlistextra";
     public static final String INTENT_EXTRA_NAME_ALBUM_LIST_SIZE = "subsonic.albumlistsize";
@@ -63,10 +59,6 @@ public final class Constants {
 	public static final String INTENT_EXTRA_NAME_DOWNLOAD = "subsonic.download";
 	public static final String INTENT_EXTRA_NAME_DOWNLOAD_VIEW = "subsonic.download_view";
 	public static final String INTENT_EXTRA_VIEW_ALBUM = "subsonic.view_album";
-	public static final String INTENT_EXTRA_NAME_PODCAST_ID = "subsonic.podcast.id";
-	public static final String INTENT_EXTRA_NAME_PODCAST_NAME = "subsonic.podcast.name";
-	public static final String INTENT_EXTRA_NAME_PODCAST_DESCRIPTION = "subsonic.podcast.description";
-	public static final String INTENT_EXTRA_NAME_SHARE = "subsonic.share";
 	public static final String INTENT_EXTRA_FRAGMENT_TYPE = "fragmentType";
 	public static final String INTENT_EXTRA_REFRESH_LISTINGS = "refreshListings";
 	public static final String INTENT_EXTRA_SEARCH_SONG = "searchSong";
@@ -138,7 +130,6 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_SYNC_MOST_RECENT = "syncMostRecent";
 	public static final String PREFERENCES_KEY_PAUSE_DISCONNECT = "pauseOnDisconnect";
 	public static final String PREFERENCES_KEY_HIDE_WIDGET = "hideWidget";
-	public static final String PREFERENCES_KEY_PODCASTS_ENABLED = "podcastsEnabled";
 	public static final String PREFERENCES_KEY_BOOKMARKS_ENABLED = "bookmarksEnabled";
 	public static final String PREFERENCES_KEY_INTERNET_RADIO_ENABLED = "internetRadioEnabled";
 	public static final String PREFERENCES_KEY_CUSTOM_SORT_ENABLED = "customSortEnabled";
@@ -159,8 +150,6 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_SONG_PRESS_ACTION = "songPressAction";
 	public static final String PREFERENCES_KEY_LARGE_ALBUM_ART = "largeAlbumArt";
 	public static final String PREFERENCES_KEY_ADMIN_ENABLED = "adminEnabled";
-	public static final String PREFERENCES_KEY_PLAYLIST_NAME = "suggestedPlaylistName";
-	public static final String PREFERENCES_KEY_PLAYLIST_ID = "suggestedPlaylistId";
 	public static final String PREFERENCES_KEY_SERVER_SYNC = "serverSync";
 	public static final String PREFERENCES_KEY_RECENT_COUNT = "mostRecentCount";
 	public static final String PREFERENCES_KEY_MENU_RATING = "showRating";
@@ -222,8 +211,6 @@ public final class Constants {
 	// Account prefs
 	public static final String SYNC_ACCOUNT_NAME = "Subsonic Account";
 	public static final String SYNC_ACCOUNT_TYPE = "audiosonic.awsomefox.com";
-	public static final String SYNC_ACCOUNT_PLAYLIST_AUTHORITY = "github.awsomefox.audiosonic.playlists.provider";
-	public static final String SYNC_ACCOUNT_PODCAST_AUTHORITY = "github.awsomefox.audiosonic.podcasts.provider";
 	public static final String SYNC_ACCOUNT_STARRED_AUTHORITY = "github.awsomefox.audiosonic.starred.provider";
 	public static final String SYNC_ACCOUNT_MOST_RECENT_AUTHORITY = "github.awsomefox.audiosonic.mostrecent.provider";
 

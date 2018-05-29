@@ -55,7 +55,6 @@ import github.awsomefox.audiosonic.R;
 import github.awsomefox.audiosonic.activity.SubsonicActivity;
 import github.awsomefox.audiosonic.activity.SubsonicFragmentActivity;
 import github.awsomefox.audiosonic.domain.Bookmark;
-import github.awsomefox.audiosonic.domain.Playlist;
 import github.awsomefox.audiosonic.service.DownloadFile;
 import github.awsomefox.audiosonic.service.DownloadService;
 import github.awsomefox.audiosonic.util.Constants;
@@ -185,10 +184,14 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 
 	public void setMetadata(MusicDirectory.Entry currentSong, Bitmap bitmap) {
 		MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-		builder.putString(MediaMetadata.METADATA_KEY_ARTIST, (currentSong == null) ? null : currentSong.getArtist())
+		String chapter = currentSong.getTitle();
+		if (currentSong.getTrack() != null) {
+			chapter = "Chapter " + String.format("%02d", currentSong.getTrack());
+		}
+		builder.putString(MediaMetadata.METADATA_KEY_ARTIST, (currentSong == null) ? null : chapter)
 				.putString(MediaMetadata.METADATA_KEY_ALBUM, (currentSong == null) ? null : currentSong.getAlbum())
 				.putString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST, (currentSong == null) ? null : currentSong.getArtist())
-				.putString(MediaMetadata.METADATA_KEY_TITLE, (currentSong) == null ? null : currentSong.getTitle())
+				.putString(MediaMetadata.METADATA_KEY_TITLE, (currentSong) == null ? null : currentSong.getAlbum())
 				.putString(MediaMetadata.METADATA_KEY_GENRE, (currentSong) == null ? null : currentSong.getGenre())
 				.putLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER, (currentSong == null) ?
 						0 : ((currentSong.getTrack() == null) ? 0 : currentSong.getTrack()))
@@ -256,8 +259,8 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 				actions |= PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
 			}
 		} else {
-			actions |= PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
-			actions |= PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
+			actions |= PlaybackStateCompat.ACTION_REWIND;
+			actions |= PlaybackStateCompat.ACTION_FAST_FORWARD;
 		}
 
 		return actions;
@@ -284,28 +287,6 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 		builder.addCustomAction(star).addCustomAction(slow).addCustomAction(fast);
 	}
 
-	private void searchPlaylist(final String name) {
-		new SilentServiceTask<Void>(downloadService) {
-			@Override
-			protected Void doInBackground(MusicService musicService) throws Throwable {
-				List<Playlist> playlists = musicService.getPlaylists(false, downloadService, null);
-				for(Playlist playlist: playlists) {
-					if(playlist.getName().equals(name)) {
-						getPlaylist(playlist);
-						return null;
-					}
-				}
-
-				noResults();
-				return null;
-			}
-
-			private void getPlaylist(Playlist playlist) throws Exception {
-				MusicDirectory musicDirectory = musicService.getPlaylist(false, playlist.getId(), playlist.getName(), downloadService, null);
-				playSongs(musicDirectory.getChildren());
-			}
-		}.execute();
-	}
 	private void searchCriteria(final SearchCritera searchCritera) {
 		new SilentServiceTask<Void>(downloadService) {
 			@Override
@@ -370,17 +351,6 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 		}.execute();
 	}
 
-	private void playPlaylist(final Playlist playlist, final boolean shuffle, final boolean append) {
-		new SilentServiceTask<Void>(downloadService) {
-			@Override
-			protected Void doInBackground(MusicService musicService) throws Throwable {
-				MusicDirectory musicDirectory = musicService.getPlaylist(false, playlist.getId(), playlist.getName(), downloadService, null);
-				playSongs(musicDirectory.getChildren(), shuffle, append);
-
-				return null;
-			}
-		}.execute();
-	}
 	private void playMusicDirectory(MusicDirectory.Entry dir, boolean shuffle, boolean append, boolean playFromBookmark) {
 		playMusicDirectory(dir.getId(), shuffle, append, playFromBookmark);
 	}
@@ -469,11 +439,11 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 
 		@Override
 		public void onSkipToNext() {
-			downloadService.next();
+			downloadService.fastForward();
 		}
 		@Override
 		public void onSkipToPrevious() {
-			downloadService.previous();
+			downloadService.rewind();
 		}
 
 		@Override
@@ -495,15 +465,8 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 				noResults();
 			} else {
 				String mediaFocus = extras.getString(MediaStore.EXTRA_MEDIA_FOCUS);
-
-
-				// Play a specific playlist
-				if (MediaStore.Audio.Playlists.ENTRY_CONTENT_TYPE.equals(mediaFocus)) {
-					String playlist = extras.getString(MediaStore.EXTRA_MEDIA_PLAYLIST);
-					searchPlaylist(playlist);
-				}
 				// Play a specific genre
-				else if (MediaStore.Audio.Genres.ENTRY_CONTENT_TYPE.equals(mediaFocus)) {
+				if (MediaStore.Audio.Genres.ENTRY_CONTENT_TYPE.equals(mediaFocus)) {
 					String genre = extras.getString(MediaStore.EXTRA_MEDIA_GENRE);
 
 					SharedPreferences.Editor editor = Util.getPreferences(downloadService).edit();
@@ -554,21 +517,10 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 			boolean shuffle = extras.getBoolean(Constants.INTENT_EXTRA_NAME_SHUFFLE, false);
 			boolean playLast = extras.getBoolean(Constants.INTENT_EXTRA_PLAY_LAST, false);
 			MusicDirectory.Entry entry = (MusicDirectory.Entry) extras.getSerializable(Constants.INTENT_EXTRA_ENTRY);
-
-			String playlistId = extras.getString(Constants.INTENT_EXTRA_NAME_PLAYLIST_ID, null);
-			if(playlistId != null) {
-				Playlist playlist = new Playlist(playlistId, null);
-				playPlaylist(playlist, shuffle, playLast);
-			}
 			String musicDirectoryId = extras.getString(Constants.INTENT_EXTRA_NAME_ID);
 			if(musicDirectoryId != null) {
 				MusicDirectory.Entry dir = new MusicDirectory.Entry(musicDirectoryId);
 				playMusicDirectory(dir, shuffle, playLast, true);
-			}
-
-			String podcastId = extras.getString(Constants.INTENT_EXTRA_NAME_PODCAST_ID, null);
-			if(podcastId != null) {
-				playSong(entry, true);
 			}
 
 			// Currently only happens when playing bookmarks so we should be looking up parent

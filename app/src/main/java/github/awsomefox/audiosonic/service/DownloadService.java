@@ -24,10 +24,8 @@ import github.awsomefox.audiosonic.activity.SubsonicActivity;
 import github.awsomefox.audiosonic.audiofx.AudioEffectsController;
 import github.awsomefox.audiosonic.audiofx.EqualizerController;
 import github.awsomefox.audiosonic.domain.Bookmark;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.PlayerState;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 import github.awsomefox.audiosonic.domain.RemoteControlState;
 import github.awsomefox.audiosonic.domain.RepeatMode;
 import github.awsomefox.audiosonic.domain.ServerInfo;
@@ -68,7 +66,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 import android.media.audiofx.AudioEffect;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -379,11 +376,6 @@ public class DownloadService extends Service {
 	public void postDelayed(Runnable r, long millis) {
 		handler.postDelayed(r, millis);
 	}
-
-	public synchronized void download(InternetRadioStation station) {
-		clear();
-		download(Arrays.asList((MusicDirectory.Entry) station), false, true, false, false);
-	}
 	public synchronized void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle) {
 		download(songs, save, autoplay, playNext, shuffle, 0, 0);
 	}
@@ -396,8 +388,6 @@ public class DownloadService extends Service {
 
 		if (songs.isEmpty()) {
 			return;
-		} else if(isCurrentPlayingSingle()) {
-			clear();
 		}
 
 		if (playNext) {
@@ -553,9 +543,6 @@ public class DownloadService extends Service {
 				this.toDelete.add(forSong(entry));
 			}
 		}
-
-		suggestedPlaylistName = prefs.getString(Constants.PREFERENCES_KEY_PLAYLIST_NAME, null);
-		suggestedPlaylistId = prefs.getString(Constants.PREFERENCES_KEY_PLAYLIST_ID, null);
 	}
 
 	public boolean isInitialized() {
@@ -747,18 +734,9 @@ public class DownloadService extends Service {
 		clear(true);
 	}
 	public synchronized void clear(boolean serialize) {
-		// Delete podcast if fully listened to
 		int position = getPlayerPosition();
 		int duration = getPlayerDuration();
 		boolean cutoff = isPastCutoff(position, duration, true);
-		if(currentPlaying != null && currentPlaying.getSong() instanceof PodcastEpisode && !currentPlaying.isSaved()) {
-			if(cutoff) {
-				currentPlaying.delete();
-			}
-		}
-		for(DownloadFile podcast: toDelete) {
-			podcast.delete();
-		}
 		toDelete.clear();
 
 		// Clear bookmarks from current playing if past a certain point
@@ -1000,10 +978,6 @@ public class DownloadService extends Service {
 
 	public List<DownloadFile> getToDelete() { return toDelete; }
 
-	public boolean isCurrentPlayingSingle() {
-		return currentPlaying != null && currentPlaying.getSong() instanceof InternetRadioStation;
-	}
-
 	public synchronized boolean shouldFastForward() {
 		return size() == 1 || (currentPlaying != null && !currentPlaying.isSong());
 	}
@@ -1215,8 +1189,6 @@ public class DownloadService extends Service {
 		} else if(playerState == PlayerState.PREPARING || playerState == PlayerState.PREPARED) {
 			return;
 		}
-
-		// Delete podcast if fully listened to
 		int position = getPlayerPosition();
 		int duration = getPlayerDuration();
 		boolean cutoff;
@@ -1224,11 +1196,6 @@ public class DownloadService extends Service {
 			cutoff = true;
 		} else {
 			cutoff = isPastCutoff(position, duration);
-		}
-		if(currentPlaying != null && currentPlaying.getSong() instanceof PodcastEpisode && !currentPlaying.isSaved()) {
-			if(cutoff) {
-				toDelete.add(currentPlaying);
-			}
 		}
 		if(cutoff) {
 			clearCurrentBookmark(true);
@@ -1575,24 +1542,6 @@ public class DownloadService extends Service {
 		this.nextPlayerState = playerState;
 	}
 
-	public void setSuggestedPlaylistName(String name, String id) {
-		this.suggestedPlaylistName = name;
-		this.suggestedPlaylistId = id;
-
-		SharedPreferences.Editor editor = Util.getPreferences(this).edit();
-		editor.putString(Constants.PREFERENCES_KEY_PLAYLIST_NAME, name);
-		editor.putString(Constants.PREFERENCES_KEY_PLAYLIST_ID, id);
-		editor.commit();
-	}
-
-	public String getSuggestedPlaylistName() {
-		return suggestedPlaylistName;
-	}
-
-	public String getSuggestedPlaylistId() {
-		return suggestedPlaylistId;
-	}
-
 	public boolean getEqualizerAvailable() {
 		return effectsController.isAvailable();
 	}
@@ -1824,7 +1773,7 @@ public class DownloadService extends Service {
 		bufferAndPlay(position, true);
 	}
 	private synchronized void bufferAndPlay(int position, boolean start) {
-		if(!currentPlaying.isCompleteFileAvailable() && !currentPlaying.isStream()) {
+		if(!currentPlaying.isCompleteFileAvailable()) {
 			if(Util.isAllowedToDownload(this)) {
 				reset();
 
@@ -1854,28 +1803,23 @@ public class DownloadService extends Service {
 
 			String dataSource;
 			boolean isPartial = false;
-			if(downloadFile.isStream()) {
-				dataSource = downloadFile.getStream();
-				Log.i(TAG, "Data Source: " + dataSource);
-			} else {
-				downloadFile.setPlaying(true);
-				final File file = downloadFile.isCompleteFileAvailable() ? downloadFile.getCompleteFile() : downloadFile.getPartialFile();
-				isPartial = file.equals(downloadFile.getPartialFile());
-				downloadFile.updateModificationDate();
+			downloadFile.setPlaying(true);
+			final File file = downloadFile.isCompleteFileAvailable() ? downloadFile.getCompleteFile() : downloadFile.getPartialFile();
+			isPartial = file.equals(downloadFile.getPartialFile());
+			downloadFile.updateModificationDate();
 
-				dataSource = file.getAbsolutePath();
-				if (isPartial && !Util.isOffline(this)) {
-					if (proxy == null) {
-						proxy = new BufferProxy(this);
-						proxy.start();
-					}
-					proxy.setBufferFile(downloadFile);
-					dataSource = proxy.getPrivateAddress(dataSource);
-					Log.i(TAG, "Data Source: " + dataSource);
-				} else if (proxy != null) {
-					proxy.stop();
-					proxy = null;
+			dataSource = file.getAbsolutePath();
+			if (isPartial && !Util.isOffline(this)) {
+				if (proxy == null) {
+					proxy = new BufferProxy(this);
+					proxy.start();
 				}
+				proxy.setBufferFile(downloadFile);
+				dataSource = proxy.getPrivateAddress(dataSource);
+				Log.i(TAG, "Data Source: " + dataSource);
+			} else if (proxy != null) {
+				proxy.stop();
+				proxy = null;
 			}
 
 			mediaPlayer.setDataSource(dataSource);
@@ -2182,9 +2126,6 @@ public class DownloadService extends Service {
 		if (downloadList.isEmpty() && backgroundDownloadList.isEmpty()) {
 			return;
 		}
-		if(currentPlaying != null && currentPlaying.isStream()) {
-			return;
-		}
 
 		// Need to download current playing and not casting?
 		if (currentPlaying != null && remoteState == RemoteControlState.LOCAL && currentPlaying != currentDownloading && !currentPlaying.isWorkDone()) {
@@ -2385,11 +2326,6 @@ public class DownloadService extends Service {
 		if(downloadFile == null) {
 			return;
 		}
-
-		// Finished loading, delete when list is cleared
-		if (downloadFile.getSong() instanceof PodcastEpisode) {
-			toDelete.add(downloadFile);
-		}
 		clearCurrentBookmark(downloadFile.getSong(), true);
 	}
 
@@ -2503,8 +2439,8 @@ public class DownloadService extends Service {
 		final MusicDirectory.Entry entry = currentPlaying.getSong();
 		int duration = getPlayerDuration();
 
-		// If song is podcast or long go ahead and auto add a bookmark
-		if(entry.isPodcast() || entry.isAudioBook() || duration > (10L * 60L * 1000L)) {
+		// If song is long go ahead and auto add a bookmark
+		if(entry.isAudioBook() || duration > (10L * 60L * 1000L)) {
 			final Context context = this;
 			final int position = getPlayerPosition();
 

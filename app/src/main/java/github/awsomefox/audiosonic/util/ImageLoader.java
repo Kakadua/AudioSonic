@@ -40,10 +40,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import github.awsomefox.audiosonic.R;
 import github.awsomefox.audiosonic.domain.ArtistInfo;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastChannel;
 import github.awsomefox.audiosonic.domain.ServerInfo;
 import github.awsomefox.audiosonic.service.MusicService;
 import github.awsomefox.audiosonic.service.MusicServiceFactory;
@@ -59,7 +56,6 @@ import github.awsomefox.audiosonic.util.compat.RemoteControlClientBase;
 public class ImageLoader {
 	private static final String TAG = ImageLoader.class.getSimpleName();
 	public static final String PLAYLIST_PREFIX = "pl-";
-	public static final String PODCAST_PREFIX = "pc-";
 
 	private Context context;
 	private LruCache<String, Bitmap> cache;
@@ -219,11 +215,7 @@ public class ImageLoader {
 		return loadImage(view, entry, large, size, crossfade);
 	}
 	public SilentBackgroundTask loadImage(View view, MusicDirectory.Entry entry, boolean large, int size, boolean crossfade) {
-		if(entry != null && entry instanceof InternetRadioStation) {
-			// Continue on and load a null bitmap
-		}
-		// If we know this a artist, try to load artist info instead
-		else if(entry != null && !entry.isAlbum() && ServerInfo.checkServerVersion(context, "1.11")  && !Util.isOffline(context)) {
+		if(entry != null && !entry.isAlbum() && ServerInfo.checkServerVersion(context, "1.11")  && !Util.isOffline(context)) {
 			SilentBackgroundTask task = new ArtistImageTask(view.getContext(), entry, size, imageSizeLarge, large, view, crossfade);
 			task.execute();
 			return task;
@@ -322,36 +314,6 @@ public class ImageLoader {
 		SilentBackgroundTask<Void> task = new AvatarTask(context, view, username);
 		task.execute();
 		return task;
-	}
-
-	public SilentBackgroundTask loadImage(View view, Playlist playlist, boolean large, boolean crossfade) {
-		MusicDirectory.Entry entry = new MusicDirectory.Entry();
-		String id;
-		if(Util.isOffline(context)) {
-			id = PLAYLIST_PREFIX + playlist.getName();
-			entry.setTitle(playlist.getComment());
-		} else {
-			id = PLAYLIST_PREFIX + playlist.getId();
-			entry.setTitle(playlist.getName());
-		}
-		entry.setId(id);
-		entry.setCoverArt(id);
-		// So this isn't treated as a artist
-		entry.setParent("");
-
-		return loadImage(view, entry, large, crossfade);
-	}
-
-
-	public SilentBackgroundTask loadImage(View view, PodcastChannel channel, boolean large, boolean crossfade) {
-		MusicDirectory.Entry entry = new MusicDirectory.Entry();
-		entry.setId(PODCAST_PREFIX + channel.getId());
-		entry.setTitle(channel.getName());
-		entry.setCoverArt(channel.getCoverArt());
-		// So this isn't treated as a artist
-		entry.setParent("");
-
-		return loadImage(view, entry, large, crossfade);
 	}
 
 	private String getKey(String coverArtId, int size) {

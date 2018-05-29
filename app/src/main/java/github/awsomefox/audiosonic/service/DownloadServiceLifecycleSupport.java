@@ -38,7 +38,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import github.awsomefox.audiosonic.util.SongDBHandler;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;import github.awsomefox.audiosonic.domain.MusicDirectory;
+import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
 import github.awsomefox.audiosonic.domain.PlayerState;
 import github.awsomefox.audiosonic.domain.ServerInfo;
@@ -311,7 +311,7 @@ public class DownloadServiceLifecycleSupport {
 		FileUtil.serialize(downloadService, state, FILENAME_DOWNLOADS_SER);
 
 		// If we are on Subsonic 5.2+, save play queue
-		if(serializeRemote && ServerInfo.canSavePlayQueue(downloadService) && !Util.isOffline(downloadService) && state.songs.size() > 0 && !(state.songs.get(0) instanceof InternetRadioStation)) {
+		if(serializeRemote && ServerInfo.canSavePlayQueue(downloadService) && !Util.isOffline(downloadService) && state.songs.size() > 0) {
 			// Cancel any currently running tasks
 			if(currentSavePlayQueueTask != null) {
 				currentSavePlayQueueTask.cancel();

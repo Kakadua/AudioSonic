@@ -26,7 +26,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import github.awsomefox.audiosonic.domain.Genre;
-import github.awsomefox.audiosonic.domain.InternetRadioStation;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
@@ -38,9 +37,6 @@ import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
 import github.awsomefox.audiosonic.domain.Lyrics;
 import github.awsomefox.audiosonic.domain.MusicFolder;
-import github.awsomefox.audiosonic.domain.Playlist;
-import github.awsomefox.audiosonic.domain.PodcastChannel;
-import github.awsomefox.audiosonic.domain.Share;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
 import github.awsomefox.audiosonic.util.ProgressListener;
 
@@ -68,22 +64,6 @@ public interface MusicService {
     SearchResult search(SearchCritera criteria, Context context, ProgressListener progressListener) throws Exception;
 
     MusicDirectory getStarredList(Context context, ProgressListener progressListener) throws Exception;
-
-    MusicDirectory getPlaylist(boolean refresh, String id, String name, Context context, ProgressListener progressListener) throws Exception;
-
-    List<Playlist> getPlaylists(boolean refresh, Context context, ProgressListener progressListener) throws Exception;
-
-    void createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception;
-	
-	void deletePlaylist(String id, Context context, ProgressListener progressListener) throws Exception;
-	
-	void addToPlaylist(String id, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception;
-	
-	void removeFromPlaylist(String id, List<Integer> toRemove, Context context, ProgressListener progressListener) throws Exception;
-	
-	void overwritePlaylist(String id, String name, int toRemove, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception;
-	
-	void updatePlaylist(String id, String name, String comment, boolean pub, Context context, ProgressListener progressListener) throws Exception;
 
     Lyrics getLyrics(String artist, String title, Context context, ProgressListener progressListener) throws Exception;
 
@@ -125,10 +105,6 @@ public interface MusicService {
     RemoteStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception;
     
     void setStarred(List<MusicDirectory.Entry> entries, List<MusicDirectory.Entry> artists, List<MusicDirectory.Entry> albums, boolean starred, ProgressListener progressListener, Context context) throws Exception;
-	
-	List<Share> getShares(Context context, ProgressListener progressListener) throws Exception;
-
-	List<Share> createShare(List<String> ids, String description, Long expires, Context context, ProgressListener progressListener) throws Exception;
 
 	void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception;
 
@@ -143,22 +119,6 @@ public interface MusicService {
 	MusicDirectory getSongsByGenre(String genre, int count, int offset, Context context, ProgressListener progressListener) throws Exception;
 
 	MusicDirectory getTopTrackSongs(String artist, int size, Context context, ProgressListener progressListener) throws Exception;
-	
-	List<PodcastChannel> getPodcastChannels(boolean refresh, Context context, ProgressListener progressListener) throws Exception;
-	
-	MusicDirectory getPodcastEpisodes(boolean refresh, String id, Context context, ProgressListener progressListener) throws Exception;
-
-	MusicDirectory getNewestPodcastEpisodes(boolean refresh, Context context, ProgressListener progressListener, int count) throws Exception;
-	
-	void refreshPodcasts(Context context, ProgressListener progressListener) throws Exception;
-	
-	void createPodcastChannel(String url, Context context, ProgressListener progressListener) throws Exception;
-	
-	void deletePodcastChannel(String id, Context context, ProgressListener progressListener) throws Exception;
-	
-	void downloadPodcastEpisode(String id, Context context, ProgressListener progressListener) throws Exception;
-	
-	void deletePodcastEpisode(String id, String parent, ProgressListener progressListener, Context context) throws Exception;
 
 	void setRating(MusicDirectory.Entry entry, int rating, Context context, ProgressListener progressListener) throws Exception;
 
@@ -193,8 +153,6 @@ public interface MusicService {
 	void savePlayQueue(List<MusicDirectory.Entry> songs, MusicDirectory.Entry currentPlaying, int position, Context context, ProgressListener progressListener) throws Exception;
 
 	PlayerQueue getPlayQueue(Context context, ProgressListener progressListener) throws Exception;
-
-	List<InternetRadioStation> getInternetRadioStations(boolean refresh, Context context, ProgressListener progressListener) throws Exception;
 	
 	int processOfflineSyncs(final Context context, final ProgressListener progressListener) throws Exception;
 	

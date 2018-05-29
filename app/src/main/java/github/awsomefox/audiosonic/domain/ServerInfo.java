@@ -243,9 +243,6 @@ public class ServerInfo implements Serializable {
 	public static boolean hasSimilarArtists(Context context) {
 		return !ServerInfo.isMadsonic(context) || ServerInfo.checkServerVersion(context, "2.0");
 	}
-	public static boolean hasNewestPodcastEpisodes(Context context) {
-		return ServerInfo.checkServerVersion(context, "1.13");
-	}
 
 	public static boolean canRescanServer(Context context) {
 		return ServerInfo.isMadsonic(context) ||

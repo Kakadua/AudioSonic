@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,9 +39,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import github.awsomefox.audiosonic.adapter.TopRatedAlbumAdapter;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
-import github.awsomefox.audiosonic.domain.PodcastEpisode;
 import github.awsomefox.audiosonic.domain.ServerInfo;
-import github.awsomefox.audiosonic.domain.Share;
 import github.awsomefox.audiosonic.service.MusicService;
 import github.awsomefox.audiosonic.service.MusicServiceFactory;
 import github.awsomefox.audiosonic.service.ServerTooOldException;
@@ -106,12 +103,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	String id;
 	String name;
 	MusicDirectory.Entry directory;
-	String playlistId;
-	String playlistName;
-	boolean playlistOwner;
-	String podcastId;
-	String podcastName;
-	String podcastDescription;
 	String albumListType;
 	String albumListExtra;
 	int albumListSize;
@@ -187,14 +178,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			id = args.getString(Constants.INTENT_EXTRA_NAME_ID);
 			name = args.getString(Constants.INTENT_EXTRA_NAME_NAME);
 			directory = (MusicDirectory.Entry) args.getSerializable(Constants.INTENT_EXTRA_NAME_DIRECTORY);
-			playlistId = args.getString(Constants.INTENT_EXTRA_NAME_PLAYLIST_ID);
-			playlistName = args.getString(Constants.INTENT_EXTRA_NAME_PLAYLIST_NAME);
-			playlistOwner = args.getBoolean(Constants.INTENT_EXTRA_NAME_PLAYLIST_OWNER, false);
-			podcastId = args.getString(Constants.INTENT_EXTRA_NAME_PODCAST_ID);
-			podcastName = args.getString(Constants.INTENT_EXTRA_NAME_PODCAST_NAME);
-			podcastDescription = args.getString(Constants.INTENT_EXTRA_NAME_PODCAST_DESCRIPTION);
-			Object shareObj = args.getSerializable(Constants.INTENT_EXTRA_NAME_SHARE);
-			share = (shareObj != null) ? (Share) shareObj : null;
 			albumListType = args.getString(Constants.INTENT_EXTRA_NAME_ALBUM_LIST_TYPE);
 			albumListExtra = args.getString(Constants.INTENT_EXTRA_NAME_ALBUM_LIST_EXTRA);
 			albumListSize = args.getInt(Constants.INTENT_EXTRA_NAME_ALBUM_LIST_SIZE, 0);
@@ -283,38 +266,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			} else if(!ServerInfo.hasSimilarArtists(context)) {
 				menu.removeItem(R.id.menu_similar_artists);
 			}
-		} else {
-			if(podcastId == null) {
-				if(Util.isOffline(context)) {
-					menuInflater.inflate(R.menu.select_song_offline, menu);
-				}
-				else {
-					menuInflater.inflate(R.menu.select_song, menu);
-
-					if(playlistId == null || !playlistOwner) {
-						menu.removeItem(R.id.menu_remove_playlist);
-					}
-				}
-
-				SharedPreferences prefs = Util.getPreferences(context);
-				if(!prefs.getBoolean(Constants.PREFERENCES_KEY_MENU_PLAY_NEXT, true)) {
-					menu.setGroupVisible(R.id.hide_play_next, false);
-				}
-				if(!prefs.getBoolean(Constants.PREFERENCES_KEY_MENU_PLAY_LAST, true)) {
-					menu.setGroupVisible(R.id.hide_play_last, false);
-				}
-			} else {
-				if(Util.isOffline(context)) {
-					menuInflater.inflate(R.menu.select_podcast_episode_offline, menu);
-				}
-				else {
-					menuInflater.inflate(R.menu.select_podcast_episode, menu);
-
-					if(!UserUtil.canPodcast()) {
-						menu.removeItem(R.id.menu_download_all);
-					}
-				}
-			}
 		}
 
 		if("starred".equals(albumListType)) {
@@ -325,12 +276,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_remove_playlist:
-				removeFromPlaylist(playlistId, playlistName, getSelectedIndexes());
-				return true;
-			case R.id.menu_download_all:
-				downloadAllPodcastEpisodes();
-				return true;
 			case R.id.menu_show_all:
 				setShowAll();
 				return true;
@@ -339,13 +284,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				return true;
 			case R.id.menu_similar_artists:
 				showSimilarArtists(id);
-				return true;
-			case R.id.menu_radio:
-				startArtistRadio(id);
-				return true;
-			case R.id.reverse:
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.detach(this).attach(this).commit();
 				return true;
 		}
 
@@ -356,7 +294,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	public void onCreateContextMenu(Menu menu, MenuInflater menuInflater, UpdateView updateView, MusicDirectory.Entry entry) {
 		onCreateContextMenuSupport(menu, menuInflater, updateView, entry);
-		if(!entry.isVideo() && !Util.isOffline(context) && (playlistId == null || !playlistOwner) && (podcastId == null  || Util.isOffline(context) && podcastId != null)) {
+		if(!entry.isVideo() && !Util.isOffline(context)) {
 			menu.removeItem(R.id.song_menu_remove_playlist);
 		}
 
@@ -366,12 +304,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	public boolean onContextItemSelected(MenuItem menuItem, UpdateView<MusicDirectory.Entry> updateView, MusicDirectory.Entry entry) {
 		if(onContextItemSelected(menuItem, entry)) {
 			return true;
-		}
-
-		switch (menuItem.getItemId()) {
-			case R.id.song_menu_remove_playlist:
-				removeFromPlaylist(playlistId, playlistName, Arrays.asList(entries.indexOf(entry)));
-				break;
 		}
 
 		return true;
@@ -396,17 +328,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			replaceFragment(fragment, true);
 		} else if (entry.isVideo()) {
 			playVideo(entry);
-		} else if(entry instanceof PodcastEpisode) {
-			String status = ((PodcastEpisode)entry).getStatus();
-			if("error".equals(status)) {
-				Util.toast(context, R.string.select_podcasts_error);
-				return;
-			} else if(!"completed".equals(status)) {
-				Util.toast(context, R.string.select_podcasts_skipped);
-				return;
-			}
-
-			onSongPress(Arrays.asList(entry), entry, false);
 		} else {
 			onSongPress(entries, entry, albumListType == null || "starred".equals(albumListType));
 		}
@@ -432,17 +353,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 		}
 
 		recyclerView.setVisibility(View.INVISIBLE);
-		if (playlistId != null) {
-			getPlaylist(playlistId, playlistName, refresh);
-		} else if(podcastId != null) {
-			getPodcast(podcastId, podcastName, refresh);
-		} else if (share != null) {
-			if(showAll) {
-				getRecursiveMusicDirectory(share.getId(), share.getName(), refresh);
-			} else {
-				getShare(share, refresh);
-			}
-		} else if (albumListType != null) {
+		if (albumListType != null) {
 			getAlbumList(albumListType, albumListSize, refresh);
 		} else {
 			if(showAll) {
@@ -499,11 +410,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			@Override
 			protected MusicDirectory load(MusicService service) throws Exception {
 				MusicDirectory root;
-				if(share == null) {
-					root = getMusicDirectory(id, name, refresh, service, this);
-				} else {
-					root = share.getMusicDirectory();
-				}
+				root = getMusicDirectory(id, name, refresh, service, this);
 				List<MusicDirectory.Entry> songs = new ArrayList<MusicDirectory.Entry>();
 				getSongsRecursively(root, songs);
 
@@ -534,39 +441,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				SelectDirectoryFragment.this.name = result.getFirst().getName();
 				setTitle(SelectDirectoryFragment.this.name);
 				super.done(result);
-			}
-		}.execute();
-	}
-
-	private void getPlaylist(final String playlistId, final String playlistName, final boolean refresh) {
-		setTitle(playlistName);
-
-		new LoadTask(refresh) {
-			@Override
-			protected MusicDirectory load(MusicService service) throws Exception {
-				return service.getPlaylist(refresh, playlistId, playlistName, context, this);
-			}
-		}.execute();
-	}
-
-	private void getPodcast(final String podcastId, final String podcastName, final boolean refresh) {
-		setTitle(podcastName);
-
-		new LoadTask(refresh) {
-			@Override
-			protected MusicDirectory load(MusicService service) throws Exception {
-				return service.getPodcastEpisodes(refresh, podcastId, context, this);
-			}
-		}.execute();
-	}
-
-	private void getShare(final Share share, final boolean refresh) {
-		setTitle(share.getName());
-
-		new LoadTask(refresh) {
-			@Override
-			protected MusicDirectory load(MusicService service) throws Exception {
-				return share.getMusicDirectory();
 			}
 		}.execute();
 	}
@@ -738,7 +612,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 		if(albumListType == null || "starred".equals(albumListType)) {
 			entryGridAdapter = new EntryGridAdapter(context, entries, getImageLoader(), largeAlbums);
-			entryGridAdapter.setRemoveFromPlaylist(playlistId != null);
 		} else {
 			if("alphabeticalByName".equals(albumListType)) {
 				entryGridAdapter = new AlphabeticalAlbumAdapter(context, entries, getImageLoader(), largeAlbums);
@@ -791,7 +664,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 		// Show header if not album list type and not root and not artist
 		// For Subsonic 5.1+ display a header for artists with getArtistInfo data if it exists
 		boolean addedHeader = false;
-		if(albumListType == null && (!artist || artistInfo != null || artistInfoDelayed != null) && (share == null || entries.size() != albums.size())) {
+		if(albumListType == null && (!artist || artistInfo != null || artistInfoDelayed != null) && (entries.size() != albums.size())) {
 			View header = createHeader();
 
 			if(header != null) {
@@ -868,7 +741,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	private void playAll(final boolean shuffle, final boolean append, final boolean playNext) {
 		boolean hasSubFolders = albums != null && !albums.isEmpty();
 
-		if (hasSubFolders && (id != null || share != null || "starred".equals(albumListType))) {
+		if (hasSubFolders && (id != null || "starred".equals(albumListType))) {
 			downloadRecursively(id, false, append, !append, shuffle, false, playNext);
 		} else if(hasSubFolders && albumListType != null) {
 			downloadRecursively(albums, shuffle, append, playNext);
@@ -896,9 +769,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	protected void downloadBackground(final boolean save) {
 		List<MusicDirectory.Entry> songs = getSelectedEntries();
-		if(playlistId != null) {
-			songs = entries;
-		}
 
 		if(songs.isEmpty()) {
 			// Get both songs and albums
@@ -933,7 +803,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 	@Override
 	protected void download(List<MusicDirectory.Entry> entries, boolean append, boolean save, boolean autoplay, boolean playNext, boolean shuffle) {
-		download(entries, append, save, autoplay, playNext, shuffle, playlistName, playlistId);
+		download(entries, append, save, autoplay, playNext, shuffle);
 	}
 
 	@Override
@@ -952,65 +822,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			getDownloadService().delete(songs);
 		}
 	}
-
-	public void removeFromPlaylist(final String id, final String name, final List<Integer> indexes) {
-		new LoadingTask<Void>(context, true) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.removeFromPlaylist(id, indexes, context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				for(Integer index: indexes) {
-					entryGridAdapter.removeAt(index);
-				}
-				Util.toast(context, context.getResources().getString(R.string.removed_playlist, String.valueOf(indexes.size()), name));
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(R.string.updated_playlist_error, name) + " " + getErrorMessage(error);
-				}
-
-				Util.toast(context, msg, false);
-			}
-		}.execute();
-	}
-
-	public void downloadAllPodcastEpisodes() {
-		new LoadingTask<Void>(context, true) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-
-				for(int i = 0; i < entries.size(); i++) {
-					PodcastEpisode episode = (PodcastEpisode) entries.get(i);
-					if("skipped".equals(episode.getStatus())) {
-						musicService.downloadPodcastEpisode(episode.getEpisodeId(), context, null);
-					}
-				}
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, context.getResources().getString(R.string.select_podcasts_downloading, podcastName));
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				Util.toast(context, getErrorMessage(error), false);
-			}
-		}.execute();
-	}
-
 
 	@Override
 	protected void toggleSelectedStarred() {
@@ -1221,19 +1032,11 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	private void setupTextDisplay(final View header) {
 
 		final TextView titleView = header.findViewById(R.id.select_album_title);
-		if(playlistName != null) {
-			titleView.setText(playlistName);
-		} else if(podcastName != null) {
-			Collections.reverse(entries);
-			titleView.setText(podcastName);
-			titleView.setPadding(0, 6, 4, 8);
-		} else if(name != null) {
+		if(name != null) {
 			titleView.setText(name);
 			if(artistInfo != null) {
 				titleView.setPadding(0, 6, 4, 8);
 			}
-		} else if(share != null) {
-			titleView.setVisibility(View.GONE);
 		}
 
 		int songCount = 0;
@@ -1290,80 +1093,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			bookDescription = "The server has no description for this book"; }
 
 		final TextView artistView = header.findViewById(R.id.select_album_artist);
-		if(podcastDescription != null || artistInfo != null || bookDescription != null) {
-			artistView.setVisibility(View.VISIBLE);
-
-			String text = "";
-			if(bookDescription != null){
-				text = bookDescription;
-			}
-			if(podcastDescription != null){
-				text = podcastDescription;
-			}
-			if(artistInfo != null){
-				text = artistInfo.getBiography();
-			}
-			Spanned spanned = null;
-			if(text != null) {
-				String newText = "";
-				try{ if(!artistName.equals("")){ newText += "<b>" + context.getResources().getString(R.string.main_artist) + "</b>: " + artistName + "<br/>"; } } catch(Exception e){}
-				try{ if(totalDuration > 0) { newText += "<b>" + context.getResources().getString(R.string.album_book_reader) + "</b>: " + bookReader + "<br/>"; } } catch(Exception e){}
-				try{ if(totalDuration > 0) { newText += "<b>" + context.getResources().getString(R.string.album_book_length) + "</b>: " + Util.formatDuration(totalDuration) + "<br/>"; } } catch(Exception e){}
-				try{ newText += text+"<br/>";} catch(Exception e){}
-				spanned = Html.fromHtml(newText);
-			}
-
-			artistView.setText(spanned);
-			artistView.setSingleLine(false);
-			final int minLines = context.getResources().getInteger(R.integer.TextDescriptionLength);
-			artistView.setLines(minLines);
-			artistView.setTextAppearance(context, android.R.style.TextAppearance_Small);
-
-			final Spanned spannedText = spanned;
-			artistView.setOnClickListener(new View.OnClickListener() {
-				@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-				@Override
-				public void onClick(View v) {
-					if(artistView.getMaxLines() == minLines) {
-						// Use LeadingMarginSpan2 to try to make text flow around image
-						Display display = context.getWindowManager().getDefaultDisplay();
-						ImageView coverArtView = header.findViewById(R.id.select_album_art);
-						coverArtView.measure(display.getWidth(), display.getHeight());
-
-						int height, width;
-						ViewGroup.MarginLayoutParams vlp = (ViewGroup.MarginLayoutParams) coverArtView.getLayoutParams();
-						if(coverArtView.getDrawable() != null) {
-							height = coverArtView.getMeasuredHeight() + coverArtView.getPaddingBottom();
-							width = coverArtView.getWidth() + coverArtView.getPaddingRight();
-						} else {
-							height = coverArtView.getHeight();
-							width = coverArtView.getWidth() + coverArtView.getPaddingRight();
-						}
-						float textLineHeight = artistView.getPaint().getTextSize();
-
-						int lines = (int) Math.ceil(height / textLineHeight) + 1;
-
-						SpannableString ss = new SpannableString(spannedText);
-						ss.setSpan(new MyLeadingMarginSpan2(lines, width), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-						View linearLayout = header.findViewById(R.id.select_album_text_layout);
-						RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-						int[]rules = params.getRules();
-						rules[RelativeLayout.RIGHT_OF] = 0;
-						params.leftMargin = vlp.rightMargin;
-
-						artistView.setText(ss);
-						artistView.setMaxLines(100);
-
-						vlp = (ViewGroup.MarginLayoutParams) titleView.getLayoutParams();
-						vlp.leftMargin = width;
-					} else {
-						artistView.setMaxLines(minLines);
-					}
-				}
-			});
-			artistView.setMovementMethod(LinkMovementMethod.getInstance());
-		} else if(topTracks) {
+		if(topTracks) {
 			artistView.setText(R.string.menu_top_tracks);
 			artistView.setVisibility(View.VISIBLE);
 		} else if(showAll) {
@@ -1382,7 +1112,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 		TextView songCountView = header.findViewById(R.id.select_album_song_count);
 		TextView songLengthView = header.findViewById(R.id.select_album_song_length);
-		if(podcastDescription != null || artistInfo != null) {
+		if(artistInfo != null) {
 			songCountView.setVisibility(View.GONE);
 			songLengthView.setVisibility(View.GONE);
 		} else {
@@ -1393,19 +1123,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 		}
 	}
 	private void setupButtonEvents(View header) {
-		ImageView shareButton = header.findViewById(R.id.select_album_share);
-		if(share != null || podcastId != null || !Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_MENU_SHARED, true) || Util.isOffline(context) || !UserUtil.canShare() || artistInfo != null) {
-			shareButton.setVisibility(View.GONE);
-		} else {
-			shareButton.setVisibility(View.GONE);
-			shareButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					createShare(SelectDirectoryFragment.this.entries);
-				}
-			});
-		}
-
 		final ImageButton starButton = header.findViewById(R.id.select_album_star);
 		if(directory != null && Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_MENU_STAR, true) && artistInfo == null) {
 			if(directory.isStarred()) {

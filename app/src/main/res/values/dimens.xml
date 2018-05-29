@@ -13,4 +13,5 @@
 	<dimen name="FastScroller.NormalBarMargin">4dp</dimen>
 	<dimen name="FastScroller.RightMargin">4dp</dimen>
 	<dimen name="design_fab_image_size" override="true">50dp</dimen>
+	<dimen name="design_fab_size_normal" override="true">75dp</dimen>
 </resources>

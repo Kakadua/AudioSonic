@@ -13,7 +13,6 @@ import android.util.Log;
 import android.os.StatFs;
 
 import github.awsomefox.audiosonic.service.MediaStoreService;
-import github.awsomefox.audiosonic.domain.Playlist;
 import github.awsomefox.audiosonic.service.DownloadFile;
 import github.awsomefox.audiosonic.service.DownloadService;
 
@@ -44,9 +43,6 @@ public class CacheCleaner {
     }
 	public void cleanSpace() {
 		new BackgroundSpaceCleanup(context).execute();
-	}
-	public void cleanPlaylists(List<Playlist> playlists) {
-		new BackgroundPlaylistsCleanup(context, playlists).execute();
 	}
 
     private void deleteEmptyDirs(List<File> dirs, Set<File> undeletable) {
@@ -257,34 +253,6 @@ public class CacheCleaner {
 				}
 			} catch (RuntimeException x) {
 				Log.e(TAG, "Error in cache cleaning.", x);
-			}
-
-			return null;
-		}
-	}
-
-	private class BackgroundPlaylistsCleanup extends SilentBackgroundTask<Void> {
-		private final List<Playlist> playlists;
-
-		public BackgroundPlaylistsCleanup(Context context, List<Playlist> playlists) {
-			super(context);
-			this.playlists = playlists;
-		}
-
-		@Override
-		protected Void doInBackground() {
-			try {
-				String server = Util.getServerName(context);
-				SortedSet<File> playlistFiles = FileUtil.listFiles(FileUtil.getPlaylistDirectory(context, server));
-				for (Playlist playlist : playlists) {
-					playlistFiles.remove(FileUtil.getPlaylistFile(context, server, playlist.getName()));
-				}
-
-				for(File playlist : playlistFiles) {
-					playlist.delete();
-				}
-			} catch (RuntimeException x) {
-				Log.e(TAG, "Error in playlist cache cleaning.", x);
 			}
 
 			return null;
