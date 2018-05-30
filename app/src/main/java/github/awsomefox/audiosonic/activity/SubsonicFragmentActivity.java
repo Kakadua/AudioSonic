@@ -189,24 +189,35 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				replaceFragment(fragment, fragment.getSupportTag());
 			}
 		}
+//		setSupportActionBar(nowPlayingToolbar);
+//		nowPlayingFragment.updateTitle();
 
 		slideUpPanel = findViewById(R.id.slide_up_panel);
 		panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
 			@Override
 			public void onPanelSlide(View panel, float slideOffset) {
-
+				if (bottomBar.getVisibility() == View.GONE) bottomBar.setVisibility(View.VISIBLE);
+				if (nowPlayingToolbar.getVisibility() == View.GONE) nowPlayingToolbar.setVisibility(View.VISIBLE);
+				coverArtView.setAlpha(1.0f - slideOffset);
+				trackView.setAlpha(1.0f - slideOffset);
+				artistView.setAlpha(1.0f - slideOffset);
+				fastforwardButton.setAlpha(1.0f - slideOffset);
+				rewindButton.setAlpha(1.0f - slideOffset);
+				previousButton.setAlpha(1.0f - slideOffset);
+				nextButton.setAlpha(1.0f - slideOffset);
+				startButton.setAlpha(1.0f - slideOffset);
+				bottomBar.setAlpha(1.0f - slideOffset);
+				nowPlayingToolbar.setAlpha(slideOffset);
 			}
 
 			@Override
 			public void onPanelCollapsed(View panel) {
 				isPanelClosing = false;
-				if(bottomBar.getVisibility() == View.GONE) {
-					bottomBar.setVisibility(View.VISIBLE);
-					nowPlayingToolbar.setVisibility(View.GONE);
-					nowPlayingFragment.setPrimaryFragment(false);
-					setSupportActionBar(mainToolbar);
-					recreateSpinner();
-				}
+				bottomBar.setVisibility(View.VISIBLE);
+				nowPlayingToolbar.setVisibility(View.GONE);
+				nowPlayingFragment.setPrimaryFragment(false);
+				setSupportActionBar(mainToolbar);
+				recreateSpinner();
 			}
 
 			@Override
