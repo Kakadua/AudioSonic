@@ -21,18 +21,6 @@
 			android:title="@string/common.play_now"/>
 	</group>
 
-	<group android:id="@+id/hide_play_next">
-		<item
-			android:id="@+id/song_menu_play_next"
-			android:title="@string/common.play_next"/>
-	</group>
-
-	<group android:id="@+id/hide_play_last">
-		<item
-			android:id="@+id/song_menu_play_last"
-			android:title="@string/common.play_last"/>
-	</group>
-
 	<group android:id="@+id/hide_delete">
 		<item
 			android:id="@+id/song_menu_delete"

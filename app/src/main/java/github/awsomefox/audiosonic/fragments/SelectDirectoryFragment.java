@@ -26,8 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.apache.http.HttpEntity;
@@ -37,7 +35,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import github.awsomefox.audiosonic.adapter.TopRatedAlbumAdapter;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.ServerInfo;
 import github.awsomefox.audiosonic.service.MusicService;
@@ -294,9 +291,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	public void onCreateContextMenu(Menu menu, MenuInflater menuInflater, UpdateView updateView, MusicDirectory.Entry entry) {
 		onCreateContextMenuSupport(menu, menuInflater, updateView, entry);
-		if(!entry.isVideo() && !Util.isOffline(context)) {
-			menu.removeItem(R.id.song_menu_remove_playlist);
-		}
 
 		recreateContextMenu(menu);
 	}
@@ -358,8 +352,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 		} else {
 			if(showAll) {
 				getRecursiveMusicDirectory(id, name, refresh);
-			} else if(topTracks) {
-				getTopTracks(id, name, refresh);
 			} else {
 				getMusicDirectory(id, name, refresh);
 			}
@@ -441,17 +433,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				SelectDirectoryFragment.this.name = result.getFirst().getName();
 				setTitle(SelectDirectoryFragment.this.name);
 				super.done(result);
-			}
-		}.execute();
-	}
-
-	private void getTopTracks(final String id, final String name, final boolean refresh) {
-		setTitle(name);
-
-		new LoadTask(refresh) {
-			@Override
-			protected MusicDirectory load(MusicService service) throws Exception {
-				return service.getTopTrackSongs(name, 50, context, this);
 			}
 		}.execute();
 	}
@@ -615,8 +596,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 		} else {
 			if("alphabeticalByName".equals(albumListType)) {
 				entryGridAdapter = new AlphabeticalAlbumAdapter(context, entries, getImageLoader(), largeAlbums);
-			} else if("highest".equals(albumListType)) {
-				entryGridAdapter = new TopRatedAlbumAdapter(context, entries, getImageLoader(), largeAlbums);
 			} else {
 				entryGridAdapter = new EntryInfiniteGridAdapter(context, entries, getImageLoader(), largeAlbums);
 			}
@@ -1154,26 +1133,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			starButton.setVisibility(View.GONE);
 		} else {
 			starButton.setVisibility(View.GONE);
-		}
-
-		View ratingBarWrapper = header.findViewById(R.id.select_album_rate_wrapper);
-		final RatingBar ratingBar = header.findViewById(R.id.select_album_rate);
-		if(directory != null && Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_MENU_RATING, true) && !Util.isOffline(context)  && artistInfo == null) {
-			ratingBar.setRating(directory.getRating());
-			ratingBarWrapper.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					UpdateHelper.setRating(context, directory, new UpdateHelper.OnRatingChange() {
-						@Override
-						public void ratingChange(int rating) {
-							ratingBar.setRating(directory.getRating());
-						}
-					});
-				}
-			});
-			ratingBar.setVisibility(View.GONE);
-		} else {
-			ratingBar.setVisibility(View.GONE);
 		}
 	}
 }

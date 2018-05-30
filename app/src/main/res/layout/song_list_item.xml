@@ -106,16 +106,6 @@
                     android:paddingLeft="6dip"
 					android:textColor="?android:textColorSecondary"/>
 
-			<RatingBar
-				android:id="@+id/song_rating"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:isIndicator="true"
-				android:layout_centerHorizontal="true"
-				android:numStars="5"
-				style="@android:style/Widget.Holo.RatingBar.Small"
-				android:visibility="gone"/>
-
             <TextView
                     android:id="@+id/song_duration"
                     android:layout_width="wrap_content"

@@ -17,9 +17,7 @@
 		android:id="@+id/menu_cache"
 		android:title="@string/common.pin"/>
 
-	<item
-		android:id="@+id/menu_add_playlist"
-		android:title="@string/menu.add_playlist"/>
+	<item android:title="@string/menu.add_playlist"/>
 
 	<item
 		android:id="@+id/menu_star"

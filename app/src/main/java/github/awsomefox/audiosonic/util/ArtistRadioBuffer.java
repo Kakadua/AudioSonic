@@ -122,7 +122,7 @@ public class ArtistRadioBuffer {
 			synchronized (buffer) {
 				lastCount = 0;
 				for(MusicDirectory.Entry entry: songs.getChildren()) {
-					if(!buffer.contains(entry) && entry.getRating() != 1) {
+					if(!buffer.contains(entry)) {
 						buffer.add(entry);
 						lastCount++;
 					}

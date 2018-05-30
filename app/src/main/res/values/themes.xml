@@ -34,9 +34,6 @@
 		<item name="bookmark">@drawable/ic_menu_bookmark_light</item>
 		<item name="add_person">@drawable/ic_menu_add_person_dark</item>
 		<item name="password">@drawable/ic_menu_password_dark</item>
-		<item name="rating_bad">@drawable/ic_action_rating_bad_light</item>
-		<item name="rating_good">@drawable/ic_action_rating_good_light</item>
-		<item name="radio">@drawable/ic_menu_radio_dark</item>
 		<item name="star_outline">@drawable/ic_toggle_star_outline_light</item>
 		<item name="download">@drawable/ic_menu_download_dark</item>
 		<item name="playback_speed">@drawable/ic_av_timer_white_48dp</item>
@@ -98,9 +95,6 @@
 		<item name="bookmark">@drawable/ic_menu_bookmark_dark</item>
 		<item name="add_person">@drawable/ic_menu_add_person_dark</item>
 		<item name="password">@drawable/ic_menu_password_dark</item>
-		<item name="rating_bad">@drawable/ic_action_rating_bad_dark</item>
-		<item name="rating_good">@drawable/ic_action_rating_good_dark</item>
-		<item name="radio">@drawable/ic_menu_radio_dark</item>
 		<item name="star_outline">@drawable/ic_toggle_star_outline_dark</item>
 		<item name="download">@drawable/ic_menu_download_dark</item>
 		<item name="playback_speed">@drawable/ic_av_timer_white_48dp</item>
@@ -189,7 +183,6 @@
 		<item name="save">@drawable/ic_menu_save_light</item>
 		<item name="add_person">@drawable/ic_menu_add_person_light</item>
 		<item name="password">@drawable/ic_menu_password_light</item>
-		<item name="radio">@drawable/ic_menu_radio_light</item>
 		<item name="download">@drawable/ic_menu_download_light</item>
 		<item name="actionModeBackground">@color/background_material_light</item>
 		<item name="actionModeStyle">@style/LightActionMode</item>

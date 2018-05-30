@@ -315,12 +315,6 @@ public final class Util {
         int cacheSize = Integer.parseInt(prefs.getString(Constants.PREFERENCES_KEY_CACHE_SIZE, "-1"));
         return cacheSize == -1 ? Integer.MAX_VALUE : cacheSize;
     }
-	public static boolean isBatchMode(Context context) {
-		return Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_BATCH_MODE, false);
-	}
-	public static void setBatchMode(Context context, boolean batchMode) {
-		Util.getPreferences(context).edit().putBoolean(Constants.PREFERENCES_KEY_BATCH_MODE, batchMode).commit();
-	}
 
 	public static String getRestUsername(Context context, String method) {
 		SharedPreferences prefs = getPreferences(context);
@@ -456,7 +450,7 @@ public final class Util {
 		}
 
 		//  Use separate profile for Chromecast so users can do ogg on phone, mp3 for CC
-		return url.replace("c=" + Constants.REST_CLIENT_ID, "c=" + Constants.CHROMECAST_CLIENT_ID);
+		return url.replace("c=" + Constants.REST_CLIENT_ID, "c=");
 	}
 
 	public static boolean isTagBrowsing(Context context) {
@@ -630,11 +624,6 @@ public final class Util {
         return Math.max(0, Constants.FREE_TRIAL_DAYS - daysSinceInstall);
     }
 
-	public static boolean isCastProxy(Context context) {
-		SharedPreferences prefs = getPreferences(context);
-		return prefs.getBoolean(Constants.PREFERENCES_KEY_CAST_PROXY, false);
-	}
-
 	public static boolean isFirstLevelArtist(Context context) {
 		SharedPreferences prefs = getPreferences(context);
 		return prefs.getBoolean(Constants.PREFERENCES_KEY_FIRST_LEVEL_ARTIST + getActiveServer(context), true);
@@ -650,10 +639,6 @@ public final class Util {
 		}
 
 		editor.commit();
-	}
-
-	public static boolean shouldCacheDuringCasting(Context context) {
-		return Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_CAST_CACHE, false);
 	}
 
 	public static boolean shouldStartOnHeadphones(Context context) {
@@ -1342,7 +1327,7 @@ public final class Util {
     		audioManager.requestAudioFocus(focusListener = new OnAudioFocusChangeListener() {
 				public void onAudioFocusChange(int focusChange) {
 					DownloadService downloadService = (DownloadService)context;
-					if((focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) && !downloadService.isRemoteEnabled()) {
+					if((focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK)) {
 						if(downloadService.getPlayerState() == PlayerState.STARTED) {
 							Log.i(TAG, "Temporary loss of focus");
 							SharedPreferences prefs = getPreferences(context);
@@ -1364,7 +1349,7 @@ public final class Util {
 							lowerFocus = false;
 							downloadService.setVolume(1.0f);
 						}
-					} else if(focusChange == AudioManager.AUDIOFOCUS_LOSS && !downloadService.isRemoteEnabled()) {
+					} else if(focusChange == AudioManager.AUDIOFOCUS_LOSS) {
 						Log.i(TAG, "Permanently lost focus");
 						focusListener = null;
 						downloadService.pause();

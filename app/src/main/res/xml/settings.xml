@@ -32,9 +32,4 @@
 		android:title="@string/settings.playback_title"
 		android:key="playback">
 	</PreferenceScreen>
-
-	<PreferenceScreen
-		android:title="@string/settings.casting"
-		android:key="cast">
-	</PreferenceScreen>
 </PreferenceScreen>

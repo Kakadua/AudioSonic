@@ -125,13 +125,8 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 		List<Integer> albums = new ArrayList<>();
 		albums.add(R.string.main_albums_newest);
 		albums.add(R.string.main_albums_random);
-
-		if(!Util.isTagBrowsing(downloadService)) {
-			albums.add(R.string.main_albums_highest);
-		}
 		albums.add(R.string.main_albums_starred);
 		albums.add(R.string.main_albums_recent);
-		albums.add(R.string.main_albums_frequent);
 
 		List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
@@ -158,17 +153,11 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 					case R.string.main_albums_random:
 						albumListType = "random";
 						break;
-					case R.string.main_albums_highest:
-						albumListType = "highest";
-						break;
 					case R.string.main_albums_starred:
 						albumListType = "starred";
 						break;
 					case R.string.main_albums_recent:
 						albumListType = "recent";
-						break;
-					case R.string.main_albums_frequent:
-						albumListType = "frequent";
 						break;
 					default:
 						albumListType = "newest";
@@ -281,12 +270,14 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 						// browse deeper
 						description = new MediaDescriptionCompat.Builder()
 								.setTitle(entry.getTitle())
+								.setSubtitle("Chapter "+ entry.getTrack())
 								.setMediaId(MUSIC_DIRECTORY_CONTENTS_PREFIX + entry.getId())
 								.build();
 					} else {
 						// playback options for a single item
 						description = new MediaDescriptionCompat.Builder()
 								.setTitle(entry.getTitle())
+								.setSubtitle("Chapter "+ entry.getTrack())
 								.setMediaId(MUSIC_DIRECTORY_PREFIX + entry.getId())
 								.build();
 					}
@@ -317,7 +308,7 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 
 					MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
 							.setTitle(entry.getTitle())
-							.setSubtitle(Util.formatDuration(entry.getBookmark().getPosition() / 1000))
+							.setSubtitle("Chapter "+ entry.getTrack() + " - " + Util.formatDuration(entry.getBookmark().getPosition() / 1000))
 							.setMediaId(MUSIC_DIRECTORY_PREFIX + entry.getId())
 							.setExtras(extras)
 							.build();
@@ -340,26 +331,6 @@ public class AutoMediaBrowserService extends MediaBrowserServiceCompat {
 				.setMediaId("play-" + id)
 				.setExtras(playAllExtras);
 		mediaItems.add(new MediaBrowserCompat.MediaItem(playAll.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
-
-		Bundle shuffleExtras = new Bundle();
-		shuffleExtras.putString(idConstant, id);
-		shuffleExtras.putBoolean(Constants.INTENT_EXTRA_NAME_SHUFFLE, true);
-
-		MediaDescriptionCompat.Builder shuffle = new MediaDescriptionCompat.Builder();
-		shuffle.setTitle(downloadService.getString(R.string.menu_shuffle))
-				.setMediaId("shuffle-" + id)
-				.setExtras(shuffleExtras);
-		mediaItems.add(new MediaBrowserCompat.MediaItem(shuffle.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
-
-		Bundle playLastExtras = new Bundle();
-		playLastExtras.putString(idConstant, id);
-		playLastExtras.putBoolean(Constants.INTENT_EXTRA_PLAY_LAST, true);
-
-		MediaDescriptionCompat.Builder playLast = new MediaDescriptionCompat.Builder();
-		playLast.setTitle(downloadService.getString(R.string.menu_play_last))
-				.setMediaId("playLast-" + id)
-				.setExtras(playLastExtras);
-		mediaItems.add(new MediaBrowserCompat.MediaItem(playLast.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
 	}
 
 	private void getPlayOptions(Result<List<MediaBrowserCompat.MediaItem>> result, String id, String idConstant) {

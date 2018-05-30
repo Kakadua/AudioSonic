@@ -94,29 +94,6 @@ public class RemoteControlClientICS extends RemoteControlClientBase {
 				apply();
 	}
 
-	@Override
-	public void registerRoute(MediaRouter router) {
-		if(mRemoteControl == null) {
-			return;
-		}
-
-		router.addRemoteControlClient(mRemoteControl);
-	}
-
-	@Override
-	public void unregisterRoute(MediaRouter router) {
-		if(mRemoteControl == null) {
-			return;
-		}
-
-		router.removeRemoteControlClient(mRemoteControl);
-	}
-
-	@Override
-	public void updatePlaylist(List<DownloadFile> playlist) {
-
-	}
-
 	protected void updateMetadata(final MusicDirectory.Entry currentSong, final RemoteControlClient.MetadataEditor editor) {
 		editor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, (currentSong == null) ? null : currentSong.getArtist())
 			.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, (currentSong == null) ? null : currentSong.getAlbum())

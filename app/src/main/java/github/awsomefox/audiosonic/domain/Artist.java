@@ -39,7 +39,6 @@ public class Artist implements Serializable {
     private String name;
     private String index;
 	private boolean starred;
-	private Integer rating;
 	private int closeness;
 
 	public Artist() {
@@ -76,17 +75,6 @@ public class Artist implements Serializable {
 	}
 	public void setStarred(boolean starred) {
 		this.starred = starred;
-	}
-
-	public int getRating() {
-		return rating == null ? 0 : rating;
-	}
-	public void setRating(Integer rating) {
-		if(rating == null || rating == 0) {
-			this.rating = null;
-		} else {
-			this.rating = rating;
-		}
 	}
 	
 	public int getCloseness() {

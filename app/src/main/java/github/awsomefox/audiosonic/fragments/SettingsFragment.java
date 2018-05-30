@@ -53,7 +53,6 @@ import github.awsomefox.audiosonic.service.MusicServiceFactory;
 import github.awsomefox.audiosonic.util.LoadingTask;
 import github.awsomefox.audiosonic.view.ErrorDialog;
 import github.awsomefox.audiosonic.activity.SubsonicActivity;
-import github.awsomefox.audiosonic.util.MediaRouteManager;
 import github.awsomefox.audiosonic.view.CacheLocationPreference;
 import github.awsomefox.audiosonic.R;
 import github.awsomefox.audiosonic.service.DownloadService;
@@ -142,8 +141,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 			xml = R.xml.settings_playback;
 		} else if("servers".equals(name)) {
 			xml = R.xml.settings_servers;
-		} else if ("cast".equals(name)) {
-			xml = R.xml.settings_cast;
 		}
 
 		if(xml != 0) {
@@ -196,18 +193,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 			if("day/night".equals(value) || "day/black".equals(value)) {
 				if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 					ActivityCompat.requestPermissions(context, new String[]{ Manifest.permission.ACCESS_COARSE_LOCATION }, SubsonicActivity.PERMISSIONS_REQUEST_LOCATION);
-				}
-			}
-		} else if(Constants.PREFERENCES_KEY_DLNA_CASTING_ENABLED.equals(key)) {
-			DownloadService downloadService = DownloadService.getInstance();
-			if(downloadService != null) {
-				MediaRouteManager mediaRouter = downloadService.getMediaRouter();
-
-				Boolean enabled = sharedPreferences.getBoolean(key, true);
-				if (enabled) {
-					mediaRouter.addDLNAProvider();
-				} else {
-					mediaRouter.removeDLNAProvider();
 				}
 			}
 		}

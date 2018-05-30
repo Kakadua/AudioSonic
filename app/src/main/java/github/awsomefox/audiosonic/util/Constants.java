@@ -36,7 +36,6 @@ public final class Constants {
     public static final String REST_PROTOCOL_VERSION_SUBSONIC = "1.2.0";
 	public static final String REST_PROTOCOL_VERSION_MADSONIC = "2.0.0";
     public static final String REST_CLIENT_ID = "Booksonic";
-    public static final String CHROMECAST_CLIENT_ID = "BooksonicCC";
 	public static final String LAST_VERSION = "subsonic.version";
 
     // Names for intent extras.
@@ -131,7 +130,6 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_PAUSE_DISCONNECT = "pauseOnDisconnect";
 	public static final String PREFERENCES_KEY_HIDE_WIDGET = "hideWidget";
 	public static final String PREFERENCES_KEY_BOOKMARKS_ENABLED = "bookmarksEnabled";
-	public static final String PREFERENCES_KEY_INTERNET_RADIO_ENABLED = "internetRadioEnabled";
 	public static final String PREFERENCES_KEY_CUSTOM_SORT_ENABLED = "customSortEnabled";
 	public static final String PREFERENCES_KEY_MENU_PLAY_NOW = "showPlayNow";
 	public static final String PREFERENCES_KEY_MENU_PLAY_SHUFFLED = "showPlayShuffled";
@@ -142,7 +140,6 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_MENU_DELETE = "showDelete";
 	public static final String PREFERENCES_KEY_MENU_STAR = "showStar";
 	public static final String PREFERENCES_KEY_MENU_SHARED = "showShared";
-	public static final String PREFERENCES_KEY_SHARED_ENABLED = "sharedEnabled";
 	public static final String PREFERENCES_KEY_BROWSE_TAGS = "browseTags";
 	public static final String PREFERENCES_KEY_OPEN_TO_TAB = "openToTab";
 	public static final String PREFERENCES_KEY_OVERRIDE_SYSTEM_LANGUAGE = "overrideSystemLanguage";
@@ -152,13 +149,11 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_ADMIN_ENABLED = "adminEnabled";
 	public static final String PREFERENCES_KEY_SERVER_SYNC = "serverSync";
 	public static final String PREFERENCES_KEY_RECENT_COUNT = "mostRecentCount";
-	public static final String PREFERENCES_KEY_MENU_RATING = "showRating";
 	public static final String PREFERENCES_KEY_REPLAY_GAIN = "replayGain";
 	public static final String PREFERENCES_KEY_REPLAY_GAIN_BUMP = "replayGainBump2";
 	public static final String PREFERENCES_KEY_REPLAY_GAIN_UNTAGGED = "replayGainUntagged2";
 	public static final String PREFERENCES_KEY_REPLAY_GAIN_TYPE= "replayGainType";
 	public static final String PREFERENCES_KEY_ALBUMS_PER_FOLDER = "albumsPerFolder";
-	public static final String PREFERENCES_KEY_CAST_PROXY = "castProxy";
 	public static final String PREFERENCES_KEY_DISABLE_EXIT_PROMPT = "disableExitPrompt";
 	public static final String PREFERENCES_KEY_RENAME_DUPLICATES = "renameDuplicates";
 	public static final String PREFERENCES_KEY_FIRST_LEVEL_ARTIST = "firstLevelArtist";
@@ -166,14 +161,8 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_COLOR_ACTION_BAR = "colorActionBar";
 	public static final String PREFERENCES_KEY_SHUFFLE_BY_ALBUM = "shuffleByAlbum";
 	public static final String PREFERENCES_KEY_RESUME_PLAY_QUEUE_NEVER = "neverResumePlayQueue";
-	public static final String PREFERENCES_KEY_BATCH_MODE = "batchMode";
-	public static final String PREFERENCES_KEY_CAST_GAPLESS_PLAYBACK = "castingGaplessPlayback";
-	public static final String PREFERENCES_KEY_CAST_STREAM_ORIGINAL = "castStreamOriginal";
-	public static final String PREFERENCES_KEY_HEADS_UP_NOTIFICATION = "headsUpNotification";
-	public static final String PREFERENCES_KEY_CAST_CACHE = "castCache";
 	public static final String PREFERENCES_KEY_PLAYBACK_SPEED = "playbackSpeed";
 	public static final String PREFERENCES_KEY_SONG_PLAYBACK_SPEED = "songPlaybackSpeed";
-	public static final String PREFERENCES_KEY_DLNA_CASTING_ENABLED = "dlnaCastingEnabled";
 	public static final String PREFERENCES_KEY_REWIND_INTERVAL = "rewindInterval";
 	public static final String PREFERENCES_KEY_FASTFORWARD_INTERVAL = "fastforwardInterval";
 	

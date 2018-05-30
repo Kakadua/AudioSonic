@@ -158,7 +158,6 @@ public class MusicDirectory implements Serializable {
 				entry.setTranscodedSuffix(refreshed.getTranscodedSuffix());
 				entry.setDiscNumber(refreshed.getDiscNumber());
 				entry.setStarred(refreshed.isStarred());
-				entry.setRating(refreshed.getRating());
 				entry.setType(refreshed.getType());
 				if(!Util.equals(entry.getCoverArt(), refreshed.getCoverArt())) {
 					metadataUpdated = true;
@@ -178,7 +177,6 @@ public class MusicDirectory implements Serializable {
 						found.setTranscodedSuffix(refreshed.getTranscodedSuffix());
 						found.setDiscNumber(refreshed.getDiscNumber());
 						found.setStarred(refreshed.isStarred());
-						found.setRating(refreshed.getRating());
 						found.setType(refreshed.getType());
 						if(!Util.equals(found.getCoverArt(), refreshed.getCoverArt())) {
 							found.setCoverArt(refreshed.getCoverArt());
@@ -250,7 +248,6 @@ public class MusicDirectory implements Serializable {
 		private boolean video;
 		private Integer discNumber;
 		private boolean starred;
-		private Integer rating;
 		private Bookmark bookmark;
 		private int type = 0;
 		private int closeness;
@@ -267,7 +264,6 @@ public class MusicDirectory implements Serializable {
 			this.title = artist.getName();
 			this.directory = true;
 			this.starred = artist.isStarred();
-			this.rating = artist.getRating();
 			this.linkedArtist = artist;
 		}
 		
@@ -546,21 +542,6 @@ public class MusicDirectory implements Serializable {
 				linkedArtist.setStarred(starred);
 			}
         }
-        
-		public int getRating() {
-			return rating == null ? 0 : rating;
-		}
-		public void setRating(Integer rating) {
-			if(rating == null || rating == 0) {
-				this.rating = null;
-			} else {
-				this.rating = rating;
-			}
-
-			if(linkedArtist != null) {
-				linkedArtist.setRating(rating);
-			}
-		}
 		
 		public Bookmark getBookmark() {
 			return bookmark;

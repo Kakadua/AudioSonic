@@ -27,12 +27,10 @@ import android.graphics.Bitmap;
 
 import github.awsomefox.audiosonic.domain.Genre;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
-import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
 import github.awsomefox.audiosonic.domain.User;
 import github.awsomefox.audiosonic.domain.ArtistInfo;
-import github.awsomefox.audiosonic.domain.ChatMessage;
 import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
 import github.awsomefox.audiosonic.domain.Lyrics;
@@ -91,36 +89,12 @@ public interface MusicService {
 	String getVideoStreamUrl(String format, int Bitrate, Context context, String id) throws Exception;
 	
 	String getHlsUrl(String id, int bitRate, Context context) throws Exception;
-
-    RemoteStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception;
-
-    RemoteStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception;
-
-    RemoteStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception;
-
-    RemoteStatus startJukebox(Context context, ProgressListener progressListener) throws Exception;
-
-    RemoteStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception;
-
-    RemoteStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception;
     
     void setStarred(List<MusicDirectory.Entry> entries, List<MusicDirectory.Entry> artists, List<MusicDirectory.Entry> albums, boolean starred, ProgressListener progressListener, Context context) throws Exception;
-
-	void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception;
-
-	void updateShare(String id, String description, Long expires, Context context, ProgressListener progressListener) throws Exception;
-    
-    List<ChatMessage> getChatMessages(Long since, Context context, ProgressListener progressListener) throws Exception;
-    
-    void addChatMessage(String message, Context context, ProgressListener progressListener) throws Exception;
 	
 	List<Genre> getGenres(boolean refresh, Context context, ProgressListener progressListener) throws Exception;
 	
 	MusicDirectory getSongsByGenre(String genre, int count, int offset, Context context, ProgressListener progressListener) throws Exception;
-
-	MusicDirectory getTopTrackSongs(String artist, int size, Context context, ProgressListener progressListener) throws Exception;
-
-	void setRating(MusicDirectory.Entry entry, int rating, Context context, ProgressListener progressListener) throws Exception;
 
 	MusicDirectory getBookmarks(boolean refresh, Context context, ProgressListener progressListener) throws Exception;
 

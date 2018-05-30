@@ -40,7 +40,6 @@ import github.awsomefox.audiosonic.domain.Lyrics;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.MusicFolder;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
-import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
 import github.awsomefox.audiosonic.domain.User;
@@ -50,7 +49,6 @@ import github.awsomefox.audiosonic.util.SilentBackgroundTask;
 import github.awsomefox.audiosonic.util.SongDBHandler;
 import github.awsomefox.audiosonic.domain.Artist;
 import github.awsomefox.audiosonic.domain.ArtistInfo;
-import github.awsomefox.audiosonic.domain.ChatMessage;
 import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.ProgressListener;
@@ -431,36 +429,6 @@ public class OfflineMusicService implements MusicService {
 	public String getHlsUrl(String id, int bitRate, Context context) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
-
-    @Override
-    public RemoteStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
-
-    @Override
-    public RemoteStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
-
-    @Override
-    public RemoteStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
-
-    @Override
-    public RemoteStatus startJukebox(Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
-
-    @Override
-    public RemoteStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
-
-    @Override
-    public RemoteStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-    }
 	
 	@Override
 	public void setStarred(List<MusicDirectory.Entry> entries, List<MusicDirectory.Entry> artists, List<MusicDirectory.Entry> albums, boolean starred, ProgressListener progressListener, Context context) throws Exception {
@@ -488,37 +456,12 @@ public class OfflineMusicService implements MusicService {
 	}
 
 	@Override
-	public void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public void updateShare(String id, String description, Long expires, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public List<ChatMessage> getChatMessages(Long since, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public void addChatMessage(String message, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
 	public List<Genre> getGenres(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
 	
 	@Override
 	public MusicDirectory getSongsByGenre(String genre, int count, int offset, Context context, ProgressListener progressListener) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public MusicDirectory getTopTrackSongs(String artist, int size, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
 
@@ -542,11 +485,6 @@ public class OfflineMusicService implements MusicService {
 
 	@Override
 	public String getCoverArtUrl(Context context, MusicDirectory.Entry entry) throws Exception {
-		throw new OfflineException(ERRORMSG);
-	}
-
-	@Override
-	public void setRating(MusicDirectory.Entry entry, int rating, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
 

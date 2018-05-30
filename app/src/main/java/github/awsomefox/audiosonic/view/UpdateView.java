@@ -30,7 +30,6 @@ import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,6 @@ public abstract class UpdateView<T> extends LinearLayout {
 
 	protected Context context;
 	protected T item;
-	protected RatingBar ratingBar;
 	protected ImageButton starButton;
 	protected ImageView moreButton;
 	protected ImageButton cacheButton;
@@ -63,8 +61,6 @@ public abstract class UpdateView<T> extends LinearLayout {
 	protected boolean shaded = false;
 	protected boolean starred = false;
 	protected boolean isStarred = false;
-	protected int isRated = 0;
-	protected int rating = 0;
 	protected SilentBackgroundTask<Void> imageTask = null;
 	protected Drawable startBackgroundDrawable;
 	
@@ -270,17 +266,6 @@ public abstract class UpdateView<T> extends LinearLayout {
 					starred = false;
 				}
 			}
-		}
-
-		if(ratingBar != null && isRated != rating) {
-			if(isRated > 0 && rating == 0) {
-				ratingBar.setVisibility(View.VISIBLE);
-			} else if(isRated == 0 && rating > 0) {
-				ratingBar.setVisibility(View.GONE);
-			}
-
-			ratingBar.setRating(isRated);
-			rating = isRated;
 		}
 
 		if(coverArtView != null && coverArtView instanceof RecyclingImageView) {

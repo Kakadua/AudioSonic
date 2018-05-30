@@ -22,9 +22,6 @@ package github.awsomefox.audiosonic.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import github.awsomefox.audiosonic.domain.MusicDirectory;
@@ -56,9 +53,6 @@ public class AlbumView extends UpdateView2<MusicDirectory.Entry, ImageLoader> {
 		coverArtView = findViewById(R.id.album_coverart);
 		titleView = findViewById(R.id.album_title);
 		artistView = findViewById(R.id.album_artist);
-
-		ratingBar = findViewById(R.id.album_rating);
-		ratingBar.setFocusable(false);
 		starButton = findViewById(R.id.album_star);
 		starButton.setFocusable(false);
 		moreButton = findViewById(R.id.item_more);
@@ -105,7 +99,6 @@ public class AlbumView extends UpdateView2<MusicDirectory.Entry, ImageLoader> {
 
 		exists = file.exists();
 		isStarred = item.isStarred();
-		isRated = item.getRating();
 	}
 
 	@Override

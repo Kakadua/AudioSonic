@@ -260,10 +260,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				}
 				else {
 					menuInflater.inflate(R.menu.select_album_context, menu);
-
-					if(Util.isTagBrowsing(context)) {
-						menu.removeItem(R.id.menu_rate);
-					}
 				}
 			
 			} else if(!entry.isVideo()) {
@@ -343,15 +339,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			case R.id.artist_menu_play_now:
 				downloadRecursively(artist.getId(), false, false, true, false, false);
 				break;
-			case R.id.artist_menu_play_shuffled:
-				downloadRecursively(artist.getId(), false, false, true, true, false);
-				break;
-			case R.id.artist_menu_play_next:
-				downloadRecursively(artist.getId(), false, true, false, false, false, true);
-				break;
-			case R.id.artist_menu_play_last:
-				downloadRecursively(artist.getId(), false, true, false, false, false);
-				break;
 			case R.id.artist_menu_download:
 				downloadRecursively(artist.getId(), false, true, false, false, true);
 				break;
@@ -367,18 +354,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			case R.id.album_menu_play_now:
 				artistOverride = true;
 				downloadRecursively(entry.getId(), false, false, true, false, false);
-				break;
-			case R.id.album_menu_play_shuffled:
-				artistOverride = true;
-				downloadRecursively(entry.getId(), false, false, true, true, false);
-				break;
-			case R.id.album_menu_play_next:
-				artistOverride = true;
-				downloadRecursively(entry.getId(), false, true, false, false, false, true);
-				break;
-			case R.id.album_menu_play_last:
-				artistOverride = true;
-				downloadRecursively(entry.getId(), false, true, false, false, false);
 				break;
 			case R.id.album_menu_download:
 				artistOverride = true;
@@ -402,12 +377,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				break;
 			case R.id.song_menu_play_now:
 				playNow(songs);
-				break;
-			case R.id.song_menu_play_next:
-				getDownloadService().download(songs, false, false, true, false);
-				break;
-			case R.id.song_menu_play_last:
-				getDownloadService().download(songs, false, false, false, false);
 				break;
 			case R.id.song_menu_download:
 				getDownloadService().downloadBackground(songs, false);
@@ -438,9 +407,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				break;
 			case R.id.bookmark_menu_delete:
 				deleteBookmark(entry, null);
-				break;
-			case R.id.menu_rate:
-				UpdateHelper.setRating(context, entry);
 				break;
 			default:
 				return false;
@@ -1066,10 +1032,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			headers.add(R.string.details_bookmark_position);
 			details.add(Util.formatDuration(song.getBookmark().getPosition() / 1000));
 		}
-		if(song.getRating() != 0) {
-			headers.add(R.string.details_rating);
-			details.add(song.getRating() + " stars");
-		}
 
 		headers.add(R.string.details_starred);
 		details.add(Util.formatBoolean(context, song.isStarred()));
@@ -1663,9 +1625,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			}
 
 			for (MusicDirectory.Entry dir : parent.getChildren(true, false)) {
-				if(dir.getRating() == 1) {
-					continue;
-				}
 
 				MusicDirectory musicDirectory;
 				if(Util.isTagBrowsing(context) && !Util.isOffline(context)) {
@@ -1677,7 +1636,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			}
 
 			for (MusicDirectory.Entry song : parent.getChildren(false, true)) {
-				if ((!song.isVideo() || allowVideo) && song.getRating() != 1) {
+				if ((!song.isVideo() || allowVideo)) {
 					songs.add(song);
 				}
 			}

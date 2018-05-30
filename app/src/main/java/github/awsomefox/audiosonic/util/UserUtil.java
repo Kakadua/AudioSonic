@@ -127,9 +127,6 @@ public final class UserUtil {
 	public static boolean isCurrentAdmin() {
 		return isCurrentRole(User.ADMIN);
 	}
-	public static boolean canShare() {
-		return isCurrentRole(User.SHARE);
-	}
 	public static boolean canJukebox() {
 		return isCurrentRole(User.JUKEBOX);
 	}

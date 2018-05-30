@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.support.v7.media.MediaRouter;
 
 import java.util.List;
 
@@ -35,7 +34,4 @@ public abstract class RemoteControlClientBase {
 	public abstract void updateMetadata(Context context, MusicDirectory.Entry currentSong);
 	public abstract void metadataChanged(MusicDirectory.Entry currentSong);
 	public abstract void updateAlbumArt(MusicDirectory.Entry currentSong, Bitmap bitmap);
-	public abstract void registerRoute(MediaRouter router);
-	public abstract void unregisterRoute(MediaRouter router);
-	public abstract void updatePlaylist(List<DownloadFile> playlist);
 }

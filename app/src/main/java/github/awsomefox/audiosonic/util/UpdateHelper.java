@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.RatingBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -177,81 +176,6 @@ public final class UpdateHelper {
 		}.execute();
 	}
 
-	public static void setRating(Activity context, Entry entry) {
-		setRating(context, entry, null);
-	}
-	public static void setRating(final Activity context, final Entry entry, final OnRatingChange onRatingChange) {
-		View layout = context.getLayoutInflater().inflate(R.layout.rating, null);
-		final RatingBar ratingBar = layout.findViewById(R.id.rating_bar);
-		ratingBar.setRating((float) entry.getRating());
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(context.getResources().getString(R.string.rating_title, entry.getTitle()))
-				.setView(layout)
-				.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						int rating = (int) ratingBar.getRating();
-						setRating(context, entry, rating, onRatingChange);
-					}
-				})
-				.setNegativeButton(R.string.common_cancel, null);
-
-		AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-
-	public static void setRating(Context context, Entry entry, int rating) {
-		setRating(context, entry, rating, null);
-	}
-	public static void setRating(final Context context, final Entry entry, final int rating, final OnRatingChange onRatingChange) {
-		final int oldRating = entry.getRating();
-		entry.setRating(rating);
-
-		if(onRatingChange != null) {
-			onRatingChange.ratingChange(rating);
-		}
-
-		new SilentBackgroundTask<Void>(context) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.setRating(entry, rating, context, null);
-
-				new EntryInstanceUpdater(entry) {
-					@Override
-					public void update(Entry found) {
-						found.setRating(rating);
-					}
-				}.execute();
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, context.getResources().getString(rating > 0 ? R.string.rating_set_rating : R.string.rating_remove_rating, entry.getTitle()));
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				entry.setRating(oldRating);
-				if(onRatingChange != null) {
-					onRatingChange.ratingChange(oldRating);
-				}
-
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(rating > 0 ? R.string.rating_set_rating_failed : R.string.rating_remove_rating_failed, entry.getTitle()) + " " + getErrorMessage(error);
-				}
-
-				Log.e(TAG, "Failed to setRating", error);
-				Util.toast(context, msg, false);
-			}
-		}.execute();
-	}
-
 	public static abstract class EntryInstanceUpdater {
 		private Entry entry;
 		protected int metadataUpdate = DownloadService.METADATA_UPDATED_ALL;
@@ -302,8 +226,5 @@ public final class UpdateHelper {
 
 		public abstract void starChange(boolean starred);
 		public abstract void starCommited(boolean starred);
-	}
-	public static abstract class OnRatingChange {
-		public abstract void ratingChange(int rating);
 	}
 }

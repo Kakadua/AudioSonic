@@ -25,22 +25,4 @@
 			android:id="@+id/song_menu_star"
 			android:title="@string/common.star"/>
 	</group>
-
-	<group android:id="@+id/hide_share">
-		<item
-			android:id="@+id/menu_share"
-			android:title="@string/menu.share"/>
-	</group>
-	
-	<group android:id="@+id/hide_rating">
-		<item
-			android:id="@+id/menu_rate"
-			android:title="@string/menu.rate"/>
-	</group>
-	
-	<group android:id="@+id/server_1.8">	
-		<item
-			android:id="@+id/song_menu_add_playlist"
-			android:title="@string/menu.add_playlist"/>
-	</group>
 </menu>

@@ -8,18 +8,6 @@
 		android:icon="@drawable/ic_slow_motion_video_white_24dp"
 		android:title="@string/download.playback_speed"
 		compat:showAsAction="ifRoom|withText" />
-	<item
-        android:id="@+id/menu_shuffle"
-        android:icon="@drawable/ic_schedule_white_24dp"
-        android:title="@string/menu.timer"
-        compat:showAsAction="ifRoom|withText"/>
-
-	<item
-		android:id="@+id/menu_mediaroute"
-		compat:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
-		compat:actionViewClass="android.support.v7.app.MediaRouteButton"
-		compat:showAsAction="always"
-		android:title="@string/menu.cast"/>
 
 	<item
 		android:id="@+id/menu_equalizer"

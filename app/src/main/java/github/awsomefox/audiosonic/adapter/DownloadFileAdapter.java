@@ -47,7 +47,7 @@ public class DownloadFileAdapter extends SectionAdapter<DownloadFile> implements
 	@Override
 	public void onBindViewHolder(UpdateView.UpdateViewHolder holder, DownloadFile item, int viewType) {
 		SongView songView = (SongView) holder.getUpdateView();
-		songView.setObject(item.getSong(), Util.isBatchMode(context));
+		songView.setObject(item.getSong(), false);
 		songView.setDownloadFile(item);
 	}
 

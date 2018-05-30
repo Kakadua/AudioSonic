@@ -135,9 +135,6 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 	@Override
 	public void onCreateContextMenu(Menu menu, MenuInflater menuInflater, UpdateView<Serializable> updateView, Serializable item) {
 		onCreateContextMenuSupport(menu, menuInflater, updateView, item);
-		if(item instanceof MusicDirectory.Entry && !((MusicDirectory.Entry) item).isVideo() && !Util.isOffline(context)) {
-			menu.removeItem(R.id.song_menu_remove_playlist);
-		}
 		recreateContextMenu(menu);
 	}
 

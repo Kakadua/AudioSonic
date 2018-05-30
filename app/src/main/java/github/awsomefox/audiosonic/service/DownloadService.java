@@ -26,12 +26,10 @@ import github.awsomefox.audiosonic.audiofx.EqualizerController;
 import github.awsomefox.audiosonic.domain.Bookmark;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.PlayerState;
-import github.awsomefox.audiosonic.domain.RemoteControlState;
 import github.awsomefox.audiosonic.domain.RepeatMode;
 import github.awsomefox.audiosonic.domain.ServerInfo;
 import github.awsomefox.audiosonic.util.ArtistRadioBuffer;
 import github.awsomefox.audiosonic.util.ImageLoader;
-import github.awsomefox.audiosonic.util.MediaRouteManager;
 import github.awsomefox.audiosonic.util.Notifications;
 import github.awsomefox.audiosonic.util.ShufflePlayBuffer;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
@@ -104,7 +102,6 @@ public class DownloadService extends Service {
 
 	public static final int METADATA_UPDATED_ALL = 0;
 	public static final int METADATA_UPDATED_STAR = 1;
-	public static final int METADATA_UPDATED_RATING = 2;
 	public static final int METADATA_UPDATED_BOOKMARK = 4;
 	public static final int METADATA_UPDATED_COVER_ART = 8;
 
@@ -128,7 +125,6 @@ public class DownloadService extends Service {
 	private final LruCache<MusicDirectory.Entry, DownloadFile> downloadFileCache = new LruCache<MusicDirectory.Entry, DownloadFile>(100);
 	private final List<DownloadFile> cleanupCandidates = new ArrayList<DownloadFile>();
 	private final Scrobbler scrobbler = new Scrobbler();
-	private RemoteController remoteController;
 	private DownloadFile currentPlaying;
 	private int currentPlayingIndex = -1;
 	private DownloadFile nextPlaying;
@@ -143,18 +139,14 @@ public class DownloadService extends Service {
 	private final List<OnSongChangedListener> onSongChangedListeners = new ArrayList<>();
 	private long revision;
 	private static DownloadService instance;
-	private String suggestedPlaylistName;
-	private String suggestedPlaylistId;
 	private PowerManager.WakeLock wakeLock;
 	private WifiManager.WifiLock wifiLock;
-	private boolean keepScreenOn;
 	private int cachedPosition = 0;
 	private boolean downloadOngoing = false;
 	private float volume = 1.0f;
 	private long delayUpdateProgress = DEFAULT_DELAY_UPDATE_PROGRESS;
 
 	private AudioEffectsController effectsController;
-	private RemoteControlState remoteState = RemoteControlState.LOCAL;
 	private PositionCache positionCache;
 	private BufferProxy proxy;
 
@@ -163,8 +155,6 @@ public class DownloadService extends Service {
 	private long timerStart;
 	private boolean autoPlayStart = false;
 	private boolean runListenersOnInit = false;
-
-	private MediaRouteManager mediaRouter;
 
 	// Variables to manage getCurrentPosition sometimes starting from an arbitrary non-zero number
 	private long subtractNextPosition = 0;
@@ -218,15 +208,6 @@ public class DownloadService extends Service {
 					}
 				});
 
-				/*try {
-					Intent i = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
-					i.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, audioSessionId);
-					i.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
-					sendBroadcast(i);
-				} catch(Throwable e) {
-					// Froyo or lower
-				}*/
-
 				effectsController = new AudioEffectsController(DownloadService.this, audioSessionId);
 				if(prefs.getBoolean(Constants.PREFERENCES_EQUALIZER_ON, false)) {
 					getEqualizerController();
@@ -268,10 +249,6 @@ public class DownloadService extends Service {
 			timerDuration = 5;
 		}
 		sleepTimer = null;
-
-		keepScreenOn = prefs.getBoolean(Constants.PREFERENCES_KEY_KEEP_SCREEN_ON, false);
-
-		mediaRouter = new MediaRouteManager(this);
 
 		instance = this;
 		shufflePlayBuffer = new ShufflePlayBuffer(this);
@@ -348,15 +325,10 @@ public class DownloadService extends Service {
 			nextPlayingTask.cancel();
 			nextPlayingTask = null;
 		}
-		if(remoteController != null) {
-			remoteController.stop();
-			remoteController.shutdown();
-		}
 		if(proxy != null) {
 			proxy.stop();
 			proxy = null;
 		}
-		mediaRouter.destroy();
 		Notifications.hidePlayingNotification(this, this, handler);
 		Notifications.hideDownloadingNotification(this, this, handler);
 	}
@@ -407,9 +379,7 @@ public class DownloadService extends Service {
 				}
 			}
 
-			if(remoteState == RemoteControlState.LOCAL || (remoteController != null && remoteController.isNextSupported())) {
-				setNextPlaying();
-			}
+			setNextPlaying();
 		} else {
 			int size = size();
 			int index = getCurrentPlayingIndex();
@@ -432,7 +402,6 @@ public class DownloadService extends Service {
 		}
 		revision++;
 		onSongsChanged();
-		updateRemotePlaylist();
 
 		if(shuffle) {
 			shuffle();
@@ -485,34 +454,9 @@ public class DownloadService extends Service {
 		lifecycleSupport.serializeDownloadQueue();
 	}
 
-	private synchronized void updateRemotePlaylist() {
-		List<DownloadFile> playlist = new ArrayList<>();
-		if(currentPlaying != null) {
-			int index = downloadList.indexOf(currentPlaying);
-			if(index == -1) {
-				index = 0;
-			}
-
-			int size = size();
-			int end = index + REMOTE_PLAYLIST_TOTAL;
-			for(int i = index; i < size && i < end; i++) {
-				playlist.add(downloadList.get(i));
-			}
-		}
-
-		if (remoteState != RemoteControlState.LOCAL && remoteController != null) {
-			remoteController.updatePlaylist();
-		}
-		mRemoteControl.updatePlaylist(playlist);
-	}
-
 	public synchronized void restore(List<MusicDirectory.Entry> songs, List<MusicDirectory.Entry> toDelete, int currentPlayingIndex, int currentPlayingPosition) {
 		SharedPreferences prefs = Util.getPreferences(this);
-		RemoteControlState newState = RemoteControlState.values()[prefs.getInt(Constants.PREFERENCES_KEY_CONTROL_MODE, 0)];
-		if(newState != RemoteControlState.LOCAL) {
-			String id = prefs.getString(Constants.PREFERENCES_KEY_CONTROL_ID, null);
-			setRemoteState(newState, null, id);
-		}
+
 		if(prefs.getBoolean(Constants.PREFERENCES_KEY_REMOVE_PLAYED, false)) {
 			removePlayed = true;
 		}
@@ -611,7 +555,6 @@ public class DownloadService extends Service {
 		revision++;
 		onSongsChanged();
 		lifecycleSupport.serializeDownloadQueue();
-		updateRemotePlaylist();
 		setNextPlaying();
 	}
 
@@ -622,19 +565,6 @@ public class DownloadService extends Service {
 	public void setRepeatMode(RepeatMode repeatMode) {
 		Util.setRepeatMode(this, repeatMode);
 		setNextPlaying();
-	}
-
-	public boolean getKeepScreenOn() {
-		return keepScreenOn;
-	}
-
-	public void setKeepScreenOn(boolean keepScreenOn) {
-		this.keepScreenOn = keepScreenOn;
-
-		SharedPreferences prefs = Util.getPreferences(this);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean(Constants.PREFERENCES_KEY_KEEP_SCREEN_ON, keepScreenOn);
-		editor.commit();
 	}
 
 	public synchronized DownloadFile forSong(MusicDirectory.Entry song) {
@@ -694,16 +624,10 @@ public class DownloadService extends Service {
 			}
 		}
 		lifecycleSupport.serializeDownloadQueue();
-		updateRemotePlaylist();
 		onSongsChanged();
 	}
 
 	public void setOnline(final boolean online) {
-		if(online) {
-			mediaRouter.addOnlineProviders();
-		} else {
-			mediaRouter.removeOnlineProviders();
-		}
 		if(shufflePlay) {
 			setShufflePlayEnabled(false);
 		}
@@ -723,7 +647,7 @@ public class DownloadService extends Service {
 		});
 	}
 	public void userSettingsChanged() {
-		mediaRouter.buildSelector();
+
 	}
 
 	public synchronized int size() {
@@ -762,15 +686,11 @@ public class DownloadService extends Service {
 		if (serialize) {
 			lifecycleSupport.serializeDownloadQueue();
 		}
-		updateRemotePlaylist();
 		setNextPlaying();
 		if(proxy != null) {
 			proxy.stop();
 			proxy = null;
 		}
-
-		suggestedPlaylistName = null;
-		suggestedPlaylistId = null;
 
 		setShufflePlayEnabled(false);
 		setArtistRadio(null);
@@ -797,7 +717,6 @@ public class DownloadService extends Service {
 		revision++;
 		onSongsChanged();
 		lifecycleSupport.serializeDownloadQueue();
-		updateRemotePlaylist();
 		if(downloadFile == nextPlaying) {
 			setNextPlaying();
 		}
@@ -864,15 +783,11 @@ public class DownloadService extends Service {
 
 	synchronized void setNextPlaying() {
 		SharedPreferences prefs = Util.getPreferences(DownloadService.this);
-
-		// Only obey gapless playback for local
-		if(remoteState == RemoteControlState.LOCAL) {
-			boolean gaplessPlayback = prefs.getBoolean(Constants.PREFERENCES_KEY_GAPLESS_PLAYBACK, true);
-			if (!gaplessPlayback) {
-				nextPlaying = null;
-				nextPlayerState = PlayerState.IDLE;
-				return;
-			}
+		boolean gaplessPlayback = prefs.getBoolean(Constants.PREFERENCES_KEY_GAPLESS_PLAYBACK, true);
+		if (!gaplessPlayback) {
+			nextPlaying = null;
+			nextPlayerState = PlayerState.IDLE;
+			return;
 		}
 		setNextPlayerState(PlayerState.IDLE);
 
@@ -886,19 +801,9 @@ public class DownloadService extends Service {
 
 		if(index < size() && index != -1 && index != currentPlayingIndex) {
 			nextPlaying = downloadList.get(index);
-
-			if(remoteState == RemoteControlState.LOCAL) {
-				nextPlayingTask = new CheckCompletionTask(nextPlaying);
-				nextPlayingTask.execute();
-			} else if(remoteController != null && remoteController.isNextSupported()) {
-				remoteController.changeNextTrack(nextPlaying);
-			}
+			nextPlayingTask = new CheckCompletionTask(nextPlaying);
+			nextPlayingTask.execute();
 		} else {
-			if(remoteState == RemoteControlState.LOCAL) {
-				// resetNext();
-			} else if(remoteController != null && remoteController.isNextSupported()) {
-				remoteController.changeNextTrack(nextPlaying);
-			}
 			nextPlaying = null;
 		}
 	}
@@ -1030,16 +935,10 @@ public class DownloadService extends Service {
 				nextPlayingTask = null;
 			}
 			setCurrentPlaying(index);
-			if (start && remoteState != RemoteControlState.LOCAL) {
-				remoteController.changeTrack(index, currentPlaying);
-			}
-			if (remoteState == RemoteControlState.LOCAL) {
-				bufferAndPlay(position, start);
-				checkDownloads();
-				setNextPlaying();
-			} else {
-				checkDownloads();
-			}
+			bufferAndPlay(position, start);
+			checkDownloads();
+			setNextPlaying();
+
 		}
 	}
 	private synchronized void playNext() {
@@ -1085,7 +984,6 @@ public class DownloadService extends Service {
 			proxy = null;
 		}
 		checkDownloads();
-		updateRemotePlaylist();
 	}
 
 	/** Plays or resumes the playback, depending on the current player state. */
@@ -1106,17 +1004,13 @@ public class DownloadService extends Service {
 		}
 
 		try {
-			if (remoteState != RemoteControlState.LOCAL) {
-				remoteController.changePosition(position / 1000);
-			} else {
-				if(proxy != null && currentPlaying.isCompleteFileAvailable()) {
-					doPlay(currentPlaying, position, playerState == PlayerState.STARTED);
-					return;
-				}
-
-				mediaPlayer.seekTo(position);
-				subtractPosition = 0;
+			if(proxy != null && currentPlaying.isCompleteFileAvailable()) {
+				doPlay(currentPlaying, position, playerState == PlayerState.STARTED);
+				return;
 			}
+
+			mediaPlayer.seekTo(position);
+			subtractPosition = 0;
 			cachedPosition = position;
 
 			onSongProgress();
@@ -1154,12 +1048,7 @@ public class DownloadService extends Service {
 		if (index == -1) {
 			return;
 		}
-
-		// If only one song, just skip within song
-		if(shouldFastForward()) {
-			rewind();
-			return;
-		} else if(playerState == PlayerState.PREPARING || playerState == PlayerState.PREPARED) {
+		if(playerState == PlayerState.PREPARING || playerState == PlayerState.PREPARED) {
 			return;
 		}
 
@@ -1182,11 +1071,7 @@ public class DownloadService extends Service {
 		next(forceCutoff, false);
 	}
 	public synchronized void next(boolean forceCutoff, boolean forceStart) {
-		// If only one song, just skip within song
-		if(shouldFastForward()) {
-			fastForward();
-			return;
-		} else if(playerState == PlayerState.PREPARING || playerState == PlayerState.PREPARED) {
+		if(playerState == PlayerState.PREPARING || playerState == PlayerState.PREPARED) {
 			return;
 		}
 		int position = getPlayerPosition();
@@ -1234,11 +1119,7 @@ public class DownloadService extends Service {
 	public synchronized void pause(boolean temp) {
 		try {
 			if (playerState == PlayerState.STARTED) {
-				if (remoteState != RemoteControlState.LOCAL) {
-					remoteController.stop();
-				} else {
-					mediaPlayer.pause();
-				}
+				mediaPlayer.pause();
 				setPlayerState(temp ? PlayerState.PAUSED_TEMP : PlayerState.PAUSED);
 			} else if(playerState == PlayerState.PAUSED_TEMP) {
 				setPlayerState(temp ? PlayerState.PAUSED_TEMP : PlayerState.PAUSED);
@@ -1251,19 +1132,8 @@ public class DownloadService extends Service {
 	public synchronized void stop() {
 		try {
 			if (playerState == PlayerState.STARTED) {
-				if (remoteState != RemoteControlState.LOCAL) {
-					remoteController.stop();
-					setPlayerState(PlayerState.STOPPED);
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							mediaRouter.setDefaultRoute();
-						}
-					});
-				} else {
-					mediaPlayer.pause();
-					setPlayerState(PlayerState.STOPPED);
-				}
+				mediaPlayer.pause();
+				setPlayerState(PlayerState.STOPPED);
 			} else if(playerState == PlayerState.PAUSED) {
 				setPlayerState(PlayerState.STOPPED);
 			}
@@ -1274,17 +1144,13 @@ public class DownloadService extends Service {
 
 	public synchronized void start() {
 		try {
-			if (remoteState != RemoteControlState.LOCAL) {
-				remoteController.start();
+			// Only start if done preparing
+			if(playerState != PlayerState.PREPARING) {
+				mediaPlayer.start();
+				applyPlaybackParamsMain();
 			} else {
-				// Only start if done preparing
-				if(playerState != PlayerState.PREPARING) {
-					mediaPlayer.start();
-					applyPlaybackParamsMain();
-				} else {
-					// Otherwise, we need to set it up to start when done preparing
-					autoPlayStart = true;
-				}
+				// Otherwise, we need to set it up to start when done preparing
+				autoPlayStart = true;
 			}
 			setPlayerState(PlayerState.STARTED);
 		} catch (Exception x) {
@@ -1299,10 +1165,7 @@ public class DownloadService extends Service {
 			bufferTask = null;
 		}
 		try {
-			// Only set to idle if it's not being killed to start RemoteController
-			if(remoteState == RemoteControlState.LOCAL) {
-				setPlayerState(PlayerState.IDLE);
-			}
+			setPlayerState(PlayerState.IDLE);
 			mediaPlayer.setOnErrorListener(null);
 			mediaPlayer.setOnCompletionListener(null);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && nextSetup) {
@@ -1342,10 +1205,7 @@ public class DownloadService extends Service {
 		try {
 			if (playerState == PlayerState.IDLE || playerState == PlayerState.DOWNLOADING || playerState == PlayerState.PREPARING) {
 				return 0;
-			}
-			if (remoteState != RemoteControlState.LOCAL) {
-				return remoteController.getRemotePosition() * 1000;
-			} else {
+			}else {
 				return Math.max(0, cachedPosition - subtractPosition);
 			}
 		} catch (Exception x) {
@@ -1357,14 +1217,10 @@ public class DownloadService extends Service {
 	public synchronized int getPlayerDuration() {
 		if (playerState != PlayerState.IDLE && playerState != PlayerState.DOWNLOADING && playerState != PlayerState.PREPARING) {
 			int duration = 0;
-			if(remoteState == RemoteControlState.LOCAL) {
-				try {
-					duration = mediaPlayer.getDuration();
-				} catch (Exception x) {
-					duration = 0;
-				}
-			} else {
-				duration = remoteController.getRemoteDuration() * 1000;
+			try {
+				duration = mediaPlayer.getDuration();
+			} catch (Exception x) {
+				duration = 0;
 			}
 
 			if(duration != 0) {
@@ -1424,33 +1280,12 @@ public class DownloadService extends Service {
 		}
 
 		if(playerState == PlayerState.STARTED && positionCache == null) {
-			if(remoteState == RemoteControlState.LOCAL) {
-				positionCache = new LocalPositionCache();
-			} else {
-				positionCache = new PositionCache();
-			}
+			positionCache = new PositionCache();
 			Thread thread = new Thread(positionCache, "PositionCache");
 			thread.start();
 		} else if(playerState != PlayerState.STARTED && positionCache != null) {
 			positionCache.stop();
 			positionCache = null;
-		}
-
-
-		if(remoteState != RemoteControlState.LOCAL) {
-			if(playerState == PlayerState.STARTED) {
-				if (!wifiLock.isHeld()) {
-					wifiLock.acquire();
-				}
-			} else if(playerState == PlayerState.PAUSED && wifiLock.isHeld()) {
-				wifiLock.release();
-			}
-		}
-
-		if(remoteController != null && remoteController.isNextSupported()) {
-			if(playerState == PlayerState.PREPARING || playerState == PlayerState.IDLE) {
-				nextPlayerState = PlayerState.IDLE;
-			}
 		}
 
 		onStateUpdate();
@@ -1483,28 +1318,6 @@ public class DownloadService extends Service {
 			// Stop checking position before the song reaches completion
 			while(isRunning) {
 				try {
-					onSongProgress();
-					Thread.sleep(delayUpdateProgress);
-				}
-				catch(Exception e) {
-					isRunning = false;
-					positionCache = null;
-				}
-			}
-		}
-	}
-	private class LocalPositionCache extends PositionCache {
-		boolean isRunning = true;
-
-		public void stop() {
-			isRunning = false;
-		}
-
-		@Override
-		public void run() {
-			// Stop checking position before the song reaches completion
-			while(isRunning) {
-				try {
 					if(mediaPlayer != null && playerState == PlayerState.STARTED) {
 						int newPosition = mediaPlayer.getCurrentPosition();
 
@@ -1525,7 +1338,7 @@ public class DownloadService extends Service {
 							subtractNextPosition = 0;
 						}
 					}
-					onSongProgress(cachedPosition < 2000);
+					onSongProgress(cachedPosition < 2000 ? true: false);
 					Thread.sleep(delayUpdateProgress);
 				}
 				catch(Exception e) {
@@ -1585,185 +1398,8 @@ public class DownloadService extends Service {
 		return controller;
 	}
 
-	public MediaRouteManager getMediaRouter() {
-		return mediaRouter;
-	}
-	public MediaRouteSelector getRemoteSelector() {
-		return mediaRouter.getSelector();
-	}
-
 	public boolean isSeekable() {
-		if(remoteState == RemoteControlState.LOCAL) {
-			return currentPlaying != null && currentPlaying.isWorkDone() && playerState != PlayerState.PREPARING;
-		} else if(remoteController != null) {
-			return remoteController.isSeekable();
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isRemoteEnabled() {
-		return remoteState != RemoteControlState.LOCAL;
-	}
-
-	public RemoteController getRemoteController() {
-		return remoteController;
-	}
-
-	public void setRemoteEnabled(RemoteControlState newState) {
-		if(instance != null) {
-			setRemoteEnabled(newState, null);
-		}
-	}
-	public void setRemoteEnabled(RemoteControlState newState, Object ref) {
-		setRemoteState(newState, ref);
-
-		RouteInfo info = mediaRouter.getSelectedRoute();
-		String routeId = info.getId();
-
-		SharedPreferences.Editor editor = Util.getPreferences(this).edit();
-		editor.putInt(Constants.PREFERENCES_KEY_CONTROL_MODE, newState.getValue());
-		editor.putString(Constants.PREFERENCES_KEY_CONTROL_ID, routeId);
-		editor.commit();
-	}
-	private void setRemoteState(RemoteControlState newState, Object ref) {
-		setRemoteState(newState, ref, null);
-	}
-	private void setRemoteState(final RemoteControlState newState, final Object ref, final String routeId) {
-		// Don't try to do anything if already in the correct state
-		if(remoteState == newState) {
-			return;
-		}
-
-		boolean isPlaying = playerState == PlayerState.STARTED;
-		int position = getPlayerPosition();
-
-		if(remoteController != null) {
-			remoteController.stop();
-			setPlayerState(PlayerState.IDLE);
-			remoteController.shutdown();
-			remoteController = null;
-
-			if(newState == RemoteControlState.LOCAL) {
-				mediaRouter.setDefaultRoute();
-			}
-		}
-
-		Log.i(TAG, remoteState.name() + " => " + newState.name() + " (" + currentPlaying + ")");
-		remoteState = newState;
-		switch(newState) {
-			case JUKEBOX_SERVER:
-				remoteController = new JukeboxController(this, handler);
-				break;
-			case CHROMECAST: case DLNA:
-				if(ref == null) {
-					remoteState = RemoteControlState.LOCAL;
-					break;
-				}
-				remoteController = (RemoteController) ref;
-				break;
-			case LOCAL: default:
-				if(wifiLock.isHeld()) {
-					wifiLock.release();
-				}
-				break;
-		}
-
-		if(remoteState != RemoteControlState.LOCAL) {
-			if(!wifiLock.isHeld()) {
-				wifiLock.acquire();
-			}
-		} else if(wifiLock.isHeld()) {
-			wifiLock.release();
-		}
-
-		if(remoteController != null) {
-			remoteController.create(isPlaying, position / 1000);
-		} else {
-			play(getCurrentPlayingIndex(), isPlaying, position);
-		}
-
-		if (remoteState != RemoteControlState.LOCAL) {
-			reset();
-
-			// Cancel current download, if necessary.
-			if (currentDownloading != null) {
-				currentDownloading.cancelDownload();
-			}
-
-			// Cancels current setup tasks
-			if(bufferTask != null && bufferTask.isRunning()) {
-				bufferTask.cancel();
-				bufferTask = null;
-			}
-			if(nextPlayingTask != null && nextPlayingTask.isRunning()) {
-				nextPlayingTask.cancel();
-				nextPlayingTask = null;
-			}
-
-			if(nextPlayerState != PlayerState.IDLE) {
-				setNextPlayerState(PlayerState.IDLE);
-			}
-		}
-		checkDownloads();
-
-		if(routeId != null) {
-			final Runnable delayedReconnect = new Runnable() {
-				@Override
-				public void run() {
-					RouteInfo info = mediaRouter.getRouteForId(routeId);
-					if(info == null) {
-						setRemoteState(RemoteControlState.LOCAL, null);
-					} else if(newState == RemoteControlState.CHROMECAST) {
-						RemoteController controller = mediaRouter.getRemoteController(info);
-						if(controller != null) {
-							setRemoteState(RemoteControlState.CHROMECAST, controller);
-						}
-					}
-					mediaRouter.stopScan();
-				}
-			};
-
-			handler.post(new Runnable() {
-				@Override
-				public void run() {
-					mediaRouter.startScan();
-					RouteInfo info = mediaRouter.getRouteForId(routeId);
-					if(info == null) {
-						handler.postDelayed(delayedReconnect, 2000L);
-					} else if(newState == RemoteControlState.CHROMECAST) {
-						RemoteController controller = mediaRouter.getRemoteController(info);
-						if(controller != null) {
-							setRemoteState(RemoteControlState.CHROMECAST, controller);
-						}
-					}
-				}
-			});
-		}
-	}
-
-	public void registerRoute(MediaRouter router) {
-		if (mRemoteControl != null) {
-			mRemoteControl.registerRoute(router);
-		}
-	}
-	public void unregisterRoute(MediaRouter router) {
-		if(mRemoteControl != null) {
-			mRemoteControl.unregisterRoute(router);
-		}
-	}
-
-	public void updateRemoteVolume(boolean up) {
-		AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-		audioManager.adjustVolume(up ? AudioManager.ADJUST_RAISE : AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
-	}
-
-	public void startRemoteScan() {
-		mediaRouter.startScan();
-	}
-
-	public void stopRemoteScan() {
-		mediaRouter.stopScan();
+		return currentPlaying != null && currentPlaying.isWorkDone() && playerState != PlayerState.PREPARING;
 	}
 
 	private synchronized void bufferAndPlay() {
@@ -1860,8 +1496,6 @@ public class DownloadService extends Service {
 								setPlayerState(PlayerState.PAUSED);
 								onSongProgress();
 							}
-
-							updateRemotePlaylist();
 						}
 
 						// Only call when starting, setPlayerState(PAUSED) already calls this
@@ -1887,11 +1521,6 @@ public class DownloadService extends Service {
 		try {
 			final File file = downloadFile.isCompleteFileAvailable() ? downloadFile.getCompleteFile() : downloadFile.getPartialFile();
 			resetNext();
-
-			// Exit when using remote controllers
-			if(remoteState != RemoteControlState.LOCAL) {
-				return;
-			}
 
 			nextMediaPlayer = new MediaPlayer();
 			nextMediaPlayer.setWakeMode(DownloadService.this, PowerManager.PARTIAL_WAKE_LOCK);
@@ -2063,13 +1692,9 @@ public class DownloadService extends Service {
 		list.add(to, movedSong);
 		currentPlayingIndex = downloadList.indexOf(currentPlaying);
 		if(mainList) {
-			if(remoteState == RemoteControlState.LOCAL || (remoteController != null && remoteController.isNextSupported())) {
-				// Moving next playing, current playing, or moving a song to be next playing
-				if(movedSong == nextPlaying || movedSong == currentPlaying || (currentPlayingIndex + 1) == to) {
-					setNextPlaying();
-				}
-			} else {
-				updateRemotePlaylist();
+			// Moving next playing, current playing, or moving a song to be next playing
+			if(movedSong == nextPlaying || movedSong == currentPlaying || (currentPlayingIndex + 1) == to) {
+				setNextPlaying();
 			}
 		}
 	}
@@ -2128,7 +1753,7 @@ public class DownloadService extends Service {
 		}
 
 		// Need to download current playing and not casting?
-		if (currentPlaying != null && remoteState == RemoteControlState.LOCAL && currentPlaying != currentDownloading && !currentPlaying.isWorkDone()) {
+		if (currentPlaying != null && currentPlaying != currentDownloading && !currentPlaying.isWorkDone()) {
 			// Cancel current download, if necessary.
 			if (currentDownloading != null) {
 				currentDownloading.cancelDownload();
@@ -2140,13 +1765,13 @@ public class DownloadService extends Service {
 		}
 
 		// Find a suitable target for download.
-		else if (currentDownloading == null || currentDownloading.isWorkDone() || currentDownloading.isFailed() && ((!downloadList.isEmpty() && remoteState == RemoteControlState.LOCAL) || !backgroundDownloadList.isEmpty())) {
+		else if (currentDownloading == null || currentDownloading.isWorkDone() || currentDownloading.isFailed() && ((!downloadList.isEmpty()) || !backgroundDownloadList.isEmpty())) {
 			currentDownloading = null;
 			int n = size();
 
 			int preloaded = 0;
 
-			if(n != 0 && (remoteState == RemoteControlState.LOCAL || Util.shouldCacheDuringCasting(this))) {
+			if(n != 0 ) {
 				int start = currentPlaying == null ? 0 : getCurrentPlayingIndex();
 				if(start == -1) {
 					start = 0;
@@ -2172,7 +1797,7 @@ public class DownloadService extends Service {
 				} while (i != start);
 			}
 
-			if((preloaded + 1 == n || preloaded >= Util.getPreloadCount(this) || downloadList.isEmpty() || remoteState != RemoteControlState.LOCAL) && !backgroundDownloadList.isEmpty()) {
+			if((preloaded + 1 == n || preloaded >= Util.getPreloadCount(this) || downloadList.isEmpty()) && !backgroundDownloadList.isEmpty()) {
 				for(int i = 0; i < backgroundDownloadList.size(); i++) {
 					DownloadFile downloadFile = backgroundDownloadList.get(i);
 					if(downloadFile.isWorkDone() && (!downloadFile.shouldSave() || downloadFile.isSaved()) || downloadFile.isFailedMax()) {
@@ -2253,7 +1878,6 @@ public class DownloadService extends Service {
 
 		if (revisionBefore != revision) {
 			onSongsChanged();
-			updateRemotePlaylist();
 		}
 
 		if (wasEmpty && !downloadList.isEmpty()) {
@@ -2295,7 +1919,6 @@ public class DownloadService extends Service {
 
 		if (revisionBefore != revision) {
 			onSongsChanged();
-			updateRemotePlaylist();
 		}
 
 		if (wasEmpty && !downloadList.isEmpty()) {
@@ -2635,39 +2258,7 @@ public class DownloadService extends Service {
 			}
 		});
 	}
-	public void toggleRating(int rating) {
-		if(currentPlaying == null) {
-			return;
-		}
 
-		MusicDirectory.Entry entry = currentPlaying.getSong();
-		if(entry.getRating() == rating) {
-			setRating(0);
-		} else {
-			setRating(rating);
-		}
-	}
-	public void setRating(int rating) {
-		final DownloadFile currentPlaying = this.currentPlaying;
-		if(currentPlaying == null) {
-			return;
-		}
-		MusicDirectory.Entry entry = currentPlaying.getSong();
-
-		// Immediately skip to the next song if down thumbed
-		if(rating == 1) {
-			next(true);
-		}
-
-		UpdateHelper.setRating(this, entry, rating, new UpdateHelper.OnRatingChange() {
-			@Override
-			public void ratingChange(int rating) {
-				if (currentPlaying == DownloadService.this.currentPlaying) {
-					onMetadataUpdate(METADATA_UPDATED_RATING);
-				}
-			}
-		});
-	}
 	public void acquireWakelock() {
 		acquireWakelock(30000);
 	}
@@ -2787,13 +2378,6 @@ public class DownloadService extends Service {
 					}
 				}
 			});
-		}
-
-		// Setup next playing at least a couple of seconds into the song since both Chromecast and some DLNA clients report PLAYING when still PREPARING
-		if(position > 2000 && remoteController != null && remoteController.isNextSupported()) {
-			if(playerState == PlayerState.STARTED && nextPlayerState == PlayerState.IDLE) {
-				setNextPlaying();
-			}
 		}
 	}
 	private void onStateUpdate() {

@@ -47,7 +47,6 @@ public class MusicDirectoryEntryParser extends AbstractParser {
         entry.setYear(getInteger("year"));
         entry.setGenre(get("genre"));
 		entry.setAlbum(get("album").replaceAll("^\\d+ - ", ""));
-		entry.setRating(getInteger("userRating"));
 
         if (!entry.isDirectory()) {
 			entry.setAlbumId(get("albumId").replaceAll("^\\d+ - ", ""));

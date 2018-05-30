@@ -35,14 +35,12 @@ import android.util.Log;
 import github.awsomefox.audiosonic.domain.Artist;
 import github.awsomefox.audiosonic.domain.ArtistInfo;
 import github.awsomefox.audiosonic.domain.Bookmark;
-import github.awsomefox.audiosonic.domain.ChatMessage;
 import github.awsomefox.audiosonic.domain.Genre;
 import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.domain.Lyrics;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.MusicFolder;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
-import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
 import github.awsomefox.audiosonic.domain.User;
@@ -580,36 +578,6 @@ public class CachedMusicService implements MusicService {
 	public String getHlsUrl(String id, int bitRate, Context context) throws Exception {
 		return musicService.getHlsUrl(id, bitRate, context);
 	}
-
-    @Override
-    public RemoteStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception {
-        return musicService.updateJukeboxPlaylist(ids, context, progressListener);
-    }
-
-    @Override
-    public RemoteStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception {
-        return musicService.skipJukebox(index, offsetSeconds, context, progressListener);
-    }
-
-    @Override
-    public RemoteStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception {
-        return musicService.stopJukebox(context, progressListener);
-    }
-
-    @Override
-    public RemoteStatus startJukebox(Context context, ProgressListener progressListener) throws Exception {
-        return musicService.startJukebox(context, progressListener);
-    }
-
-    @Override
-    public RemoteStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception {
-        return musicService.getJukeboxStatus(context, progressListener);
-    }
-
-    @Override
-    public RemoteStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception {
-        return musicService.setJukeboxGain(gain, context, progressListener);
-    }
     
 	@Override
 	public void setStarred(List<MusicDirectory.Entry> entries, List<MusicDirectory.Entry> artists, List<MusicDirectory.Entry> albums, final boolean starred, ProgressListener progressListener, Context context) throws Exception {
@@ -628,26 +596,6 @@ public class CachedMusicService implements MusicService {
 		}
 
 		new StarUpdater(context, allEntries).execute();
-	}
-
-	@Override
-	public void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception {
-		musicService.deleteShare(id, context, progressListener);
-	}
-
-	@Override
-	public void updateShare(String id, String description, Long expires, Context context, ProgressListener progressListener) throws Exception {
-		musicService.updateShare(id, description, expires, context, progressListener);
-	}
-
-	@Override
-	public List<ChatMessage> getChatMessages(Long since, Context context, ProgressListener progressListener) throws Exception {
-		return musicService.getChatMessages(since, context, progressListener);
-	}
-
-	@Override
-	public void addChatMessage(String message, Context context, ProgressListener progressListener) throws Exception {
-		musicService.addChatMessage(message, context, progressListener);
 	}
 	
 	@Override
@@ -688,33 +636,6 @@ public class CachedMusicService implements MusicService {
 				return dir;
 			}
 		}
-	}
-
-	@Override
-	public MusicDirectory getTopTrackSongs(String artist, int size, Context context, ProgressListener progressListener) throws Exception {
-		return musicService.getTopTrackSongs(artist, size, context, progressListener);
-	}
-
-	@Override
-	public void setRating(final MusicDirectory.Entry entry, final int rating, Context context, ProgressListener progressListener) throws Exception {
-		musicService.setRating(entry, rating, context, progressListener);
-
-		new GenericEntryUpdater(context, entry) {
-			@Override
-			public boolean checkResult(MusicDirectory.Entry entry, MusicDirectory.Entry check) {
-				if (entry.getId().equals(check.getId())) {
-					check.setRating(entry.getRating());
-					return true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void updateResult(MusicDirectory.Entry result) {
-
-			}
-		}.execute();
 	}
 
 	@Override

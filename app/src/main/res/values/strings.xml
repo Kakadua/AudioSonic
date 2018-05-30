@@ -6,19 +6,15 @@
     <string name="common.save">Save</string>
     <string name="common.cancel">Cancel</string>
     <string name="common.play_now">Play Now</string>
-	<string name="common.play_shuffled">Play Shuffled</string>
     <string name="common.play_next">Play Next</string>
-    <string name="common.play_last">Play Last</string>
-	<string name="common.download">Cache</string>
+    <string name="common.download">Cache</string>
     <string name="common.pin">Permanent Cache</string>
     <string name="common.delete">Delete</string>
 	<string name="common.star">Star</string>
 	<string name="common.unstar">Unstar</string>
 	<string name="common.info">Details</string>
-	<string name="common.name">Name</string>
-	<string name="common.comment">Comment</string>
-	<string name="common.public">Public</string>
-	<string name="common.play_external">Play Video</string>
+    <string name="common.comment">Comment</string>
+    <string name="common.play_external">Play Video</string>
 	<string name="common.stream_external">Stream Video</string>
 	<string name="common.confirm">Confirm</string>
 	<string name="common.confirm_message">Do you want to %1$s %2$s?</string>
@@ -34,9 +30,6 @@
     <string name="button_bar.browse">Library</string>
     <string name="button_bar.now_playing">Now Playing</string>
 	<string name="button_bar.bookmarks">Bookmarks</string>
-	<string name="button_bar.internet_radio">Internet Radio</string>
-	<string name="button_bar.shares">Shares</string>
-	<string name="button_bar.chat">Chat</string>
 	<string name="button_bar.admin">Admin</string>
 	<string name="button_bar.downloading">Downloading</string>
 	<string name="button_bar.offline">Offline</string>
@@ -47,8 +40,6 @@
 	<![CDATA[
 		<font color="red">Cache vs Permanent Cache</font>
 		<br/>When tracks are downloaded by AudioSonic, they can be deleted to make room for new downloads.  Permanently cached tracks on the other hand will never be automatically deleted.
-		<p/><font color="red">ChromeCast fails</font>:
-		<br/>Try setting the option Settings -> Playback -> Use device proxy.  It is a work around for Chromecast not accepting self-signed certificates.
 		<p/><font color="red">First level in Library are actually groups of authors</font>:
 		<br/>In the option menu, deselect "First level authors".  This will make it so that the entire first level of directories shown will be treated like groups of authors instead of the authors themselves.
 	]]>
@@ -86,17 +77,12 @@
     <string name="menu.about">About</string>
 	<string name="menu.log">Send Log</string>
 	<string name="menu.set_timer">Set Timer</string>
-	<string name="menu.keep_synced">Keep Synced</string>
-	<string name="menu.stop_sync">Stop syncing</string>
-	<string name="menu.show_all">Show all songs</string>
+    <string name="menu.show_all">Show all songs</string>
 	<string name="menu.show_artist">Show Author</string>
-	<string name="menu.share">Share</string>
 	<string name="menu.delete_cache">Delete Cache</string>
-	<string name="menu.cast">Cast To Device</string>
 	<string name="menu.faq">FAQ</string>
 	<string name="menu.add_user">Add User</string>
 	<string name="menu.rescan">Rescan Server</string>
-	<string name="menu.rate">Set Rating</string>
 	<string name="menu.top_tracks">Last.FM Top Tracks</string>
 	<string name="menu.similar_artists">Similar Author</string>
 	<string name="menu.similar_artists.missing">Missing Artists</string>
@@ -145,15 +131,11 @@
     <string name="download.menu_show_album">Show Book</string>
     <string name="download.menu_lyrics">Lyrics</string>
 	<string name="download.menu_remove_all">Remove all</string>
-    <string name="download.menu_screen_on">Screen on</string>
     <string name="download.menu_remove_played_songs">Remove played tracks</string>
     <string name="download.repeat_off">Repeat off</string>
     <string name="download.repeat_all">Repeat all</string>
     <string name="download.repeat_single">Repeat track</string>
-    <string name="download.jukebox_server_too_old">Remote control is not supported. Please upgrade your server.</string>
-    <string name="download.jukebox_offline">Remote control is not available in offline mode.</string>
-    <string name="download.jukebox_not_authorized">Remote control is not allowed. Please enable jukebox mode in <b>Users &gt; Settings</b> on your server.</string>
-	<string name="download.start_timer">Start Timer</string>
+    <string name="download.start_timer">Start Timer</string>
 	<string name="download.stop_time_remaining">Stop in %1$s</string>
 	<string name="download.need_download">Video needs to be downloaded first</string>
 	<string name="download.no_streaming_player">No player can play this stream</string>
@@ -165,10 +147,8 @@
 	<string name="download.downloading_summary">Current: %1$s</string>
 	<string name="download.downloading_summary_expanded">Current: %1$s
 		\nEstimated Size: %2$s</string>
-	<string name="download.failed_to_load">Failed to load</string>
-	<string name="download.restore_play_queue">continue from where you left off on another device at</string>
-    <string name="download.batch_mode">Batch Mode</string>
-	<string name="download.playback_speed_half">0.5x</string>
+    <string name="download.restore_play_queue">continue from where you left off on another device at</string>
+    <string name="download.playback_speed_half">0.5x</string>
     <string name="download_playback_speed_one_p_two">1.2x</string>
 	<string name="download_playback_speed_one_p_five">1.5x</string>
 	<string name="download_playback_speed_two">2x</string>
@@ -189,16 +169,6 @@
 	<string name="bookmark.resume">Resume playing \'%1$s\' from %2$s</string>
 	<string name="bookmark.action_resume">Resume</string>
 	<string name="bookmark.action_start_over">Start Over</string>
-
-	<string name="rating.title">Rate \"%s\"</string>
-	<string name="rating.set_rating">Rating set for \"%s\"</string>
-	<string name="rating.set_rating_failed">Failed to set rating for \"%s\"</string>
-	<string name="rating.remove_rating">Rating removed for \"%s\"</string>
-	<string name="rating.remove_rating_failed">Failed to remove rating for \"%s\"</string>
-
-	<string name="song_details.error">Error</string>
-	<string name="song_details.skipped">Skipped</string>
-	<string name="song_details.downloading">Downloading</string>
 
     <string name="lyrics.nomatch">No lyrics found</string>
 
@@ -242,11 +212,7 @@
     <string name="settings.theme_title">Theme</string>
     <string name="settings.theme_light">Light</string>
     <string name="settings.theme_dark">Dark</string>
-	<string name="settings.theme_black">Black</string>
-	<string name="settings.theme_holo">Holo</string>
-	<string name="settings.theme_day_night">Day/Night</string>
-	<string name="settings.theme_day_black_night">Day/Black Night</string>
-	<string name="settings.theme_fullscreen">Fullscreen</string>
+    <string name="settings.theme_fullscreen">Fullscreen</string>
 	<string name="settings.theme_fullscreen_summary">Hide as many UI elements as Android will allow</string>
 	<string name="settings.track_title">Display Track #</string>
 
@@ -312,19 +278,13 @@
 	<string name="settings.gapless_playback">Gapless Playback</string>
 	<string name="settings.gapless_playback_summary">If you are seeing strange bugs during playback, turning this off may help.</string>
 	<string name="settings.chat_refresh">Chat Refresh Rate (Secs)</string>
-	<string name="settings.chat_enabled">Chat Enabled</string>
-	<string name="settings.chat_enabled_summary">Whether or not to display the chat listing in the pull out drawer</string>
     <string name="settings.cache_screen_title">Cache/Network</string>
 	<string name="settings.playback_title">Playback</string>
 	<string name="settings.hide_widget_title">Hide Widget</string>
 	<string name="settings.hide_widget_summary">Hide widget after exiting app</string>
 	<string name="settings.bookmarks_enabled">Bookmarks Enabled</string>
 	<string name="settings.bookmarks_enabled_summary">Whether or not to display the bookmarks listing in the pull out drawer</string>
-	<string name="settings.internet_radio_enabled">Internet Radio Enabled</string>
-	<string name="settings.internet_radio_enabled_summary">Whether or not to display the internet radio listing in the pull out drawer</string>
-	<string name="settings.shares_enabled">Shares Enabled</string>
-	<string name="settings.shares_enabled_summary">Whether or not to display the shares listing in the pull out drawer</string>
-	<string name="settings.sync_title">Sync</string>
+    <string name="settings.sync_title">Sync</string>
 	<string name="settings.sync_enabled">Sync Enabled</string>
 	<string name="settings.sync_enabled_summary">Whether or not played books are periodically checked for changes</string>
 	<string name="settings.sync_interval">Sync Interval</string>
@@ -350,8 +310,6 @@
 	<string name="settings.menu_options.pin_summary">Show Permanent Cache in menus</string>
 	<string name="settings.menu_options.delete_summary">Show Delete in menus</string>
 	<string name="settings.menu_options.star_summary">Show Star in menus</string>
-	<string name="settings.menu_options.shared_summary">Show Share in menus</string>
-	<string name="settings.menu_options.rate_summary">Show Rating in menus</string>
     <string name="settings.disable_exit_prompt">Disable Exit Prompt</string>
 	<string name="settings.disable_exit_prompt_summary">Exit the app immediately upon pressing back from the home screen</string>
 	<string name="settings.override_system_language">Override System Language</string>
@@ -374,38 +332,18 @@
 	<string name="settings.replay_gain_type.track">Track tags</string>
 	<string name="settings.replay_gain_bump">Replay Gain Pre-amp</string>
 	<string name="settings.replay_gain_untagged">Tracks without Replay Gain</string>
-	<string name="settings.casting">Casting</string>
-	<string name="settings.casting_proxy">Use device proxy</string>
-	<string name="settings.casting_proxy_summary">Stream everything through the device as a proxy.  This gets around issues such as using self-signed certificates.</string>
 	<string name="settings.rename_duplicates">Rename duplicate tracks</string>
 	<string name="settings.rename_duplicates_summary">Rename duplicate tracks to the original filename so you can tell them apart.</string>
 	<string name="settings.start_on_headphones">Start on headphones</string>
 	<string name="settings.start_on_headphones_summary">Start when headphones are plugged in.  This requires the use of a service which starts on boot up to check for the headphone plug event even when AudioSonic is not running.</string>
 	<string name="settings.color_action_bar">Color Action Bar</string>
 	<string name="settings.color_action_bar.summary">Color the action bar and status bar or leave them alone</string>
-    <string name="settings.casting_stream_original">Stream original</string>
-	<string name="settings.casting_stream_original_summary">Stream original files where supported by cast device</string>
-    <string name="settings.casting_cache">Cache While Casting</string>
-	<string name="settings.casting_cache_summary">Cache currently playing songs while casting</string>
-	<string name="settings.casting.dlna_casting_enabled">DLNA Enabled</string>
-	<string name="settings.casting.dlna_casting_enabled.summary">If you are having battery drain problems on Android 7.0 try turning this off</string>
 
 	<string name="shuffle.title">Shuffle By</string>
 	<string name="shuffle.startYear">Start Year:</string>
 	<string name="shuffle.endYear">End Year:</string>
 	<string name="shuffle.genre">Genre:</string>
 	<string name="shuffle.pick_genre">Pick a genre</string>
-
-	<string name="share.expires">Expires: %s</string>
-	<string name="share.expires_never">Never Expires</string>
-	<string name="share.deleted">Deleted share %s</string>
-	<string name="share.deleted_error">Failed to delete share %s</string>
-	<string name="share.no_expiration">No expiration</string>
-	<string name="share.expiration">Expires:</string>
-	<string name="share.updated_info">Updated share information for %s</string>
-	<string name="share.updated_info_error">Failed to update share information for %s</string>
-	<string name="share.via">Share via</string>
-	<string name="share.delete">Delete Share</string>
 
 	<string name="admin.add_user_username">Username:</string>
 	<string name="admin.add_user_email">Email:</string>
@@ -444,7 +382,6 @@
 	<string name="admin.role.comment">Add comments</string>
 	<string name="admin.role.stream">Stream music</string>
 	<string name="admin.role.jukebox">Control jukebox</string>
-	<string name="admin.role.share">Manage shares</string>
 	<string name="admin.role.video_conversion">Convert videos</string>
 	<string name="admin.role.lastfm">Use Last.FM feature</string>
 
@@ -495,8 +432,6 @@
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">More…</string>
 
-	<string name="chat.send_a_message">Send a message</string>
-
 
     <string name="changelog_version_format">Version %s</string>
 
@@ -512,9 +447,7 @@
 
 	<string name="details.title.song">Track Details</string>
 	<string name="details.title.album">Book Details</string>
-    <string name="details.title.internet_radio_station">Internet Radio Details</string>
-	<string name="details.status">Status</string>
-	<string name="details.artist">Author</string>
+    <string name="details.artist">Author</string>
 	<string name="details.album">Book</string>
 	<string name="details.track">Track</string>
 	<string name="details.genre">Genre</string>
@@ -526,17 +459,10 @@
 	<string name="details.size">Size</string>
 	<string name="details.length">Length</string>
 	<string name="details.bookmark_position">Bookmark Position</string>
-	<string name="details.rating">Rating</string>
-	<string name="details.description">Description</string>
-	<string name="details.owner">Owner</string>
-	<string name="details.comments">Comments</string>
-	<string name="details.song_count">Track Count</string>
-	<string name="details.public">Public</string>
-	<string name="details.created">Created</string>
+    <string name="details.comments">Comments</string>
+    <string name="details.created">Created</string>
 	<string name="details.title">Title</string>
-	<string name="details.url">URL</string>
-	<string name="details.error">Error Message</string>
-	<string name="details.author">Author</string>
+    <string name="details.author">Author</string>
 	<string name="details.email">Email</string>
 	<string name="details.version">Version</string>
 	<string name="details.files_cached">Files Cached</string>
@@ -549,12 +475,8 @@
 	<string name="details.updated">Updated</string>
 	<string name="details.starred">Starred</string>
 	<string name="details.last_played">Last Played</string>
-	<string name="details.expiration">Expiration</string>
-	<string name="details.played_count">Played Count</string>
-	<string name="details.stream_url">Stream URL</string>
-	<string name="details.home_page">Home Page</string>
 
-	<string name="permission.external_storage.failed">Audiosonic cannot function without the ability to write to storage</string>
+    <string name="permission.external_storage.failed">Audiosonic cannot function without the ability to write to storage</string>
 
     <plurals name="select_album_n_songs">
         <item quantity="zero">No tracks</item>
@@ -577,9 +499,6 @@
 
 	<!--PopMod-->
 	<string name="main.author">Author</string>
-    <string name="menu.timer">Timer</string>
-	<string name="album.book.length">Length</string>
-	<string name="album.book.reader">Narrator</string>
     <string name="details.fork">Forked from</string>
 	<string name="imported">Imported</string>
 	<string name="exported">Exported to</string>
@@ -590,8 +509,7 @@
 	<string name="export.title">Export</string>
 	<string name="export.server.text">Should the server details and accounts be exported?\n\nIf yes you need to enter the password for your top server here.</string>
 	<string name="export.wrong.password">Password incorrect. Servers and accounts will be skipped</string>
-	<string name="settings.theme_classic">Classic</string>
-	<string name="msg.server.outdated">Your server is outdated</string>
+    <string name="msg.server.outdated">Your server is outdated</string>
 	<string name="msg.server.outdated_beta">Your server is an outdated beta version</string>
 	<string name="msg.server.notBooksonic">Your server is outdated or not running Booksonic</string>
     <string name="msg.server.offline">The server is offline</string>

@@ -29,7 +29,6 @@ public class User implements Serializable {
 	public static final String COMMENT = "commentRole";
 	public static final String STREAM = "streamRole";
 	public static final String JUKEBOX = "jukeboxRole";
-	public static final String SHARE = "shareRole";
 	public static final String VIDEO_CONVERSION = "videoConversionRole";
 	public static final String LASTFM = "lastFMRole";
 	public static final List<String> ROLES = new ArrayList<>();
@@ -43,7 +42,6 @@ public class User implements Serializable {
 		ROLES.add(COVERART);
 		ROLES.add(COMMENT);
 		ROLES.add(JUKEBOX);
-		ROLES.add(SHARE);
 		ROLES.add(VIDEO_CONVERSION);
 	}
 	

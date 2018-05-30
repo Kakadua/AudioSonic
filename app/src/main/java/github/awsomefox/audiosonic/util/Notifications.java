@@ -90,9 +90,7 @@ public final class Notifications {
 
     public static void showPlayingNotification(final Context context, final DownloadService downloadService, final Handler handler, MusicDirectory.Entry song) {
         final boolean playing = downloadService.getPlayerState() == PlayerState.STARTED;
-        boolean remote = downloadService.isRemoteEnabled();
-        boolean shouldFastForward = downloadService.shouldFastForward();
-        setupViews(downloadService.getRemoteControlClient(), context, song, false, downloadService.getPlayerState(), remote, shouldFastForward);
+        setupViews(downloadService.getRemoteControlClient(), context, song, false, downloadService.getPlayerState());
 
         playShowing = true;
         if (downloadForeground && downloadShowing) {
@@ -129,7 +127,7 @@ public final class Notifications {
         DSubWidgetProvider.notifyInstances(context, downloadService, playing);
     }
 
-    private static void setupViews(RemoteControlClientBase base, Context context, MusicDirectory.Entry song, boolean expanded, PlayerState state, boolean remote, boolean shouldFastForward) {
+    private static void setupViews(RemoteControlClientBase base, Context context, MusicDirectory.Entry song, boolean expanded, PlayerState state) {
         // Use the same text for the ticker and the expanded notification
         String title = song.getTitle();
         if(song.getTrack() != null) {

@@ -6,19 +6,15 @@
     <string name="common.save">Spara</string>
     <string name="common.cancel">Avbryt</string>
     <string name="common.play_now">Spela nu</string>
-	<string name="common.play_shuffled">Spela slumpat</string>
     <string name="common.play_next">Spela nästa</string>
-    <string name="common.play_last">Spela Sista</string>
-	<string name="common.download">Cache</string>
+    <string name="common.download">Cache</string>
     <string name="common.pin">Permanent cache</string>
     <string name="common.delete">Ta Bort</string>
 	<string name="common.star">Favorit</string>
 	<string name="common.unstar">Inte favorit</string>
 	<string name="common.info">Detaljer</string>
-	<string name="common.name">Namn</string>
-	<string name="common.comment">Kommentar</string>
-	<string name="common.public">Publik</string>
-	<string name="common.play_external">Spela video</string>
+    <string name="common.comment">Kommentar</string>
+    <string name="common.play_external">Spela video</string>
 	<string name="common.stream_external">Streama video</string>
 	<string name="common.confirm">Konfirmera</string>
 	<string name="common.confirm_message">Vill du %1$s %2$s?</string>
@@ -34,8 +30,6 @@
     <string name="button_bar.browse">Bibliotek</string>
     <string name="button_bar.now_playing">Spelar nu</string>
 	<string name="button_bar.bookmarks">Bokmärken</string>
-	<string name="button_bar.shares">Delningar</string>
-	<string name="button_bar.chat">Chat</string>
 	<string name="button_bar.admin">Admin</string>
 	<string name="button_bar.downloading">Laddar ner</string>
 	<string name="button_bar.offline">Offline</string>
@@ -46,8 +40,6 @@
 	<![CDATA[
 		<font color="red">Cache vs Permanent Cache</font>:
 		<br/>När filer laddas ner av Booksonic kan de senare raderas för att lämna rum åt nya filer.  Permanent cache kan aldrig raderas utan ett aktivt val av dig.
-		<p/><font color="red">ChromeCast misslyckande</font>:
-		<br/>Prova att använda alternativet Inställningar -> Uppspelning -> Använd enhets proxy.  Det är ett "hack" för att Chromecast inte godtar självsignerade certifikat.
 		
 		<p/><font color="red">Första steget i biblioteket är grupper med författare</font>:
 		<br/>Avmarkera "Första steget författare" i inställningsmenyn.  Det kommer göra så att hela första steget kommer att hanteras som forfattar grupper istället för som enstaka författare.
@@ -83,35 +75,19 @@
     <string name="menu.about">Om</string>
 	<string name="menu.add_playlist">Lägg till i spellista</string>
 	<string name="menu.remove_playlist">Ta bort från spellista</string>
-	<string name="menu.deleted_playlist">Tog bort spellistan  %s</string>
-	<string name="menu.deleted_playlist_error">Misslyckades med att ta bort spellistan %s</string>
-	<string name="menu.log">Skicka Logg</string>
+    <string name="menu.log">Skicka Logg</string>
 	<string name="menu.set_timer">Starta timer</string>
-	<string name="menu.keep_synced">Håll synkroniserad</string>
-	<string name="menu.stop_sync">Sluta synkronisera</string>
-	<string name="menu.show_all">Visa all media</string>
+    <string name="menu.show_all">Visa all media</string>
 	<string name="menu.show_artist">Visa Författare</string>
-	<string name="menu.share">Dela</string>
 	<string name="menu.delete_cache">Rensa cache</string>
-	<string name="menu.cast">Casta till enhet</string>
 	<string name="menu.faq">FAQ</string>
 	<string name="menu.add_user">Lägg till användare</string>
 	<string name="menu.rescan">Skanna servern igen</string>
-	<string name="menu.rate">Sätt betyg </string>
-	<string name="menu.top_tracks">Last.FM topp spår</string>
+    <string name="menu.top_tracks">Last.FM topp spår</string>
 	<string name="menu.similar_artists">Liknande författare</string>
 
 	<string name="menu.start_radio">Starta radio</string>
 	<string name="menu.first_level_artist">Första steget författare</string>
-
-    <string name="playlist.label">Spellistor</string>
-	<string name="playlist.update_info">Uppdatera information</string>
-	<string name="playlist.updated_info">Uppdaterade spelliste information för %s</string>
-	<string name="playlist.updated_info_error">Misslyckades med att uppdatera spelliste information för %s</string>
-	<string name="playlist.overwrite">Skriv över existerande spellista</string>
-	<string name="playlist.add_to">Lägg till i spellista</string>
-	<string name="playlist.create_new">Skapa ny</string>
-	<string name="playlist.delete">Radera spellista</string>
 
     <string name="search.title">Sök</string>
     <string name="search.artists">Författare</string>
@@ -155,19 +131,11 @@
     <string name="download.menu_show_album">Visa böcker</string>
     <string name="download.menu_lyrics">Texter</string>
 	<string name="download.menu_remove_all">Ta bort allt</string>
-    <string name="download.menu_screen_on">Skärmen är på</string>
     <string name="download.menu_remove_played_songs">Ta bort spelade spår</string>
-    <string name="download.playlist_title">Spara spellista</string>
-    <string name="download.playlist_name">Spellistans namn:</string>
-    <string name="download.playlist_done">Spellistan sparades.</string>
-    <string name="download.playlist_error">Misslyckades med att spara spellistan, försök igen senare.</string>
     <string name="download.repeat_off">Upprepa inte</string>
     <string name="download.repeat_all">Upprepa alla</string>
     <string name="download.repeat_single">Upprepa spåret</string>
-    <string name="download.jukebox_server_too_old">Fjärrkontroll stöds inte. Uppdatera din Booksonic server.</string>
-    <string name="download.jukebox_offline">Fjärrkontroll fungerar inte i offline läge.</string>
-    <string name="download.jukebox_not_authorized">Fjärrkontroll acceptaras inte. Acceptera Jukebox läge i <b>Användare &gt; Inställningar</b> på din Booksonic server.</string>
-	<string name="download.start_timer">Starta timer</string>
+    <string name="download.start_timer">Starta timer</string>
 	<string name="download.stop_time_remaining">Stoppa om %1$s</string>
 	<string name="download.need_download">Videon måste laddas ner först</string>
 	<string name="download.no_streaming_player">Ingen spelare kan spela upp den här strömmen</string>
@@ -179,8 +147,7 @@
 	<string name="download.downloading_summary">Nuvarande: %1$s</string>
 	<string name="download.downloading_summary_expanded">Nuvarande: %1$s
 		\nBeräknad storlek: %2$s</string>
-	<string name="download.failed_to_load">Misslyckades med att ladda</string>
-	<string name="download.restore_play_queue">Fortsätt där du slutade på en annan enhet</string>
+    <string name="download.restore_play_queue">Fortsätt där du slutade på en annan enhet</string>
 
 	<string name="sync.new_albums">Nya böcker tillgängliga</string>
 	<string name="sync.new_starred">Nya favoritspår tillgängliga</string>
@@ -189,14 +156,9 @@
 	<string name="starring_content_unstarred">\"%s\" är inte längre en favorit</string>
     <string name="starring_content_error">Misslyckades med att uppdatera \"%s\", försök igen senare.</string>
 
-	<string name="playlist.mine">Mina spellistor</string>
-	<string name="playlist.shared">Delade spellistor</string>
-	<string name="playlist_error">Misslyckades med att hämta listan över spellistor</string>
-	<string name="updated_playlist">Ladde till %1$s spår till \"%2$s\"</string>
-    <string name="updated_playlist_error">Misslyckades med att uppdatera \"%s\", försök igen senare.</string>
-	<string name="removed_playlist">Tog bort %1$s spår från \"%2$s\"</string>
-	
-	<string name="bookmark.delete">Ta bort bokmärke</string>
+    <string name="playlist_error">Misslyckades med att hämta listan över spellistor</string>
+
+    <string name="bookmark.delete">Ta bort bokmärke</string>
 	<string name="bookmark.delete_title">Ta bort bokmärke för</string>
 	<string name="bookmark.deleted">Tog bort bokmärke för \"%s\"</string>
 	<string name="bookmark.deleted_error">Misslyckades med att ta bort bokmärke för \"%s\"</string>
@@ -205,16 +167,6 @@
 	<string name="bookmark.resume">Fortsätt spela \'%1$s\' från %2$s</string>
 	<string name="bookmark.action_resume">Fortsätt</string>
 	<string name="bookmark.action_start_over">Börja om</string>
-
-	<string name="rating.title">Betygsätt \"%s\"</string>
-	<string name="rating.set_rating">Betyg satt på \"%s\"</string>
-	<string name="rating.set_rating_failed">Misslyckades med att sätta betyg på \"%s\"</string>
-	<string name="rating.remove_rating">Betyg borttaget från \"%s\"</string>
-	<string name="rating.remove_rating_failed">Misslyckades med att ta bort betyg från \"%s\"</string>
-
-	<string name="song_details.error">Error</string>
-	<string name="song_details.skipped">Hoppade över</string>
-	<string name="song_details.downloading">Laddar ner</string>
 
     <string name="lyrics.nomatch">Inga texter hittades</string>
 
@@ -256,9 +208,7 @@
     <string name="settings.theme_title">Tema</string>
     <string name="settings.theme_light">Ljust</string>
     <string name="settings.theme_dark">Mörkt</string>
-	<string name="settings.theme_black">Svart</string>
-	<string name="settings.theme_holo">Holo</string>
-	<string name="settings.theme_fullscreen">Fullskärm</string>
+    <string name="settings.theme_fullscreen">Fullskärm</string>
 	<string name="settings.theme_fullscreen_summary">Göm så mycket UI som Android tillåter</string>
 	<string name="settings.track_title">Visa spårnummer #</string>
 	<string name="settings.track_summary">Visa spårnummer # framför spåret om det finns</string>
@@ -324,8 +274,6 @@
     <string name="settings.gapless_playback">Spela upp utan mellanrum</string>
 	<string name="settings.gapless_playback_summary">Om du märker några konstiga buggar när du lyssnar kan det hjälpa att slå av den här.</string>
 	<string name="settings.chat_refresh">Hur ofta ska chat uppdateras (sekunder)</string>
-	<string name="settings.chat_enabled">Chat aktiverad</string>
-	<string name="settings.chat_enabled_summary">Om chatten ska visas i menyn till vänster</string>
 
     <string name="settings.cache_screen_title">Cache/Nätverk</string>
 	<string name="settings.playback_title">Uppspelning</string>
@@ -333,8 +281,6 @@
 	<string name="settings.hide_widget_summary">Dölj widget efter att jag lämnat appen</string>
 	<string name="settings.bookmarks_enabled">Bokmärken aktiverade</string>
 	<string name="settings.bookmarks_enabled_summary">Om bokmärken ska visas eller inte i menyn till vänster</string>
-	<string name="settings.shares_enabled">Delningar aktiverade</string>
-	<string name="settings.shares_enabled_summary">Om delningar ska visas eller inte i menyn till vänster</string>
 	<string name="settings.sync_title">Synkronisering</string>
 	<string name="settings.sync_enabled">Synkronisering aktiverad</string>
 	<string name="settings.sync_interval">Synkroniserings interval</string>
@@ -362,8 +308,6 @@
 	<string name="settings.menu_options.pin_summary">Visa permanent cache i menyer</string>
 	<string name="settings.menu_options.delete_summary">Visa ta bort i menyer</string>
 	<string name="settings.menu_options.star_summary">Visa favorit i menyer</string>
-	<string name="settings.menu_options.shared_summary">Visa dela i menyer</string>
-	<string name="settings.menu_options.rate_summary">Visa omdömme i menyer</string>
 
     <string name="settings.disable_exit_prompt">Avaktivera stäng ner rutan</string>
 	<string name="settings.disable_exit_prompt_summary">Stäng appen direkt när jag trycker bakåt på hemskärmen</string>
@@ -386,9 +330,6 @@
 	<string name="settings.replay_gain_type.track">Spår taggar</string>
 	<string name="settings.replay_gain_bump">Replay Gain Pre-amp</string>
 	<string name="settings.replay_gain_untagged">Spår utan Replay Gain</string>
-	<string name="settings.casting">Casting</string>
-	<string name="settings.casting_proxy">Använd enhetens proxy</string>
-	<string name="settings.casting_proxy_summary">Streama allting genom enheten som en proxy.  Det här kommer runt problem med självsignerade certifikat.</string>
 	<string name="settings.rename_duplicates">Döp om tvillingspår</string>
 	<string name="settings.rename_duplicates_summary">Döp om tvillingspår till originalnamnet så att jag kan se skillnad på dem.</string>
 	<string name="settings.start_on_headphones">Starta när hörlurar sätts in</string>
@@ -402,18 +343,6 @@
 	<string name="shuffle.endYear">Slut år:</string>
 	<string name="shuffle.genre">Genre:</string>
 	<string name="shuffle.pick_genre">Välj en genre</string>
-
-
-	<string name="share.expires">Går ut: %s</string>
-	<string name="share.expires_never">Går aldrig ut</string>
-	<string name="share.deleted">Tog bort delning %s</string>
-	<string name="share.deleted_error">Misslyckades med att ta bort delning %s</string>
-	<string name="share.no_expiration">Går aldrig ut</string>
-	<string name="share.expiration">Går ut:</string>
-	<string name="share.updated_info">Uppdaterad delnings information för %s</string>
-	<string name="share.updated_info_error">Misslyckades med att uppdatera delnings information för %s</string>
-	<string name="share.via">Dela via</string>
-	<string name="share.delete">Ta bort delning</string>
 
 	<string name="admin.add_user_username">Användarnamn:</string>
 	<string name="admin.add_user_email">Email:</string>
@@ -449,7 +378,6 @@
 	<string name="admin.role.comment">Lägg till kommentar</string>
 	<string name="admin.role.stream">Streama musik</string>
 	<string name="admin.role.jukebox">Kontrolera jukeboxen</string>
-	<string name="admin.role.share">Hantera delningar</string>
 	<string name="admin.role.lastfm">Använd Last.FM funktionen</string>
 
     <string name="music_service.retry">Ett nätverksproblem har uppstått. Försök %1$d av %2$d.</string>
@@ -501,9 +429,7 @@
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">Mer…</string>
 
-	<string name="chat.send_a_message">Skicka ett meddelande</string>
-
-	<string name="tasker.start_playing">Börja spela</string>
+    <string name="tasker.start_playing">Börja spela</string>
 	<string name="tasker.start_playing_shuffled">Börja spela i slumpat läge</string>
 
 	<string name="tasker.start_playing_title">Tasker -> Starta Booksonic</string>
@@ -519,11 +445,8 @@
 	<string name="details.title.song">Spår detaljer</string>
 
 	<string name="details.title.album">Bokdetaljer</string>
-	<string name="details.title.playlist">Playlist detaljer</string>
 
-	<string name="details.status">Status</string>
-
-	<string name="details.artist">Författare</string>
+    <string name="details.artist">Författare</string>
 	<string name="details.album">Bok</string>
 	<string name="details.track">Spår</string>
 	<string name="details.genre">Genre</string>
@@ -535,17 +458,10 @@
 	<string name="details.size">Storlek</string>
 	<string name="details.length">Längd</string>
 	<string name="details.bookmark_position">Bokmärkes position</string>
-	<string name="details.rating">Omdömme</string>
-	<string name="details.description">Beskrivning</string>
-	<string name="details.owner">Ägare</string>
-	<string name="details.comments">Kommentarer</string>
-	<string name="details.song_count">Spår räknare</string>
-	<string name="details.public">Publik</string>
-	<string name="details.created">Skapad</string>
+    <string name="details.comments">Kommentarer</string>
+    <string name="details.created">Skapad</string>
 	<string name="details.title">Titel</string>
-	<string name="details.url">URL</string>
-	<string name="details.error">Felmeddelande</string>
-	<string name="details.author">Utvecklare</string>
+    <string name="details.author">Utvecklare</string>
 	<string name="details.email">Email</string>
 	<string name="details.fork">Forked från</string>
 	<string name="details.version">Version</string>
@@ -580,11 +496,7 @@
 
 	<!--PopMod-->
 	<string name="main.author">Författare</string>
-    <string name="menu.timer">Timer</string>
-	<string name="album.book.length">Längd</string>
-	<string name="album.book.reader">Uppläsare</string>
-	<string name="playlist.reverse">Omvänt</string>
-	<string name="imported">Importerat</string>
+    <string name="imported">Importerat</string>
 	<string name="exported">Exporterat till</string>
     <string name="menu.import">Importera</string>
 	<string name="menu.export">Exportera</string>
@@ -593,8 +505,7 @@
 	<string name="export.title">Exportera</string>
 	<string name="export.server.text">Ska server och användardetaljer exporteras?\n\nOm ja så måste du fylla i lösenordet för din topp server här.</string>
 	<string name="export.wrong.password">Ogiltigt lösenord. Servrar och konton sparas inte.</string>
-	<string name="settings.theme_classic">Klassisk</string>
-	<string name="msg.server.outdated">Din server är föråldrad</string>
+    <string name="msg.server.outdated">Din server är föråldrad</string>
 	<string name="msg.server.outdated_beta">Din server är en föråldrad beta version</string>
 	<string name="msg.server.notBooksonic">Din server är föråldrad eller kör inte Booksonic</string>
     <string name="msg.server.offline">Servern är offline</string>

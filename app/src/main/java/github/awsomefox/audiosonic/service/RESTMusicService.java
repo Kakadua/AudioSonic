@@ -46,14 +46,12 @@ import android.util.Log;
 import com.google.android.gms.security.ProviderInstaller;
 
 import github.awsomefox.audiosonic.domain.ArtistInfo;
-import github.awsomefox.audiosonic.domain.ChatMessage;
 import github.awsomefox.audiosonic.domain.Genre;
 import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.domain.Lyrics;
 import github.awsomefox.audiosonic.domain.MusicDirectory;
 import github.awsomefox.audiosonic.domain.MusicFolder;
 import github.awsomefox.audiosonic.domain.PlayerQueue;
-import github.awsomefox.audiosonic.domain.RemoteStatus;
 import github.awsomefox.audiosonic.domain.SearchCritera;
 import github.awsomefox.audiosonic.domain.SearchResult;
 import github.awsomefox.audiosonic.domain.ServerInfo;
@@ -62,11 +60,9 @@ import github.awsomefox.audiosonic.domain.Version;
 import github.awsomefox.audiosonic.fragments.MainFragment;
 import github.awsomefox.audiosonic.service.parser.ArtistInfoParser;
 import github.awsomefox.audiosonic.service.parser.BookmarkParser;
-import github.awsomefox.audiosonic.service.parser.ChatMessageParser;
 import github.awsomefox.audiosonic.service.parser.EntryListParser;
 import github.awsomefox.audiosonic.service.parser.ErrorParser;
 import github.awsomefox.audiosonic.service.parser.IndexesParser;
-import github.awsomefox.audiosonic.service.parser.JukeboxStatusParser;
 import github.awsomefox.audiosonic.service.parser.LicenseParser;
 import github.awsomefox.audiosonic.service.parser.LyricsParser;
 import github.awsomefox.audiosonic.service.parser.MusicDirectoryParser;
@@ -74,7 +70,6 @@ import github.awsomefox.audiosonic.service.parser.MusicFoldersParser;
 import github.awsomefox.audiosonic.service.parser.RandomSongsParser;
 import github.awsomefox.audiosonic.service.parser.SearchResult2Parser;
 import github.awsomefox.audiosonic.service.parser.SearchResultParser;
-import github.awsomefox.audiosonic.service.parser.TopSongsParser;
 import github.awsomefox.audiosonic.service.parser.UserParser;
 import github.awsomefox.audiosonic.util.FileUtil;
 import github.awsomefox.audiosonic.util.Pair;
@@ -753,7 +748,7 @@ public class RESTMusicService implements MusicService {
 		builder.append("&id=").append(song.getId());
 
 		// Allow user to specify to stream raw formats if available
-		if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_CAST_STREAM_ORIGINAL, true) && ("mp3".equals(song.getSuffix()) || "flac".equals(song.getSuffix()) || "wav".equals(song.getSuffix()) || "aac".equals(song.getSuffix())) && ServerInfo.checkServerVersion(context, "1.9", getInstance(context))) {
+		if(("mp3".equals(song.getSuffix()) || "flac".equals(song.getSuffix()) || "wav".equals(song.getSuffix()) || "aac".equals(song.getSuffix())) && ServerInfo.checkServerVersion(context, "1.9", getInstance(context))) {
 			builder.append("&format=raw");
 
 		} else {
@@ -810,61 +805,6 @@ public class RESTMusicService implements MusicService {
 	}
 
     @Override
-    public RemoteStatus updateJukeboxPlaylist(List<String> ids, Context context, ProgressListener progressListener) throws Exception {
-        int n = ids.size();
-        List<String> parameterNames = new ArrayList<String>(n + 1);
-        parameterNames.add("action");
-        for (int i = 0; i < n; i++) {
-            parameterNames.add("id");
-        }
-        List<Object> parameterValues = new ArrayList<Object>();
-        parameterValues.add("set");
-        parameterValues.addAll(ids);
-
-        return executeJukeboxCommand(context, progressListener, parameterNames, parameterValues);
-    }
-
-    @Override
-    public RemoteStatus skipJukebox(int index, int offsetSeconds, Context context, ProgressListener progressListener) throws Exception {
-        List<String> parameterNames = Arrays.asList("action", "index", "offset");
-        List<Object> parameterValues = Arrays.<Object>asList("skip", index, offsetSeconds);
-        return executeJukeboxCommand(context, progressListener, parameterNames, parameterValues);
-    }
-
-    @Override
-    public RemoteStatus stopJukebox(Context context, ProgressListener progressListener) throws Exception {
-        return executeJukeboxCommand(context, progressListener, Arrays.asList("action"), Arrays.<Object>asList("stop"));
-    }
-
-    @Override
-    public RemoteStatus startJukebox(Context context, ProgressListener progressListener) throws Exception {
-        return executeJukeboxCommand(context, progressListener, Arrays.asList("action"), Arrays.<Object>asList("start"));
-    }
-
-    @Override
-    public RemoteStatus getJukeboxStatus(Context context, ProgressListener progressListener) throws Exception {
-        return executeJukeboxCommand(context, progressListener, Arrays.asList("action"), Arrays.<Object>asList("status"));
-    }
-
-    @Override
-    public RemoteStatus setJukeboxGain(float gain, Context context, ProgressListener progressListener) throws Exception {
-        List<String> parameterNames = Arrays.asList("action", "gain");
-        List<Object> parameterValues = Arrays.<Object>asList("setGain", gain);
-        return executeJukeboxCommand(context, progressListener, parameterNames, parameterValues);
-
-    }
-
-    private RemoteStatus executeJukeboxCommand(Context context, ProgressListener progressListener, List<String> parameterNames, List<Object> parameterValues) throws Exception {
-        checkServerVersion(context, "1.7", "Jukebox not supported.");
-        Reader reader = getReader(context, progressListener, "jukeboxControl", parameterNames, parameterValues);
-        try {
-            return new JukeboxStatusParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
-        }
-    }
-
-    @Override
     public void setStarred(List<MusicDirectory.Entry> entries, List<MusicDirectory.Entry> artists, List<MusicDirectory.Entry> albums, boolean starred, ProgressListener progressListener, Context context) throws Exception {
     	checkServerVersion(context, "1.8", "Starring is not supported.");
 
@@ -902,91 +842,6 @@ public class RESTMusicService implements MusicService {
             Util.close(reader);
         }
     }
-
-	@Override
-	public void deleteShare(String id, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.6", "Shares not supported.");
-
-		List<String> parameterNames = new ArrayList<String>();
-		List<Object> parameterValues = new ArrayList<Object>();
-
-		parameterNames.add("id");
-		parameterValues.add(id);
-
-		Reader reader = getReader(context, progressListener, "deleteShare", parameterNames, parameterValues);
-
-		try {
-			new ErrorParser(context, getInstance(context)).parse(reader);
-		}
-		finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public void updateShare(String id, String description, Long expires, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.6", "Updating share not supported.");
-
-		List<String> parameterNames = new ArrayList<String>();
-		List<Object> parameterValues = new ArrayList<Object>();
-
-		parameterNames.add("id");
-		parameterValues.add(id);
-
-		if (description != null) {
-			parameterNames.add("description");
-			parameterValues.add(description);
-		}
-
-		parameterNames.add("expires");
-		parameterValues.add(expires);
-
-		Reader reader = getReader(context, progressListener, "updateShare", parameterNames, parameterValues);
-		try {
-			new ErrorParser(context, getInstance(context)).parse(reader);
-		}
-		finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public List<ChatMessage> getChatMessages(Long since, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.2", "Chat not supported.");
-
-		List<String> parameterNames = new ArrayList<String>();
-		List<Object> parameterValues = new ArrayList<Object>();
-
-		parameterNames.add("since");
-		parameterValues.add(since);
-
-		Reader reader = getReader(context, progressListener, "getChatMessages", parameterNames, parameterValues);
-
-		try {
-			return new ChatMessageParser(context, getInstance(context)).parse(reader, progressListener);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public void addChatMessage(String message, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.2", "Chat not supported.");
-
-		List<String> parameterNames = new ArrayList<String>();
-		List<Object> parameterValues = new ArrayList<Object>();
-
-		parameterNames.add("message");
-		parameterValues.add(message);
-
-		Reader reader = getReader(context, progressListener, "addChatMessage", parameterNames, parameterValues);
-
-		try {
-			new ErrorParser(context, getInstance(context)).parse(reader);
-		} finally {
-			Util.close(reader);
-		}
-	}
 
 	@Override
 	public List<Genre> getGenres(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
@@ -1027,38 +882,6 @@ public class RESTMusicService implements MusicService {
 		Reader reader = getReader(context, progressListener, "getSongsByGenre", parameterNames, parameterValues, true);
 		try {
 			return new RandomSongsParser(context, instance).parse(reader, progressListener);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public MusicDirectory getTopTrackSongs(String artist, int size, Context context, ProgressListener progressListener) throws Exception {
-		List<String> parameterNames = new ArrayList<String>();
-		List<Object> parameterValues = new ArrayList<Object>();
-
-		parameterNames.add("artist");
-		parameterValues.add(artist);
-		parameterNames.add("size");
-		parameterValues.add(size);
-
-		String method = ServerInfo.isMadsonic(context, getInstance(context)) ? "getTopTrackSongs" : "getTopSongs";
-		Reader reader = getReader(context, progressListener, method, parameterNames, parameterValues);
-		try {
-
-			return new TopSongsParser(context, getInstance(context)).parse(reader, progressListener);
-		} finally {
-			Util.close(reader);
-		}
-	}
-
-	@Override
-	public void setRating(MusicDirectory.Entry entry, int rating, Context context, ProgressListener progressListener) throws Exception {
-		checkServerVersion(context, "1.6", "Setting ratings not supported.");
-
-		Reader reader = getReader(context, progressListener, "setRating", Arrays.asList("id", "rating"), Arrays.<Object>asList(entry.getId(), rating));
-		try {
-			new ErrorParser(context, getInstance(context)).parse(reader);
 		} finally {
 			Util.close(reader);
 		}

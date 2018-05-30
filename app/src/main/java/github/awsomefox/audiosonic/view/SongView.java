@@ -87,7 +87,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		durationTextView = findViewById(R.id.song_duration);
 		statusTextView = findViewById(R.id.song_status);
 		statusImageView = findViewById(R.id.song_status_icon);
-		ratingBar = findViewById(R.id.song_rating);
 		starButton = findViewById(R.id.song_star);
 		starButton.setFocusable(false);
 		bookmarkButton = (ImageButton) findViewById(R.id.song_bookmark);
@@ -130,8 +129,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		artistTextView.setText(song.getAlbum());
 
 		this.setBackgroundColor(0x00000000);
-		ratingBar.setVisibility(GONE);
-		rating = 0;
 
 		revision = -1;
 		loaded = false;
@@ -168,7 +165,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 		partialFileExists = partialFile.exists();
 		isStarred = item.isStarred();
 		isBookmarked = item.getBookmark() != null;
-		isRated = item.getRating();
 
 		// Check if needs to load metadata: check against all fields that we know are null in offline mode
 		if(item.getBitRate() == null && item.getDuration() == null && item.getDiscNumber() == null && isWorkDone) {
@@ -271,39 +267,6 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 				playedButton.setVisibility(GONE);
 				isPlayedShown = false;
 			}
-		}
-
-		if(isRated != rating) {
-			if(isRated > 1) {
-				if(rating <= 1) {
-					ratingBar.setVisibility(VISIBLE);
-				}
-
-				ratingBar.setNumStars(isRated);
-				ratingBar.setRating(isRated);
-			} else if(isRated <= 1) {
-				if(rating > 1) {
-					ratingBar.setVisibility(GONE);
-				}
-			}
-
-			// Still highlight red if a 1-star
-			if(isRated == 1) {
-				this.setBackgroundColor(Color.RED);
-
-				String theme = ThemeUtil.getTheme(context);
-				if("black".equals(theme)) {
-					this.getBackground().setAlpha(80);
-				} else if("dark".equals(theme) || "holo".equals(theme)) {
-					this.getBackground().setAlpha(60);
-				} else {
-					this.getBackground().setAlpha(20);
-				}
-			} else if(rating == 1) {
-				this.setBackgroundColor(0x00000000);
-			}
-
-			rating = isRated;
 		}
 	}
 

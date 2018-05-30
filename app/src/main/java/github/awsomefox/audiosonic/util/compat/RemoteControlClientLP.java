@@ -188,10 +188,10 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 		if (currentSong.getTrack() != null) {
 			chapter = "Chapter " + String.format("%02d", currentSong.getTrack());
 		}
-		builder.putString(MediaMetadata.METADATA_KEY_ARTIST, (currentSong == null) ? null : chapter)
-				.putString(MediaMetadata.METADATA_KEY_ALBUM, (currentSong == null) ? null : currentSong.getAlbum())
+		builder.putString(MediaMetadata.METADATA_KEY_ARTIST, (currentSong == null) ? null : currentSong.getAlbum())
+				.putString(MediaMetadata.METADATA_KEY_ALBUM, (currentSong == null) ? null : currentSong.getArtist())
 				.putString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST, (currentSong == null) ? null : currentSong.getArtist())
-				.putString(MediaMetadata.METADATA_KEY_TITLE, (currentSong) == null ? null : currentSong.getAlbum())
+				.putString(MediaMetadata.METADATA_KEY_TITLE, (currentSong) == null ? null : chapter)
 				.putString(MediaMetadata.METADATA_KEY_GENRE, (currentSong) == null ? null : currentSong.getGenre())
 				.putLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER, (currentSong == null) ?
 						0 : ((currentSong.getTrack() == null) ? 0 : currentSong.getTrack()))
@@ -209,36 +209,6 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 
 	public void updateAlbumArt(MusicDirectory.Entry currentSong, Bitmap bitmap) {
 		setMetadata(currentSong, bitmap);
-	}
-
-	@Override
-	public void registerRoute(MediaRouter router) {
-		router.setMediaSession(mediaSession);
-	}
-
-	@Override
-	public void unregisterRoute(MediaRouter router) {
-		router.setMediaSession(null);
-	}
-
-	@Override
-	public void updatePlaylist(List<DownloadFile> playlist) {
-		List<MediaSessionCompat.QueueItem> queue = new ArrayList<>();
-
-		for(DownloadFile file: playlist) {
-			MusicDirectory.Entry entry = file.getSong();
-
-			MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-					.setMediaId(entry.getId())
-					.setTitle(entry.getTitle())
-					.setSubtitle(entry.getAlbumDisplay())
-					.build();
-			MediaSessionCompat.QueueItem item = new MediaSessionCompat.QueueItem(description, entry.getId().hashCode());
-			queue.add(item);
-		}
-
-		mediaSession.setQueue(queue);
-		currentQueue = playlist;
 	}
 
 	public MediaSessionCompat getMediaSession() {
@@ -259,8 +229,8 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 				actions |= PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
 			}
 		} else {
-			actions |= PlaybackStateCompat.ACTION_REWIND;
-			actions |= PlaybackStateCompat.ACTION_FAST_FORWARD;
+			actions |= PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
+			actions |= PlaybackStateCompat.ACTION_SKIP_TO_NEXT;
 		}
 
 		return actions;
@@ -268,8 +238,6 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 	protected void addCustomActions(MusicDirectory.Entry currentSong, PlaybackStateCompat.Builder builder) {
 		Bundle showOnWearExtras = new Bundle();
 		showOnWearExtras.putBoolean(SHOW_ON_WEAR, true);
-
-		int rating = currentSong.getRating();
 
 		PlaybackStateCompat.CustomAction star = new PlaybackStateCompat.CustomAction.Builder(CUSTOM_ACTION_STAR,
 					downloadService.getString(R.string.common_star),
@@ -320,15 +288,12 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 				}
 
 				for (MusicDirectory.Entry dir : musicDirectory.getChildren(true, false)) {
-					if (dir.getRating() == 1) {
-						continue;
-					}
 
 					getSongsRecursively(dir, songs);
 				}
 
 				for (MusicDirectory.Entry song : musicDirectory.getChildren(false, true)) {
-					if (!song.isVideo() && song.getRating() != 1) {
+					if (!song.isVideo()) {
 						songs.add(song);
 					}
 				}
@@ -368,7 +333,7 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 				List<MusicDirectory.Entry> playEntries = new ArrayList<>();
 				List<MusicDirectory.Entry> allEntries = musicDirectory.getChildren(false, true);
 				for(MusicDirectory.Entry song: allEntries) {
-					if (!song.isVideo() && song.getRating() != 1) {
+					if (!song.isVideo()) {
 						playEntries.add(song);
 					}
 				}
@@ -540,11 +505,7 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 
 		@Override
 		public void onCustomAction(String action, Bundle extras) {
-			if(CUSTOM_ACTION_THUMBS_UP.equals(action)) {
-				downloadService.toggleRating(5);
-			} else if(CUSTOM_ACTION_THUMBS_DOWN.equals(action)) {
-				downloadService.toggleRating(1);
-			} else if(CUSTOM_ACTION_STAR.equals(action)) {
+			if(CUSTOM_ACTION_STAR.equals(action)) {
 				downloadService.toggleStarred();
 			} else if(CUSTOM_ACTION_SLOW.equals(action)) {
 				if (downloadService.getPlaybackSpeed() <= .5f) {

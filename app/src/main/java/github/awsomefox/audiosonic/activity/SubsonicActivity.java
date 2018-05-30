@@ -82,6 +82,7 @@ import github.awsomefox.audiosonic.service.MusicServiceFactory;
 import github.awsomefox.audiosonic.util.DrawableTint;
 import github.awsomefox.audiosonic.util.ImageLoader;
 import github.awsomefox.audiosonic.util.KakaduaUtil;
+import github.awsomefox.audiosonic.util.Notifications;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
 import github.awsomefox.audiosonic.util.ThemeUtil;
 import github.awsomefox.audiosonic.util.UserUtil;
@@ -131,9 +132,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	boolean showingTabs = true;
 	boolean drawerOpen = false;
 	SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
-	private SensorManager sensorManager;
 	float x,y,z;
-	boolean checkShake = false;
 
 	static {
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
@@ -141,11 +140,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 	@Override
 	protected void onCreate(Bundle bundle) {
-
-
-		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		sensorManager.registerListener(this, sensorManager.getDefaultSensor
-				(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 
 		UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
 		if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION) {
@@ -615,15 +609,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		boolean isVolumeDown = keyCode == KeyEvent.KEYCODE_VOLUME_DOWN;
-		boolean isVolumeUp = keyCode == KeyEvent.KEYCODE_VOLUME_UP;
-		boolean isVolumeAdjust = isVolumeDown || isVolumeUp;
-		boolean isJukebox = getDownloadService() != null && getDownloadService().isRemoteEnabled();
-
-		if (isVolumeAdjust && isJukebox) {
-			getDownloadService().updateRemoteVolume(isVolumeUp);
-			return true;
-		}
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -659,9 +644,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 		SharedPreferences prefs = Util.getPreferences(this);
 		boolean bookmarksEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_BOOKMARKS_ENABLED, true) && !Util.isOffline(this) && ServerInfo.canBookmark(this);
-		boolean internetRadioEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_INTERNET_RADIO_ENABLED, false) && !Util.isOffline(this) && ServerInfo.canInternetRadio(this);
-		boolean sharedEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_SHARED_ENABLED, false) && !Util.isOffline(this);
-		boolean chatEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_CHAT_ENABLED, false) && !Util.isOffline(this);
 		boolean adminEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_ADMIN_ENABLED, false) && !Util.isOffline(this);
 
 		MenuItem offlineMenuItem = drawerList.getMenu().findItem(R.id.drawer_offline);
@@ -1047,7 +1029,11 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 				break;
 			}
 			Log.w(TAG, "DownloadService not running. Attempting to start it.");
-			startService(new Intent(this, DownloadService.class));
+//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//				startForegroundService(new Intent(this, DownloadService.class));
+//			} else {
+				startService(new Intent(this, DownloadService.class));
+//			}
 			Util.sleepQuietly(50L);
 		}
 
@@ -1313,35 +1299,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		checkShake = true;
-		if(checkShake) {
-			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
-				boolean reset = false;
-				double sensitivity = 3.0;
-				if (event.values[0] > x + sensitivity || event.values[0] < x - sensitivity) {
-					reset = true;
-				}
-				if (event.values[1] > y + sensitivity || event.values[1] < y - sensitivity) {
-					reset = true;
-				}
-				if (event.values[2] > z + sensitivity || event.values[2] < z - sensitivity) {
-					reset = true;
-				}
-
-				if (reset) {
-					DownloadService downloadService = getDownloadService();
-					if (downloadService != null && downloadService.getSleepTimer()) {
-						downloadService.stopSleepTimer();
-						downloadService.startSleepTimer();
-					}
-				}
-
-				x = event.values[0];
-				y = event.values[1];
-				z = event.values[2];
-
-			}
-		}
 	}
 }
