@@ -1376,7 +1376,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 				break;
 		}
 	}
-	private void updateTitle() {
+	public void updateTitle() {
 		DownloadService downloadService = getDownloadService();
 		float playbackSpeed = downloadService.getPlaybackSpeed();
 

@@ -42,7 +42,6 @@
 				android:layout_height="?attr/actionBarSize"
 				android:layout_width="match_parent"
 				android:elevation="4dp"
-				android:visibility="gone"
 				android:theme="?attr/actionbarThemeStyle"
 				app:popupTheme="?attr/actionbarPopupStyle"/>
 
@@ -56,6 +55,7 @@
 
 				<github.awsomefox.audiosonic.view.RecyclingImageView
 					android:id="@+id/album_art"
+					android:src="@drawable/unknown_album"
 					android:layout_width="?attr/actionBarSize"
 					android:layout_height="?attr/actionBarSize"
 					android:layout_gravity="left|center"
