@@ -85,9 +85,9 @@ public class DownloadServiceLifecycleSupport {
 					if (DownloadService.CMD_PLAY.equals(action)) {
 						downloadService.play();
 					} else if (DownloadService.CMD_NEXT.equals(action)) {
-						downloadService.next();
+						downloadService.fastForward();
 					} else if (DownloadService.CMD_PREVIOUS.equals(action)) {
-						downloadService.previous();
+						downloadService.rewind();
 					} else if (DownloadService.CMD_TOGGLEPAUSE.equals(action)) {
 						downloadService.togglePlayPause();
 					} else if (DownloadService.CMD_PAUSE.equals(action)) {
@@ -237,9 +237,9 @@ public class DownloadServiceLifecycleSupport {
 					} else if(DownloadService.CMD_TOGGLEPAUSE.equals(action)) {
 						downloadService.togglePlayPause();
 					} else if(DownloadService.CMD_NEXT.equals(action)) {
-						downloadService.next();
+						downloadService.fastForward();
 					} else if(DownloadService.CMD_PREVIOUS.equals(action)) {
-						downloadService.previous();
+						downloadService.rewind();
 					} else if(DownloadService.CANCEL_DOWNLOADS.equals(action)) {
 						downloadService.clearBackground();
 					} else if(intent.getExtras() != null) {
@@ -419,14 +419,14 @@ public class DownloadServiceLifecycleSupport {
 				case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
 					if(lastPressTime < (System.currentTimeMillis() - DEBOUNCE_TIME)) {
 						lastPressTime = System.currentTimeMillis();
-						downloadService.previous();
+						downloadService.rewind();
 					}
 					break;
 				case RemoteControlClient.FLAG_KEY_MEDIA_NEXT:
 				case KeyEvent.KEYCODE_MEDIA_NEXT:
 					if(lastPressTime < (System.currentTimeMillis() - DEBOUNCE_TIME)) {
 						lastPressTime = System.currentTimeMillis();
-						downloadService.next();
+						downloadService.fastForward();
 					}
 					break;
 				case KeyEvent.KEYCODE_MEDIA_REWIND:
