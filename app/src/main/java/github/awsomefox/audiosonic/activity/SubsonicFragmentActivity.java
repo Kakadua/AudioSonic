@@ -35,6 +35,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -197,7 +199,10 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			@Override
 			public void onPanelSlide(View panel, float slideOffset) {
 				if (bottomBar.getVisibility() == View.GONE) bottomBar.setVisibility(View.VISIBLE);
-				if (nowPlayingToolbar.getVisibility() == View.GONE) nowPlayingToolbar.setVisibility(View.VISIBLE);
+				if (nowPlayingToolbar.getVisibility() == View.GONE) {
+					nowPlayingToolbar.setVisibility(View.VISIBLE);
+					nowPlayingFragment.setupNowPlaying(getDownloadService().getCurrentPlaying());
+				}
 				coverArtView.setAlpha(1.0f - slideOffset);
 				trackView.setAlpha(1.0f - slideOffset);
 				artistView.setAlpha(1.0f - slideOffset);
@@ -281,6 +286,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			trans.add(R.id.now_playing_fragment_container, nowPlayingFragment, nowPlayingFragment.getTag() + "");
 			trans.commit();
 		}
+		nowPlayingToolbar.setVisibility(View.GONE);
 
 		rewindButton = findViewById(R.id.download_rewind);
 		rewindButton.setOnClickListener(new View.OnClickListener() {

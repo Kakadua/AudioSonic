@@ -354,7 +354,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 					default:
 						break;
 				}
-				updateRepeatButton();
 				setControlsVisible(true);
 			}
 		});
@@ -369,15 +368,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 
 		View overlay = rootView.findViewById(R.id.download_overlay_buttons);
 		final int overlayHeight = overlay != null ? overlay.getHeight() : -1;
-//		albumArtImageView.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				if (overlayHeight == -1 || lastY < (view.getBottom() - overlayHeight)) {
-//					toggleFullscreenAlbumArt();
-//					setControlsVisible(true);
-//				}
-//			}
-//		});
 
 		progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -656,7 +646,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 					DownloadService downloadService = getDownloadService();
 					downloadService.addOnSongChangedListener(NowPlayingFragment.this, true);
 				}
-				updateRepeatButton();
 				updateTitle();
 			}
 		});
@@ -1169,17 +1158,29 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			getImageLoader().loadImage(albumArtImageView, song, true, true);
 
 			DownloadService downloadService = getDownloadService();
-			if(downloadService.isShufflePlayEnabled()) {
-				setSubtitle(context.getResources().getString(R.string.download_playerstate_playing_shuffle));
-			} else if(downloadService.isArtistRadio()) {
-				setSubtitle(context.getResources().getString(R.string.download_playerstate_playing_artist_radio));
-			} else {
-				setSubtitle(context.getResources().getString(R.string.download_playing_out_of, currentPlayingIndex + 1, currentPlayingSize));
-			}
+			updateTitle();
 		} else {
 			songTitleTextView.setText(null);
 			getImageLoader().loadImage(albumArtImageView, (MusicDirectory.Entry) null, true, false);
-			setSubtitle(null);
+		}
+	}
+
+	public void setupNowPlaying(DownloadFile nowPlaying) {
+		if (nowPlaying != null) {
+			MusicDirectory.Entry song = nowPlaying.getSong();
+			songTitleTextView.setText(song.getTitle());
+			if(song.getTrack() != null) {
+				songTitleTextView.setText("Chapter " + String.format("%02d", song.getTrack()));
+			}
+			getImageLoader().loadImage(albumArtImageView, song, true, true);
+
+			DownloadService downloadService = getDownloadService();
+			updateTitle();
+			statusTextView.setText(song.getAlbum());
+			statusTextView2.setText(song.getArtist());
+		} else {
+			songTitleTextView.setText(null);
+			getImageLoader().loadImage(albumArtImageView, (MusicDirectory.Entry) null, true, false);
 		}
 	}
 
@@ -1344,23 +1345,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			getImageLoader().loadImage(albumArtImageView, song, true, true);
 		}
 	}
-
-	public void updateRepeatButton() {
-		DownloadService downloadService = getDownloadService();
-		switch (downloadService.getRepeatMode()) {
-			case OFF:
-				repeatButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.media_button_repeat_off));
-				break;
-			case ALL:
-				repeatButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.media_button_repeat_all));
-				break;
-			case SINGLE:
-				repeatButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.media_button_repeat_single));
-				break;
-			default:
-				break;
-		}
-	}
 	public void updateTitle() {
 		DownloadService downloadService = getDownloadService();
 		float playbackSpeed = downloadService.getPlaybackSpeed();
@@ -1385,7 +1369,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		}
 
 		if(playbackSpeedText != null) {
-			title += " (" + playbackSpeedText + ")";
+			setSubtitle(playbackSpeedText);
 		}
 		setTitle(title);
 	}
