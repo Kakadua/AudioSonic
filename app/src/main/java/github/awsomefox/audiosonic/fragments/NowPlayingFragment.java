@@ -92,7 +92,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 
-public class NowPlayingFragment extends SubsonicFragment implements OnGestureListener, SectionAdapter.OnItemClickedListener<DownloadFile>, OnSongChangedListener {
+public class NowPlayingFragment extends SubsonicFragment implements SectionAdapter.OnItemClickedListener<DownloadFile>, OnSongChangedListener {
 	private static final String TAG = NowPlayingFragment.class.getSimpleName();
 	private static final int PERCENTAGE_OF_SCREEN_FOR_SWIPE = 10;
 
@@ -118,7 +118,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private View pauseButton;
 	private View stopButton;
 	private View startButton;
-	private ImageButton repeatButton;
 	private ImageButton starButton;
 	private ImageButton bookmarkButton;
 
@@ -126,7 +125,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private DownloadFile currentPlaying;
 	private int swipeDistance;
 	private int swipeVelocity;
-	private ScheduledFuture<?> hideControlsFuture;
 	private List<DownloadFile> songList;
 	private DownloadFileAdapter songListAdapter;
 	private boolean seekInProgress = false;
@@ -157,7 +155,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(Constants.FRAGMENT_DOWNLOAD_FLIPPER, playlistFlipper.getDisplayedChild());
 	}
 
 	@Override
@@ -169,7 +166,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		Display d = w.getDefaultDisplay();
 		swipeDistance = (d.getWidth() + d.getHeight()) * PERCENTAGE_OF_SCREEN_FOR_SWIPE / 100;
 		swipeVelocity = (d.getWidth() + d.getHeight()) * PERCENTAGE_OF_SCREEN_FOR_SWIPE / 100;
-		gestureScanner = new GestureDetector(this);
 
 		playlistFlipper = rootView.findViewById(R.id.download_playlist_flipper);
 		emptyTextView = rootView.findViewById(R.id.download_empty);
@@ -187,7 +183,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		pauseButton =rootView.findViewById(R.id.download_pause);
 		stopButton =rootView.findViewById(R.id.download_stop);
 		startButton =rootView.findViewById(R.id.download_start);
-		repeatButton = rootView.findViewById(R.id.download_repeat);
 		bookmarkButton = rootView.findViewById(R.id.download_bookmark);
 
 		playlistView = rootView.findViewById(R.id.download_list);
@@ -209,27 +204,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		} else {
 			starButton.setVisibility(View.GONE);
 		}
-
-		View.OnTouchListener touchListener = new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent me) {
-				return gestureScanner.onTouchEvent(me);
-			}
-		};
-		pauseButton.setOnTouchListener(touchListener);
-		stopButton.setOnTouchListener(touchListener);
-		startButton.setOnTouchListener(touchListener);
-		bookmarkButton.setOnTouchListener(touchListener);
-		emptyTextView.setOnTouchListener(touchListener);
-		albumArtImageView.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent me) {
-				if (me.getAction() == MotionEvent.ACTION_DOWN) {
-					lastY = (int) me.getRawY();
-				}
-				return gestureScanner.onTouchEvent(me);
-			}
-		});
 
 		previousButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -333,28 +307,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 						return null;
 					}
 				}.execute();
-			}
-		});
-
-		repeatButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				RepeatMode repeatMode = getDownloadService().getRepeatMode().next();
-				getDownloadService().setRepeatMode(repeatMode);
-				switch (repeatMode) {
-					case OFF:
-						Util.toast(context, R.string.download_repeat_off);
-						break;
-					case ALL:
-						Util.toast(context, R.string.download_repeat_all);
-						break;
-					case SINGLE:
-						Util.toast(context, R.string.download_repeat_single);
-						break;
-					default:
-						break;
-				}
-				setControlsVisible(true);
 			}
 		});
 
@@ -624,20 +576,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private void onResumeHandlers() {
 		executorService = Executors.newSingleThreadScheduledExecutor();
 		setControlsVisible(true);
-
-		final DownloadService downloadService = getDownloadService();
-		if (downloadService == null || downloadService.getCurrentPlaying() == null || startFlipped) {
-			playlistFlipper.setDisplayedChild(1);
-			startFlipped = false;
-		}
-
 		updateButtons();
-
-		if(currentPlaying == null && downloadService != null && currentPlaying == downloadService.getCurrentPlaying()) {
-			getImageLoader().loadImage(albumArtImageView, (MusicDirectory.Entry) null, true, false);
-		} else if (downloadService != null && downloadService.getCurrentPlaying() != null) {
-			getImageLoader().loadImage(albumArtImageView, downloadService.getCurrentPlaying().getSong(), true, false);
-		}
 
 		context.runWhenServiceAvailable(new Runnable() {
 			@Override
@@ -662,7 +601,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			if (downloadService != null) {
 				downloadService.removeOnSongChangeListener(this);
 			}
-			playlistFlipper.setDisplayedChild(0);
 		}
 	}
 
@@ -698,36 +636,35 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		return songListAdapter;
 	}
 
-	private void scheduleHideControls() {
-		if (hideControlsFuture != null) {
-			hideControlsFuture.cancel(false);
-		}
-
-		final Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				handler.post(new Runnable() {
-					@Override
-					public void run() {
-						//TODO, make a setting to turn this on & off
-						// setControlsVisible(false);
-					}
-				});
-			}
-		};
-		hideControlsFuture = executorService.schedule(runnable, 3000L, TimeUnit.MILLISECONDS);
-	}
+//	private void scheduleHideControls() {
+//		if (hideControlsFuture != null) {
+//			hideControlsFuture.cancel(false);
+//		}
+//
+//		final Handler handler = new Handler();
+//		Runnable runnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				handler.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						//TODO, make a setting to turn this on & off
+//						// setControlsVisible(false);
+//					}
+//				});
+//			}
+//		};
+//		hideControlsFuture = executorService.schedule(runnable, 3000L, TimeUnit.MILLISECONDS);
+//	}
 
 	private void setControlsVisible(boolean visible) {
-		DownloadService downloadService = getDownloadService();
 		try {
 			long duration = 1700L;
 			FadeOutAnimation.createAndStart(rootView.findViewById(R.id.download_overlay_buttons), !visible, duration);
 
-			if (visible) {
-				scheduleHideControls();
-			}
+//			if (visible) {
+//				scheduleHideControls();
+//			}
 		} catch(Exception e) {
 
 		}
@@ -1028,85 +965,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 				Util.toast(context, msg, false);
 			}
 		}.execute();
-	}
-
-	@Override
-	public boolean onDown(MotionEvent me) {
-		setControlsVisible(true);
-		return false;
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		final DownloadService downloadService = getDownloadService();
-		if (downloadService == null || e1 == null || e2 == null) {
-			return false;
-		}
-
-		// Right to Left swipe
-		int action = 0;
-		if (e1.getX() - e2.getX() > swipeDistance && Math.abs(velocityX) > swipeVelocity) {
-			action = ACTION_NEXT;
-		}
-		// Left to Right swipe
-		else if (e2.getX() - e1.getX() > swipeDistance && Math.abs(velocityX) > swipeVelocity) {
-			action = ACTION_PREVIOUS;
-		}
-		// Top to Bottom swipe
-		else if (e2.getY() - e1.getY() > swipeDistance && Math.abs(velocityY) > swipeVelocity) {
-			action = ACTION_FORWARD;
-		}
-		// Bottom to Top swipe
-		else if (e1.getY() - e2.getY() > swipeDistance && Math.abs(velocityY) > swipeVelocity) {
-			action = ACTION_REWIND;
-		}
-
-		if(action > 0) {
-			final int performAction = action;
-			warnIfStorageUnavailable();
-			new SilentBackgroundTask<Void>(context) {
-				@Override
-				protected Void doInBackground() throws Throwable {
-					switch(performAction) {
-						case ACTION_NEXT:
-							downloadService.next();
-							break;
-						case ACTION_PREVIOUS:
-							downloadService.previous();
-							break;
-						case ACTION_FORWARD:
-							downloadService.fastForward();
-							break;
-						case ACTION_REWIND:
-							downloadService.rewind();
-							break;
-					}
-					return null;
-				}
-			}.execute();
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
 	}
 
 	@Override
