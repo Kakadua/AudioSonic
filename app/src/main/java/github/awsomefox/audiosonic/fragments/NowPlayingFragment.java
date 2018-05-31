@@ -578,6 +578,10 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		setControlsVisible(true);
 		updateButtons();
 
+        if (playlistFlipper.getDisplayedChild() == 1) {
+            toggleFullscreenAlbumArt();
+        }
+
 		context.runWhenServiceAvailable(new Runnable() {
 			@Override
 			public void run() {
@@ -636,35 +640,11 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		return songListAdapter;
 	}
 
-//	private void scheduleHideControls() {
-//		if (hideControlsFuture != null) {
-//			hideControlsFuture.cancel(false);
-//		}
-//
-//		final Handler handler = new Handler();
-//		Runnable runnable = new Runnable() {
-//			@Override
-//			public void run() {
-//				handler.post(new Runnable() {
-//					@Override
-//					public void run() {
-//						//TODO, make a setting to turn this on & off
-//						// setControlsVisible(false);
-//					}
-//				});
-//			}
-//		};
-//		hideControlsFuture = executorService.schedule(runnable, 3000L, TimeUnit.MILLISECONDS);
-//	}
 
 	private void setControlsVisible(boolean visible) {
 		try {
 			long duration = 1700L;
 			FadeOutAnimation.createAndStart(rootView.findViewById(R.id.download_overlay_buttons), !visible, duration);
-
-//			if (visible) {
-//				scheduleHideControls();
-//			}
 		} catch(Exception e) {
 
 		}
