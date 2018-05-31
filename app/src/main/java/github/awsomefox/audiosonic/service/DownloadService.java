@@ -42,7 +42,6 @@ import github.awsomefox.audiosonic.receiver.MediaButtonIntentReceiver;
 import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.Util;
 import github.awsomefox.audiosonic.util.tags.BastpUtil;
-import github.daneren2005.serverproxy.BufferProxy;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,7 +147,6 @@ public class DownloadService extends Service {
 
 	private AudioEffectsController effectsController;
 	private PositionCache positionCache;
-	private BufferProxy proxy;
 
 	private Timer sleepTimer;
 	private int timerDuration;
@@ -324,10 +322,6 @@ public class DownloadService extends Service {
 		if(nextPlayingTask != null) {
 			nextPlayingTask.cancel();
 			nextPlayingTask = null;
-		}
-		if(proxy != null) {
-			proxy.stop();
-			proxy = null;
 		}
 		Notifications.hidePlayingNotification(this, this, handler);
 		Notifications.hideDownloadingNotification(this, this, handler);
@@ -687,10 +681,6 @@ public class DownloadService extends Service {
 			lifecycleSupport.serializeDownloadQueue();
 		}
 		setNextPlaying();
-		if(proxy != null) {
-			proxy.stop();
-			proxy = null;
-		}
 
 		setShufflePlayEnabled(false);
 		setArtistRadio(null);
@@ -977,12 +967,6 @@ public class DownloadService extends Service {
 		setupHandlers(currentPlaying, false, start);
 		applyPlaybackParamsMain();
 		setNextPlaying();
-
-		// Proxy should not be being used here since the next player was already setup to play
-		if(proxy != null) {
-			proxy.stop();
-			proxy = null;
-		}
 		checkDownloads();
 	}
 
@@ -1004,10 +988,6 @@ public class DownloadService extends Service {
 		}
 
 		try {
-			if(proxy != null && currentPlaying.isCompleteFileAvailable()) {
-				doPlay(currentPlaying, position, playerState == PlayerState.STARTED);
-				return;
-			}
 
 			mediaPlayer.seekTo(position);
 			subtractPosition = 0;
@@ -1445,18 +1425,6 @@ public class DownloadService extends Service {
 			downloadFile.updateModificationDate();
 
 			dataSource = file.getAbsolutePath();
-			if (isPartial && !Util.isOffline(this)) {
-				if (proxy == null) {
-					proxy = new BufferProxy(this);
-					proxy.start();
-				}
-				proxy.setBufferFile(downloadFile);
-				dataSource = proxy.getPrivateAddress(dataSource);
-				Log.i(TAG, "Data Source: " + dataSource);
-			} else if (proxy != null) {
-				proxy.stop();
-				proxy = null;
-			}
 
 			mediaPlayer.setDataSource(dataSource);
 			setPlayerState(PlayerState.PREPARING);

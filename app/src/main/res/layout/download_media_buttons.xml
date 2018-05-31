@@ -88,14 +88,5 @@
             android:layout_centerVertical="true"
             />
 
-    <ImageButton
-            style="@style/PlaybackControl"
-			android:id="@+id/download_toggle_list"
-			android:src="?attr/toggle_list"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            />
-
 
 </RelativeLayout>

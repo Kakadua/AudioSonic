@@ -153,6 +153,7 @@
 	<string name="download_playback_speed_one_p_five">1.5x</string>
 	<string name="download_playback_speed_two">2x</string>
     <string name="download.playback_speed">Playback Speed</string>
+	<string name="download.play_list">Toggle Chapterlist</string>
 	<string name="sync.new_albums">New books available</string>
 	<string name="sync.new_starred">New starred tracks available</string>
 

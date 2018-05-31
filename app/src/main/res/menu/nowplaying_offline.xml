@@ -20,7 +20,15 @@
 	<item
 		android:id="@+id/menu_toggle_speed"
 		android:title="@string/download.playback_speed"
+		android:icon="@drawable/ic_slow_motion_video_white_24dp"
 		compat:showAsAction="ifRoom|withText" />
+
+	<item
+		android:id="@+id/menu_toggle_list"
+		android:title="@string/download.play_list"
+		android:icon="@drawable/ic_menu_playlist_dark"
+		compat:showAsAction="ifRoom|withText" />
+
 	<item
 		android:id="@+id/menu_exit"
 		android:title="@string/menu.exit"/>

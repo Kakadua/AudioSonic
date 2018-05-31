@@ -37,9 +37,8 @@ import github.awsomefox.audiosonic.util.FileUtil;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
 import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.Util;
-import github.daneren2005.serverproxy.BufferFile;
 
-public class DownloadFile implements BufferFile {
+public class DownloadFile  {
     private static final String TAG = DownloadFile.class.getSimpleName();
     private static final int MAX_FAILURES = 5;
     private final Context context;
@@ -132,7 +131,6 @@ public class DownloadFile implements BufferFile {
 		}
 	}
 
-	@Override
 	public long getEstimatedSize() {
 		if(contentLength != null) {
 			return contentLength;
@@ -184,7 +182,6 @@ public class DownloadFile implements BufferFile {
         }
     }
 
-	@Override
 	public File getFile() {
 		if (saveFile.exists()) {
 			return saveFile;
@@ -222,22 +219,19 @@ public class DownloadFile implements BufferFile {
         return saveFile.exists() || completeFile.exists();
     }
 
-	@Override
+
     public synchronized boolean isWorkDone() {
         return saveFile.exists() || (completeFile.exists() && !save) || saveWhenDone || completeWhenDone;
     }
 
-	@Override
 	public void onStart() {
 		setPlaying(true);
 	}
 
-	@Override
 	public void onStop() {
 		setPlaying(false);
 	}
 
-	@Override
 	public synchronized void onResume() {
 		if(!isWorkDone() && !isFailedMax() && !isDownloading() && !isDownloadCancelled()) {
 			download();

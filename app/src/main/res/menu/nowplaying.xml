@@ -10,6 +10,12 @@
 		compat:showAsAction="ifRoom|withText" />
 
 	<item
+		android:id="@+id/menu_toggle_list"
+		android:title="@string/download.play_list"
+		android:icon="@drawable/ic_menu_playlist_dark"
+		compat:showAsAction="ifRoom|withText" />
+
+	<item
 		android:id="@+id/menu_equalizer"
 		android:title="@string/equalizer.label"
 		android:checkable="true"/>

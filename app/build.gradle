@@ -39,7 +39,6 @@ android {
 }
 
 dependencies {
-	implementation project(':Server Proxy')
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation 'com.android.support:support-v4:27.1.0'
 	implementation 'com.android.support:appcompat-v7:27.1.0'

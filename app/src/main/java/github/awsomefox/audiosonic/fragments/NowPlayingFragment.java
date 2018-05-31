@@ -119,7 +119,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private View stopButton;
 	private View startButton;
 	private ImageButton repeatButton;
-	private View toggleListButton;
 	private ImageButton starButton;
 	private ImageButton bookmarkButton;
 
@@ -190,7 +189,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		startButton =rootView.findViewById(R.id.download_start);
 		repeatButton = rootView.findViewById(R.id.download_repeat);
 		bookmarkButton = rootView.findViewById(R.id.download_bookmark);
-		toggleListButton =rootView.findViewById(R.id.download_toggle_list);
 
 		playlistView = rootView.findViewById(R.id.download_list);
 		FastScroller fastScroller = rootView.findViewById(R.id.download_fast_scroller);
@@ -369,25 +367,17 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			}
 		});
 
-		toggleListButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				toggleFullscreenAlbumArt();
-				setControlsVisible(true);
-			}
-		});
-
 		View overlay = rootView.findViewById(R.id.download_overlay_buttons);
 		final int overlayHeight = overlay != null ? overlay.getHeight() : -1;
-		albumArtImageView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (overlayHeight == -1 || lastY < (view.getBottom() - overlayHeight)) {
-					toggleFullscreenAlbumArt();
-					setControlsVisible(true);
-				}
-			}
-		});
+//		albumArtImageView.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				if (overlayHeight == -1 || lastY < (view.getBottom() - overlayHeight)) {
+//					toggleFullscreenAlbumArt();
+//					setControlsVisible(true);
+//				}
+//			}
+//		});
 
 		progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -593,14 +583,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 				}
 				context.supportInvalidateOptionsMenu();
 				return true;
-			case R.id.menu_shuffle:
-				if(getDownloadService().getSleepTimer()) {
-					getDownloadService().stopSleepTimer();
-					context.supportInvalidateOptionsMenu();
-				} else {
-					startTimer();
-				}
-				return true;
 			case R.id.menu_toggle_timer:
 				if(getDownloadService().getSleepTimer()) {
 					getDownloadService().stopSleepTimer();
@@ -611,6 +593,9 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 				return true;
 			case R.id.menu_toggle_speed:
 				startSpeed();
+				return true;
+			case R.id.menu_toggle_list:
+				toggleFullscreenAlbumArt();
 				return true;
 			case R.id.menu_info:
 				displaySongInfo(song.getSong());
@@ -660,6 +645,8 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 
 		if(currentPlaying == null && downloadService != null && currentPlaying == downloadService.getCurrentPlaying()) {
 			getImageLoader().loadImage(albumArtImageView, (MusicDirectory.Entry) null, true, false);
+		} else if (downloadService != null && downloadService.getCurrentPlaying() != null) {
+			getImageLoader().loadImage(albumArtImageView, downloadService.getCurrentPlaying().getSong(), true, false);
 		}
 
 		context.runWhenServiceAvailable(new Runnable() {
@@ -1232,8 +1219,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			updateMediaButton();
 			setupSubtitle(currentPlayingIndex);
 		}
-		toggleListButton.setVisibility(View.GONE);
-		repeatButton.setVisibility(View.GONE);
 	}
 
 	@Override
