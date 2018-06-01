@@ -241,7 +241,7 @@ public class RESTMusicService implements MusicService {
 		SharedPreferences prefs = Util.getPreferences(context);
 		String cacheLocn = prefs.getString(Constants.PREFERENCES_KEY_CACHE_LOCATION, null);
 		if(cacheLocn != null && id.indexOf(cacheLocn) != -1) {
-			String search = Util.parseOfflineIDSearch(context, id, cacheLocn);
+			String search = Util.parseOfflineIDSearch(id, cacheLocn);
 			SearchCritera critera = new SearchCritera(search, 1, 1, 0);
 			SearchResult result = searchNew(critera, context, progressListener);
 			if(result.getArtists().size() == 1) {
@@ -1240,7 +1240,7 @@ public class RESTMusicService implements MusicService {
 			if(cachedSongId != null) {
 				id = cachedSongId.getSecond();
 			} else {
-				String searchCriteria = Util.parseOfflineIDSearch(context, id, cacheLocn);
+				String searchCriteria = Util.parseOfflineIDSearch(id, cacheLocn);
 				SearchCritera critera = new SearchCritera(searchCriteria, 0, 0, 1);
 				SearchResult result = searchNew(critera, context, progressListener);
 				if (result.getSongs().size() == 1) {

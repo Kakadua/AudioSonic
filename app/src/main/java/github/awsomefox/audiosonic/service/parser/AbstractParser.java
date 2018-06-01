@@ -74,7 +74,7 @@ public abstract class AbstractParser {
                 message = context.getResources().getString(R.string.parser_not_authenticated);
                 break;
 			case 41:
-				Util.setBlockTokenUse(context, instance, true);
+				Util.setBlockTokenUse(context, instance);
 
 				// Throw IOException so RESTMusicService knows to retry
 				throw new IOException();

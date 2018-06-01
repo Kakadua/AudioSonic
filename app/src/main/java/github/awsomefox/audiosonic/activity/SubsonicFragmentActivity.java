@@ -35,8 +35,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -80,11 +78,10 @@ import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.Util;
 
 /**
- * Created by Scott on 10/14/13.
+ * Edited by Scott on 10/14/13.
  */
 public class SubsonicFragmentActivity extends SubsonicActivity implements DownloadService.OnSongChangedListener {
 	private static String TAG = SubsonicFragmentActivity.class.getSimpleName();
-	private static boolean infoDialogDisplayed;
 	private static boolean sessionInitialized = false;
 	private static long ALLOWED_SKEW = 30000L;
 
@@ -103,7 +100,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	private ImageButton startButton;
 	private long lastBackPressTime = 0;
 	private DownloadFile currentPlaying;
-	private PlayerState currentState;
 	private ImageButton previousButton;
 	private ImageButton nextButton;
 	private ImageButton rewindButton;
@@ -191,8 +187,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				replaceFragment(fragment, fragment.getSupportTag());
 			}
 		}
-//		setSupportActionBar(nowPlayingToolbar);
-//		nowPlayingFragment.updateTitle();
 
 		slideUpPanel = findViewById(R.id.slide_up_panel);
 		panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
@@ -225,27 +219,27 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				recreateSpinner();
 			}
 
-			@Override
+			@SuppressWarnings("ConstantConditions")
+            @Override
 			public void onPanelExpanded(View panel) {
 				isPanelClosing = false;
 				currentFragment.stopActionMode();
+                // Disable custom view before switching
+                getSupportActionBar().setDisplayShowCustomEnabled(false);
+                getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-				// Disable custom view before switching
-				getSupportActionBar().setDisplayShowCustomEnabled(false);
-				getSupportActionBar().setDisplayShowTitleEnabled(true);
+                bottomBar.setVisibility(View.GONE);
+                nowPlayingToolbar.setVisibility(View.VISIBLE);
+                setSupportActionBar(nowPlayingToolbar);
 
-				bottomBar.setVisibility(View.GONE);
-				nowPlayingToolbar.setVisibility(View.VISIBLE);
-				setSupportActionBar(nowPlayingToolbar);
+                if (secondaryFragment == null) {
+                    nowPlayingFragment.setPrimaryFragment(true);
+                } else {
+                    secondaryFragment.setPrimaryFragment(true);
+                }
 
-				if(secondaryFragment == null) {
-					nowPlayingFragment.setPrimaryFragment(true);
-				} else {
-					secondaryFragment.setPrimaryFragment(true);
-				}
-
-				drawerToggle.setDrawerIndicatorEnabled(false);
-				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                drawerToggle.setDrawerIndicatorEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 
 			@Override
@@ -264,6 +258,8 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
+                    nowPlayingFragment.setupNowPlaying();
+                    nowPlayingFragment.updateTitle();
 					openNowPlaying();
 				}
 			}, 200);
@@ -431,6 +427,8 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			}
 		} else if(intent.getBooleanExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD, false)) {
 			if(slideUpPanel.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+			    nowPlayingFragment.setupNowPlaying();
+                nowPlayingFragment.updateTitle();
 				openNowPlaying();
 			}
 		} else {
@@ -471,7 +469,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		runWhenServiceAvailable(new Runnable() {
 			@Override
 			public void run() {
-				getDownloadService().addOnSongChangedListener(SubsonicFragmentActivity.this, true);
+				getDownloadService().addOnSongChangedListener(SubsonicFragmentActivity.this);
 			}
 		});
 	}
@@ -607,7 +605,8 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		}
 	}
 
-	@Override
+	@SuppressWarnings("ConstantConditions")
+    @Override
 	public void setTitle(CharSequence title) {
 		if(slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
 			getSupportActionBar().setTitle(title);
@@ -689,7 +688,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			Updater updater = new Updater(ver);
 			updater.checkUpdates(this);
 		}
-		catch(Exception e) {}
+		catch(Exception ignored) {}
 	}
 
 	private void loadSession() {
@@ -716,7 +715,10 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			resetCacheLocation(prefs);
 		} else {
 			String path = prefs.getString(Constants.PREFERENCES_KEY_CACHE_LOCATION, null);
-			File cacheLocation = new File(path);
+			File cacheLocation = null;
+			if (path != null) {
+				cacheLocation = new File(path);
+			}
 			if(!FileUtil.verifyCanWrite(cacheLocation)) {
 				// Only warn user if there is a difference saved
 				if(resetCacheLocation(prefs)) {
@@ -734,24 +736,24 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			editor.putString(Constants.PREFERENCES_KEY_USERNAME + 1, "guest");
 			editor.putString(Constants.PREFERENCES_KEY_PASSWORD + 1, "guest");
 			editor.putInt(Constants.PREFERENCES_KEY_SERVER_INSTANCE, 1);
-			editor.commit();
+			editor.apply();
 		}
 		if(!prefs.contains(Constants.PREFERENCES_KEY_SERVER_COUNT)) {
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putInt(Constants.PREFERENCES_KEY_SERVER_COUNT, 1);
-			editor.commit();
+			editor.apply();
 		}
 	}
 
 	private boolean resetCacheLocation(SharedPreferences prefs) {
 		String newDirectory = FileUtil.getDefaultMusicDirectory(this).getPath();
 		String oldDirectory = prefs.getString(Constants.PREFERENCES_KEY_CACHE_LOCATION, null);
-		if(newDirectory == null || (oldDirectory != null && newDirectory.equals(oldDirectory))) {
+		if(oldDirectory != null && newDirectory.equals(oldDirectory)) {
 			return false;
 		} else {
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString(Constants.PREFERENCES_KEY_CACHE_LOCATION, newDirectory);
-			editor.commit();
+			editor.apply();
 			return true;
 		}
 	}
@@ -863,7 +865,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 
 								SharedPreferences.Editor editor = Util.getPreferences(SubsonicFragmentActivity.this).edit();
 								editor.putBoolean(Constants.PREFERENCES_KEY_RESUME_PLAY_QUEUE_NEVER, true);
-								editor.commit();
+								editor.apply();
 								return null;
 							}
 						}.execute();
@@ -881,9 +883,11 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			protected Void doInBackground() throws Throwable {
 				AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
 				Account account = new Account(Constants.SYNC_ACCOUNT_NAME, Constants.SYNC_ACCOUNT_TYPE);
-				accountManager.addAccountExplicitly(account, null, null);
+                if (accountManager != null) {
+                    accountManager.addAccountExplicitly(account, null, null);
+                }
 
-				SharedPreferences prefs = Util.getPreferences(context);
+                SharedPreferences prefs = Util.getPreferences(context);
 				boolean syncEnabled = prefs.getBoolean(Constants.PREFERENCES_KEY_SYNC_ENABLED, true);
 				int syncInterval = Integer.parseInt(prefs.getString(Constants.PREFERENCES_KEY_SYNC_INTERVAL, "60"));
 				// Add for starred/recently added
@@ -921,7 +925,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				String strServer = server.getText().toString();
 
 				if(strUsername.length() > 0 && strPassword.length() > 0 && strServer.length() > 0){
-					Util.setRestCredentials(SubsonicFragmentActivity.this, null, strUsername, strPassword, strServer);
+					Util.setRestCredentials(SubsonicFragmentActivity.this, strUsername, strPassword, strServer);
 					login.dismiss();
 					populateTabs();
 					//recreate();
@@ -942,18 +946,13 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	}
 
 	private void showInfoDialog() {
-		infoDialogDisplayed = true;
-		//Display the welcome message until the user has changed their Username and Password.
-		if (Util.getRestUsername(this, null).contains("guest")) {
+        //Display the welcome message until the user has changed their Username and Password.
+		if (Util.getRestUsername(this).contains("guest")) {
 			showLoginDialog();
 		}
 	}
 
-	public Toolbar getActiveToolbar() {
-		return slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ? nowPlayingToolbar : mainToolbar;
-	}
-
-	@Override
+    @Override
 	public void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex) {
 		this.currentPlaying = currentPlaying;
 
@@ -988,8 +987,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	}
 
 	private void updateMediaButtons() {
-		DownloadService downloadService = getDownloadService();
-		previousButton.setVisibility(View.GONE);
+        previousButton.setVisibility(View.GONE);
 		nextButton.setVisibility(View.GONE);
 
 		rewindButton.setVisibility(View.VISIBLE);

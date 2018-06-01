@@ -18,9 +18,10 @@ package github.awsomefox.audiosonic.fragments;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,27 +29,18 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.MediaRouteButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.Display;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -70,7 +62,6 @@ import github.awsomefox.audiosonic.activity.SubsonicFragmentActivity;
 import github.awsomefox.audiosonic.adapter.SectionAdapter;
 import github.awsomefox.audiosonic.domain.Bookmark;
 import github.awsomefox.audiosonic.domain.PlayerState;
-import github.awsomefox.audiosonic.domain.RepeatMode;
 import github.awsomefox.audiosonic.domain.ServerInfo;
 import github.awsomefox.audiosonic.service.DownloadFile;
 import github.awsomefox.audiosonic.service.DownloadService;
@@ -89,17 +80,10 @@ import static github.awsomefox.audiosonic.domain.PlayerState.*;
 
 import github.awsomefox.audiosonic.view.AutoRepeatButton;
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledFuture;
 
 
 public class NowPlayingFragment extends SubsonicFragment implements SectionAdapter.OnItemClickedListener<DownloadFile>, OnSongChangedListener {
 	private static final String TAG = NowPlayingFragment.class.getSimpleName();
-	private static final int PERCENTAGE_OF_SCREEN_FOR_SWIPE = 10;
-
-	private static final int ACTION_PREVIOUS = 1;
-	private static final int ACTION_NEXT = 2;
-	private static final int ACTION_REWIND = 3;
-	private static final int ACTION_FORWARD = 4;
 
 	private ViewFlipper playlistFlipper;
 	private TextView emptyTextView;
@@ -123,15 +107,11 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 
 	private ScheduledExecutorService executorService;
 	private DownloadFile currentPlaying;
-	private int swipeDistance;
-	private int swipeVelocity;
 	private List<DownloadFile> songList;
 	private DownloadFileAdapter songListAdapter;
 	private boolean seekInProgress = false;
 	private boolean startFlipped = false;
 	private boolean scrollWhenLoaded = false;
-	private int lastY = 0;
-	private int currentPlayingSize = 0;
 	private MenuItem timerMenu;
 
     private SQLiteHandler sqlh;
@@ -158,14 +138,9 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		rootView = inflater.inflate(R.layout.download, container, false);
 		setTitle(R.string.button_bar_now_playing);
-
-		WindowManager w = context.getWindowManager();
-		Display d = w.getDefaultDisplay();
-		swipeDistance = (d.getWidth() + d.getHeight()) * PERCENTAGE_OF_SCREEN_FOR_SWIPE / 100;
-		swipeVelocity = (d.getWidth() + d.getHeight()) * PERCENTAGE_OF_SCREEN_FOR_SWIPE / 100;
 
 		playlistFlipper = rootView.findViewById(R.id.download_playlist_flipper);
 		emptyTextView = rootView.findViewById(R.id.download_empty);
@@ -198,7 +173,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 				@Override
 				public void onClick(View v) {
 					getDownloadService().toggleStarred();
-					setControlsVisible(true);
+					setControlsVisible();
 				}
 			});
 		} else {
@@ -216,7 +191,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 						return null;
 					}
 				}.execute();
-				setControlsVisible(true);
+				setControlsVisible();
 			}
 		});
 		previousButton.setOnRepeatListener(new Runnable() {
@@ -236,7 +211,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 						return true;
 					}
 				}.execute();
-				setControlsVisible(true);
+				setControlsVisible();
 			}
 		});
 		nextButton.setOnRepeatListener(new Runnable() {
@@ -314,12 +289,9 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			@Override
 			public void onClick(View view) {
 				createBookmark();
-				setControlsVisible(true);
+				setControlsVisible();
 			}
 		});
-
-		View overlay = rootView.findViewById(R.id.download_overlay_buttons);
-		final int overlayHeight = overlay != null ? overlay.getHeight() : -1;
 
 		progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -347,7 +319,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) {
 				if (fromUser) {
 					positionTextView.setText(Util.formatDuration(position / 1000));
-					setControlsVisible(true);
+					setControlsVisible();
 				}
 				DownloadService downloadService = getDownloadService();
 				TextView textTimer = context.findViewById(R.id.textTimer);
@@ -395,7 +367,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		if(equalizerAvailable) {
 			SharedPreferences prefs = Util.getPreferences(context);
 			boolean equalizerOn = prefs.getBoolean(Constants.PREFERENCES_EQUALIZER_ON, false);
-			if (equalizerOn && downloadService != null) {
+			if (equalizerOn) {
 				if(downloadService.getEqualizerController() != null && downloadService.getEqualizerController().isEnabled()) {
 					menu.findItem(R.id.menu_equalizer).setChecked(true);
 				}
@@ -407,11 +379,8 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
-		if(menuItemSelected(menuItem.getItemId(), null)) {
-			return true;
-		}
+		return menuItemSelected(menuItem.getItemId(), null) || super.onOptionsItemSelected(menuItem);
 
-		return super.onOptionsItemSelected(menuItem);
 	}
 
 	@Override
@@ -433,15 +402,11 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 
 	@Override
 	public boolean onContextItemSelected(MenuItem menuItem, UpdateView<DownloadFile> updateView, DownloadFile downloadFile) {
-		if(onContextItemSelected(menuItem, downloadFile.getSong())) {
-			return true;
-		}
+		return onContextItemSelected(menuItem, downloadFile.getSong()) || menuItemSelected(menuItem.getItemId(), downloadFile);
 
-		return menuItemSelected(menuItem.getItemId(), downloadFile);
 	}
 
 	private boolean menuItemSelected(int menuItemId, final DownloadFile song) {
-		List<MusicDirectory.Entry> songs;
 		switch (menuItemId) {
 			case R.id.menu_show_album: case R.id.menu_show_artist:
 				MusicDirectory.Entry entry = song.getSong();
@@ -476,7 +441,6 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 				if(Util.isOffline(context)) {
 					try {
 						// This should only be successful if this is a online song in offline mode
-						Integer.parseInt(entry.getParent());
 						String root = FileUtil.getMusicDirectory(context).getPath();
 						String id = root + "/" + entry.getPath();
 						id = id.substring(0, id.lastIndexOf("/"));
@@ -549,7 +513,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 					if(controller != null) {
 						SubsonicFragment fragment = new EqualizerFragment();
 						replaceFragment(fragment);
-						setControlsVisible(true);
+						setControlsVisible();
 
 						return true;
 					}
@@ -575,8 +539,6 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 	}
 	private void onResumeHandlers() {
 		executorService = Executors.newSingleThreadScheduledExecutor();
-		setControlsVisible(true);
-		updateButtons();
 
         if (playlistFlipper.getDisplayedChild() == 1) {
             toggleFullscreenAlbumArt();
@@ -587,9 +549,10 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			public void run() {
 				if (primaryFragment) {
 					DownloadService downloadService = getDownloadService();
-					downloadService.addOnSongChangedListener(NowPlayingFragment.this, true);
+					downloadService.addOnSongChangedListener(NowPlayingFragment.this);
 				}
 				updateTitle();
+				setupNowPlaying();
 			}
 		});
 	}
@@ -641,11 +604,11 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 	}
 
 
-	private void setControlsVisible(boolean visible) {
+	private void setControlsVisible() {
 		try {
 			long duration = 1700L;
-			FadeOutAnimation.createAndStart(rootView.findViewById(R.id.download_overlay_buttons), !visible, duration);
-		} catch(Exception e) {
+			FadeOutAnimation.createAndStart(rootView.findViewById(R.id.download_overlay_buttons), false, duration);
+		} catch(Exception ignored) {
 
 		}
 	}
@@ -697,7 +660,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 	}
 
 	protected void startTimer() {
-		View dialogView = context.getLayoutInflater().inflate(R.layout.start_timer, null);
+		@SuppressLint("InflateParams") View dialogView = context.getLayoutInflater().inflate(R.layout.start_timer, null);
 
 		// Setup length label
 		final TextView lengthBox = dialogView.findViewById(R.id.timer_length_label);
@@ -738,7 +701,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putString(Constants.PREFERENCES_KEY_SLEEP_TIMER_DURATION, Integer.toString(length));
-						editor.commit();
+						editor.apply();
 
 						getDownloadService().setSleepTimerDuration(length);
 						getDownloadService().startSleepTimer();
@@ -750,11 +713,11 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		dialog.show();
 	}
 
-	protected void startSpeed() {
-		View dialogView = context.getLayoutInflater().inflate(R.layout.set_playback_speed, null);
+	@SuppressLint("SetTextI18n")
+    protected void startSpeed() {
+		@SuppressLint("InflateParams") View dialogView = context.getLayoutInflater().inflate(R.layout.set_playback_speed, null);
 		// Setup length label
 		final TextView lengthBox = dialogView.findViewById(R.id.playback_speed_label);
-		final SharedPreferences prefs = Util.getPreferences(context);
 		// Setup length slider
 		final SeekBar lengthBar = dialogView.findViewById(R.id.playback_speed_bar);
 		lengthBar.setProgress((int)(getPlaybackSpeed()*10-5));
@@ -818,10 +781,9 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		PlayerState state = service.getPlayerState();
 		if (state == PAUSED || state == COMPLETED || state == STOPPED) {
 			service.start();
-		} else if (state == STOPPED || state == IDLE) {
+		} else if (state == IDLE) {
 			warnIfStorageUnavailable();
 			int current = service.getCurrentPlayingIndex();
-			// TODO: Use play() method.
 			if (current == -1) {
 				service.play(0);
 			} else {
@@ -858,39 +820,12 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 
 	private void createBookmark() {
 		DownloadService downloadService = getDownloadService();
-		if(downloadService == null) {
-			return;
-		}
-
-		final DownloadFile currentDownload = downloadService.getCurrentPlaying();
-		if(currentDownload == null) {
-			return;
-		}
-
-		View dialogView = context.getLayoutInflater().inflate(R.layout.create_bookmark, null);
-		final EditText commentBox = dialogView.findViewById(R.id.comment_text);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(R.string.download_save_bookmark_title)
-				.setView(dialogView)
-				.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						String comment = commentBox.getText().toString();
-
-						createBookmark(currentDownload, comment);
-					}
-				})
-				.setNegativeButton(R.string.common_cancel, null);
-		AlertDialog dialog = builder.create();
-		dialog.show();
+		if(downloadService == null) { return; }
+		if(downloadService.getCurrentPlaying() == null) { return; }
+        createBookmark(downloadService, downloadService.getCurrentPlaying());
 	}
-	private void createBookmark(final DownloadFile currentDownload, final String comment) {
-		DownloadService downloadService = getDownloadService();
-		if(downloadService == null) {
-			return;
-		}
 
+	private void createBookmark(DownloadService downloadService, final DownloadFile currentDownload) {
 		final MusicDirectory.Entry currentSong = currentDownload.getSong();
 		final int position = downloadService.getPlayerPosition();
 		final Bookmark oldBookmark = currentSong.getBookmark();
@@ -901,7 +836,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			@Override
 			protected Void doInBackground() throws Throwable {
 				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.createBookmark(currentSong, position, comment, context, null);
+				musicService.createBookmark(currentSong, position, "", context, null);
 
 				new UpdateHelper.EntryInstanceUpdater(currentSong) {
 					@Override
@@ -916,7 +851,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			@Override
 			protected void done(Void result) {
 				Util.toast(context, R.string.download_save_bookmark);
-				setControlsVisible(true);
+				setControlsVisible();
 			}
 
 			@Override
@@ -968,17 +903,15 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			Long temp = System.currentTimeMillis() / 1000L;
 			track[2] = temp.toString();
 			this.sqlh.addTrack(track);
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		this.currentPlaying = currentPlaying;
-		setupSubtitle(currentPlayingIndex);
-
+		setupNowPlaying();
 		updateMediaButton();
 		updateTitle();
 	}
 
 	private void updateMediaButton() {
-		DownloadService downloadService = getDownloadService();
 		previousButton.setVisibility(View.VISIBLE);
 		nextButton.setVisibility(View.VISIBLE);
 
@@ -986,45 +919,43 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		fastforwardButton.setVisibility(View.VISIBLE);
 	}
 
-	private void setupSubtitle(int currentPlayingIndex) {
+	@SuppressLint({"SetTextI18n", "DefaultLocale"})
+    public void setupNowPlaying() {
 		if (currentPlaying != null) {
+            setControlsVisible();
+            updateButtons();
 			MusicDirectory.Entry song = currentPlaying.getSong();
 			songTitleTextView.setText(song.getTitle());
 			if(song.getTrack() != null) {
 				songTitleTextView.setText("Chapter " + String.format("%02d", song.getTrack()));
 			}
 			getImageLoader().loadImage(albumArtImageView, song, true, true);
-
-			DownloadService downloadService = getDownloadService();
-			updateTitle();
 		} else {
 			songTitleTextView.setText(null);
-			getImageLoader().loadImage(albumArtImageView, (MusicDirectory.Entry) null, true, false);
 		}
 	}
 
-	public void setupNowPlaying(DownloadFile nowPlaying) {
+	@SuppressLint({"DefaultLocale", "SetTextI18n"})
+    public void setupNowPlaying(DownloadFile nowPlaying) {
 		if (nowPlaying != null) {
+            setControlsVisible();
+            updateButtons();
 			MusicDirectory.Entry song = nowPlaying.getSong();
 			songTitleTextView.setText(song.getTitle());
 			if(song.getTrack() != null) {
 				songTitleTextView.setText("Chapter " + String.format("%02d", song.getTrack()));
 			}
 			getImageLoader().loadImage(albumArtImageView, song, true, true);
-
-			DownloadService downloadService = getDownloadService();
 			updateTitle();
 			statusTextView.setText(song.getAlbum());
 			statusTextView2.setText(song.getArtist());
 		} else {
 			songTitleTextView.setText(null);
-			getImageLoader().loadImage(albumArtImageView, (MusicDirectory.Entry) null, true, false);
 		}
 	}
 
 	@Override
 	public void onSongsChanged(List<DownloadFile> songs, DownloadFile currentPlaying, int currentPlayingIndex) {
-		currentPlayingSize = songs.size();
 
 		DownloadService downloadService = getDownloadService();
 		if(downloadService.isShufflePlayEnabled()) {
@@ -1056,11 +987,13 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			onMetadataUpdate(currentPlaying != null ? currentPlaying.getSong() : null, DownloadService.METADATA_UPDATED_ALL);
 		} else {
 			updateMediaButton();
-			setupSubtitle(currentPlayingIndex);
+			setupNowPlaying();
+			updateTitle();
 		}
 	}
 
-	@Override
+	@SuppressLint("SetTextI18n")
+    @Override
 	public void onSongProgress(DownloadFile currentPlaying, int millisPlayed, Integer duration, boolean isSeekable) {
 		if (currentPlaying != null) {
 			int millisTotal = duration == null ? 0 : duration;
@@ -1186,7 +1119,6 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 	public void updateTitle() {
 		DownloadService downloadService = getDownloadService();
 		float playbackSpeed = downloadService.getPlaybackSpeed();
-
 		String title = context.getResources().getString(R.string.button_bar_now_playing);
 		int stringRes = -1;
 		if(playbackSpeed == 0.5f) {
@@ -1198,14 +1130,12 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		} else if(playbackSpeed == 2.0f) {
 			stringRes = R.string.download_playback_speed_two;
 		}
-
 		String playbackSpeedText = null;
 		if(stringRes != -1) {
 			playbackSpeedText = context.getResources().getString(stringRes);
 		} else if(Math.abs(playbackSpeed - 1.0) > 0.01) {
 			playbackSpeedText = Float.toString(playbackSpeed) + "x";
 		}
-
 		if(playbackSpeedText != null) {
 			setSubtitle(playbackSpeedText);
 		}

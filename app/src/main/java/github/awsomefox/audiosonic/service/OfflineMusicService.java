@@ -19,8 +19,6 @@
 package github.awsomefox.audiosonic.service;
 
 import java.io.File;
-import java.io.Reader;
-import java.io.FileReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +31,6 @@ import java.util.Set;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import github.awsomefox.audiosonic.domain.Genre;
 import github.awsomefox.audiosonic.domain.Lyrics;
@@ -53,9 +50,8 @@ import github.awsomefox.audiosonic.domain.Indexes;
 import github.awsomefox.audiosonic.util.Constants;
 import github.awsomefox.audiosonic.util.ProgressListener;
 import github.awsomefox.audiosonic.util.Util;
-import java.io.*;
+
 import java.util.Comparator;
-import java.util.SortedSet;
 
 /**
  * @author Sindre Mehus
@@ -381,7 +377,7 @@ public class OfflineMusicService implements MusicService {
 				offlineEditor.putString(Constants.OFFLINE_SCROBBLE_ID + scrobbles, cachedSongId.getSecond());
 				offlineEditor.remove(Constants.OFFLINE_SCROBBLE_SEARCH + scrobbles);
 			} else {
-				String scrobbleSearchCriteria = Util.parseOfflineIDSearch(context, id, cacheLocn);
+				String scrobbleSearchCriteria = Util.parseOfflineIDSearch(id, cacheLocn);
 				offlineEditor.putString(Constants.OFFLINE_SCROBBLE_SEARCH + scrobbles, scrobbleSearchCriteria);
 				offlineEditor.remove(Constants.OFFLINE_SCROBBLE_ID + scrobbles);
 			}
@@ -442,7 +438,7 @@ public class OfflineMusicService implements MusicService {
 
 		String id = entries.get(0).getId();
 		if(id.indexOf(cacheLocn) != -1) {
-			String searchCriteria = Util.parseOfflineIDSearch(context, id, cacheLocn);
+			String searchCriteria = Util.parseOfflineIDSearch(id, cacheLocn);
 			offlineEditor.putString(Constants.OFFLINE_STAR_SEARCH + stars, searchCriteria);
 			offlineEditor.remove(Constants.OFFLINE_STAR_ID + stars);
 		} else {
