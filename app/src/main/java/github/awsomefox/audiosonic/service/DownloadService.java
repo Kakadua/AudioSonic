@@ -2226,6 +2226,9 @@ public class DownloadService extends Service {
 		final int position = getPlayerPosition();
 		final int index = getCurrentPlayingIndex();
 		final int queueSize = size();
+		if (currentPlaying != null) {
+		    Util.broadcastNewTrackInfo(this, currentPlaying.getSong());
+        }
 
 		synchronized(onSongChangedListeners) {
 			for (final OnSongChangedListener listener : onSongChangedListeners) {
