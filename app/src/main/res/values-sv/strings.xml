@@ -81,8 +81,7 @@
     <string name="menu.top_tracks">Last.FM topp spår</string>
 	<string name="menu.similar_artists">Liknande författare</string>
 
-	<string name="menu.start_radio">Starta radio</string>
-	<string name="menu.first_level_artist">Första steget författare</string>
+    <string name="menu.first_level_artist">Första steget författare</string>
 
     <string name="search.title">Sök</string>
     <string name="search.artists">Författare</string>
