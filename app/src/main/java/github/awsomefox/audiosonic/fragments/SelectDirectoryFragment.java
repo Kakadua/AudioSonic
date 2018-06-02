@@ -254,12 +254,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			menuInflater.inflate(R.menu.select_album_list, menu);
 		} else if(artist && !showAll) {
 			menuInflater.inflate(R.menu.select_album, menu);
-
-			if(!ServerInfo.hasTopSongs(context)) {
-				menu.removeItem(R.id.menu_top_tracks);
-			}
 			if(!ServerInfo.checkServerVersion(context, "1.11")) {
-				menu.removeItem(R.id.menu_radio);
 				menu.removeItem(R.id.menu_similar_artists);
 			} else if(!ServerInfo.hasSimilarArtists(context)) {
 				menu.removeItem(R.id.menu_similar_artists);
@@ -274,12 +269,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_show_all:
-				setShowAll();
-				return true;
-			case R.id.menu_top_tracks:
-				showTopTracks();
-				return true;
 			case R.id.menu_similar_artists:
 				showSimilarArtists(id);
 				return true;

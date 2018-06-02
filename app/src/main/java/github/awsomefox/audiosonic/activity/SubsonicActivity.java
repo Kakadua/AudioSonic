@@ -918,10 +918,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 		if(backStack.size() > 0) {
 
-			if(drawerToggle.isDrawerIndicatorEnabled() && getSupportActionBar() != null) {
+			if(getSupportActionBar() != null) {
 				getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 				drawerToggle.setDrawerIndicatorEnabled(false);
-//				drawerToggle.setHomeAsUpIndicator(android.R.drawable.ic_dialog_info);
 				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		} else {

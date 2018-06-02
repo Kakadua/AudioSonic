@@ -195,7 +195,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
 			@Override
 			public void onPanelSlide(View panel, float slideOffset) {
-                drawerToggle.setDrawerIndicatorEnabled(true);
+//                drawerToggle.setDrawerIndicatorEnabled(true);
 				if (bottomBar.getVisibility() == View.GONE) bottomBar.setVisibility(View.VISIBLE);
 				if (nowPlayingToolbar.getVisibility() == View.GONE) {
 					nowPlayingToolbar.setVisibility(View.VISIBLE);
@@ -211,6 +211,9 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
                             Bitmap.createScaledBitmap(bitmap, 150, 150, true));
                     getSupportActionBar().setHomeAsUpIndicator(d);
 				}
+				if (backStack.size() == 0 ) {
+                    drawerToggle.setDrawerIndicatorEnabled(true);
+                }
 				coverArtView.setAlpha(1.0f - slideOffset);
 				trackView.setAlpha(1.0f - slideOffset);
 				artistView.setAlpha(1.0f - slideOffset);
@@ -226,6 +229,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			@Override
 			public void onPanelCollapsed(View panel) {
 				isPanelClosing = false;
+                drawerToggle.setDrawerIndicatorEnabled(false);
 				bottomBar.setVisibility(View.VISIBLE);
 				nowPlayingToolbar.setVisibility(View.GONE);
 				nowPlayingFragment.setPrimaryFragment(false);
@@ -238,7 +242,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			public void onPanelExpanded(View panel) {
 				isPanelClosing = false;
 				currentFragment.stopActionMode();
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
                 bottomBar.setVisibility(View.GONE);
                 nowPlayingToolbar.setVisibility(View.VISIBLE);

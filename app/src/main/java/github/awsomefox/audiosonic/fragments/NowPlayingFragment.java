@@ -929,9 +929,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			if(song.getTrack() != null) {
 				songTitleTextView.setText("Chapter " + String.format("%02d", song.getTrack()));
 			}
-            if(albumArtImageView.getDrawable() == null) {
-                getImageLoader().loadImage(albumArtImageView, song, true, true);
-            }
+            getImageLoader().loadImage(albumArtImageView, song, true, true);
 		} else {
 			songTitleTextView.setText(null);
 		}
@@ -947,9 +945,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			if(song.getTrack() != null) {
 				songTitleTextView.setText("Chapter " + String.format("%02d", song.getTrack()));
 			}
-            if(albumArtImageView.getDrawable() == null) {
-                getImageLoader().loadImage(albumArtImageView, song, true, true);
-            }
+            getImageLoader().loadImage(albumArtImageView, song, true, true);
 			updateTitle(speed);
 			statusTextView.setText(song.getAlbum());
 			statusTextView2.setText(song.getArtist());
@@ -1116,7 +1112,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 			bookmarkButton.setImageResource(bookmark);
 		}
 
-		if(song != null && albumArtImageView != null && fieldChange == DownloadService.METADATA_UPDATED_COVER_ART && albumArtImageView.getDrawable() == null) {
+		if(song != null && albumArtImageView != null && fieldChange == DownloadService.METADATA_UPDATED_COVER_ART) {
 
 			getImageLoader().loadImage(albumArtImageView, song, true, true);
 		}
