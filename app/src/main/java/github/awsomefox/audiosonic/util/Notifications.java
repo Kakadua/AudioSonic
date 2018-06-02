@@ -90,8 +90,10 @@ public final class Notifications {
 
     public static void showPlayingNotification(final Context context, final DownloadService downloadService, final Handler handler, MusicDirectory.Entry song) {
         final boolean playing = downloadService.getPlayerState() == PlayerState.STARTED;
-        setupViews(downloadService.getRemoteControlClient(), context, song, false, downloadService.getPlayerState());
-
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = setupViews(downloadService.getRemoteControlClient(), context, song, false, downloadService.getPlayerState());
+//        notificationManager.notify( 1, notification );
+        downloadService.startForeground(NOTIFICATION_ID_PLAYING, notification);
         playShowing = true;
         if (downloadForeground && downloadShowing) {
             downloadForeground = false;
@@ -110,7 +112,6 @@ public final class Notifications {
                     if (!playing) {
                         playShowing = false;
                         persistentPlayingShowing = true;
-                        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                         downloadService.stopForeground(false);
 
                         try {
@@ -127,7 +128,7 @@ public final class Notifications {
         DSubWidgetProvider.notifyInstances(context, downloadService, playing);
     }
 
-    private static void setupViews(RemoteControlClientBase base, Context context, MusicDirectory.Entry song, boolean expanded, PlayerState state) {
+    private static Notification setupViews(RemoteControlClientBase base, Context context, MusicDirectory.Entry song, boolean expanded, PlayerState state) {
         // Use the same text for the ticker and the expanded notification
         String title = song.getTitle();
         if(song.getTrack() != null) {
@@ -149,7 +150,6 @@ public final class Notifications {
             bitmap  = BitmapFactory.decodeResource(context.getResources(), R.drawable.unknown_album);
             Log.w(TAG, "Failed to get notification cover art", x);
         }
-        if(state == PlayerState.STOPPED) { return; }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel(context);
         }
@@ -187,8 +187,7 @@ public final class Notifications {
         builder.addAction( generateAction(context, R.drawable.ic_forward_30_black_24dp, "Skip Forward", "KEYCODE_MEDIA_FAST_FORWARD", KeyEvent.KEYCODE_MEDIA_FAST_FORWARD ) );
         builder.addAction( generateAction(context, R.drawable.ic_skip_next_black_24dp, "Next", "KEYCODE_MEDIA_NEXT", KeyEvent.KEYCODE_MEDIA_NEXT ) );
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify( 1, builder.build() );
+        return builder.build();
     }
 
     public static void hidePlayingNotification(final Context context, final DownloadService downloadService, Handler handler) {

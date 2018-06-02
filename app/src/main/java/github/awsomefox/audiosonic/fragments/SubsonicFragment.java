@@ -203,9 +203,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_global_shuffle:
-				onShuffleRequested();
-				return true;
 			case R.id.menu_exit:
 				exit();
 				return true;
@@ -683,128 +680,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			Log.w(TAG, "Error while checking storage space for music directory", e);
 		}
 	}
-
-	protected void onShuffleRequested() {
-		if(Util.isOffline(context)) {
-			DownloadService downloadService = getDownloadService();
-			if(downloadService == null) {
-				return;
-			}
-			downloadService.clear();
-			downloadService.setShufflePlayEnabled(true);
-			context.openNowPlaying();
-			return;
-		}
-
-		View dialogView = context.getLayoutInflater().inflate(R.layout.shuffle_dialog, null);
-		final EditText startYearBox = dialogView.findViewById(R.id.start_year);
-		final EditText endYearBox = dialogView.findViewById(R.id.end_year);
-		final EditText genreBox = dialogView.findViewById(R.id.genre);
-		final Button genreCombo = dialogView.findViewById(R.id.genre_combo);
-
-		final SharedPreferences prefs = Util.getPreferences(context);
-		final String oldStartYear = prefs.getString(Constants.PREFERENCES_KEY_SHUFFLE_START_YEAR, "");
-		final String oldEndYear = prefs.getString(Constants.PREFERENCES_KEY_SHUFFLE_END_YEAR, "");
-		final String oldGenre = prefs.getString(Constants.PREFERENCES_KEY_SHUFFLE_GENRE, "");
-
-		boolean _useCombo = false;
-		if(ServerInfo.checkServerVersion(context, "1.9.0")) {
-			genreBox.setVisibility(View.GONE);
-			genreCombo.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					new LoadingTask<List<Genre>>(context, true) {
-						@Override
-						protected List<Genre> doInBackground() throws Throwable {
-							MusicService musicService = MusicServiceFactory.getMusicService(context);
-							return musicService.getGenres(false, context, this);
-						}
-
-						@Override
-						protected void done(final List<Genre> genres) {
-							List<String> names = new ArrayList<String>();
-							String blank = context.getResources().getString(R.string.select_genre_blank);
-							names.add(blank);
-							for(Genre genre: genres) {
-								names.add(genre.getName());
-							}
-							final List<String> finalNames = names;
-
-							AlertDialog.Builder builder = new AlertDialog.Builder(context);
-							builder.setTitle(R.string.shuffle_pick_genre)
-									.setItems(names.toArray(new CharSequence[names.size()]), new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											if(which == 0) {
-												genreCombo.setText("");
-											} else {
-												genreCombo.setText(finalNames.get(which));
-											}
-										}
-									});
-							AlertDialog dialog = builder.create();
-							dialog.show();
-						}
-
-						@Override
-						protected void error(Throwable error) {
-							String msg;
-							if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-								msg = getErrorMessage(error);
-							} else {
-								msg = context.getResources().getString(R.string.playlist_error) + " " + getErrorMessage(error);
-							}
-
-							Util.toast(context, msg, false);
-						}
-					}.execute();
-				}
-			});
-			_useCombo = true;
-		} else {
-			genreCombo.setVisibility(View.GONE);
-		}
-		final boolean useCombo = _useCombo;
-
-		startYearBox.setText(oldStartYear);
-		endYearBox.setText(oldEndYear);
-		genreBox.setText(oldGenre);
-		genreCombo.setText(oldGenre);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(R.string.shuffle_title)
-				.setView(dialogView)
-				.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						String genre;
-						if (useCombo) {
-							genre = genreCombo.getText().toString();
-						} else {
-							genre = genreBox.getText().toString();
-						}
-						String startYear = startYearBox.getText().toString();
-						String endYear = endYearBox.getText().toString();
-
-						SharedPreferences.Editor editor = prefs.edit();
-						editor.putString(Constants.PREFERENCES_KEY_SHUFFLE_START_YEAR, startYear);
-						editor.putString(Constants.PREFERENCES_KEY_SHUFFLE_END_YEAR, endYear);
-						editor.putString(Constants.PREFERENCES_KEY_SHUFFLE_GENRE, genre);
-						editor.commit();
-
-						DownloadService downloadService = getDownloadService();
-						if (downloadService == null) {
-							return;
-						}
-
-						downloadService.clear();
-						downloadService.setShufflePlayEnabled(true);
-						context.openNowPlaying();
-					}
-				})
-				.setNegativeButton(R.string.common_cancel, null);
-		AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-
 
 	protected void downloadRecursively(final String id, final boolean save, final boolean append, final boolean autoplay, final boolean shuffle, final boolean background) {
 		downloadRecursively(id, "", true, save, append, autoplay, shuffle, background);

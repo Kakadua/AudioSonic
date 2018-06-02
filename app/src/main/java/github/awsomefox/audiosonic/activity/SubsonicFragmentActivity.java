@@ -92,6 +92,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	private SubsonicFragment secondaryFragment;
 	private Toolbar mainToolbar;
 	private Toolbar nowPlayingToolbar;
+	private CharSequence currentDirectoryTitle;
 
 	private View bottomBar;
 	private ImageView coverArtView;
@@ -195,6 +196,9 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				if (bottomBar.getVisibility() == View.GONE) bottomBar.setVisibility(View.VISIBLE);
 				if (nowPlayingToolbar.getVisibility() == View.GONE) {
 					nowPlayingToolbar.setVisibility(View.VISIBLE);
+					if (getSupportActionBar() != null) {
+                        currentDirectoryTitle = getSupportActionBar().getTitle();
+                    }
 					nowPlayingFragment.setupNowPlaying(getDownloadService().getCurrentPlaying());
 				}
 				coverArtView.setAlpha(1.0f - slideOffset);
@@ -217,6 +221,9 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				nowPlayingFragment.setPrimaryFragment(false);
 				setSupportActionBar(mainToolbar);
 				recreateSpinner();
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(currentDirectoryTitle);
+                }
 			}
 
 			@SuppressWarnings("ConstantConditions")
@@ -237,8 +244,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
                 } else {
                     secondaryFragment.setPrimaryFragment(true);
                 }
-
-                drawerToggle.setDrawerIndicatorEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 
@@ -510,10 +515,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
 			trans.hide(nowPlayingFragment);
 			trans.commit();
-		}
-
-		if(drawerToggle != null && backStack.size() > 0) {
-			drawerToggle.setDrawerIndicatorEnabled(false);
 		}
 
 		if(savedInstanceState.getInt(Constants.MAIN_SLIDE_PANEL_STATE, -1) == SlidingUpPanelLayout.PanelState.EXPANDED.hashCode()) {
