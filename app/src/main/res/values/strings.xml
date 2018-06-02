@@ -12,7 +12,6 @@
 	<string name="common.star">Star</string>
 	<string name="common.unstar">Unstar</string>
 	<string name="common.info">Details</string>
-    <string name="common.comment">Comment</string>
     <string name="common.play_external">Play Video</string>
 	<string name="common.stream_external">Stream Video</string>
 	<string name="common.confirm">Confirm</string>
@@ -122,22 +121,15 @@
     <string name="download.playerstate_downloading">Downloading - %s</string>
 	<string name="download.playerstate_mobile_disabled">Waiting for WiFi network to download</string>
     <string name="download.playerstate_buffering">Buffering</string>
-    <string name="download.playerstate_playing_shuffle">Shuffle mode</string>
-	<string name="download.playerstate_playing_artist_radio">Artist radio</string>
     <string name="download.menu_show_album">Show Book</string>
     <string name="download.menu_lyrics">Lyrics</string>
 	<string name="download.menu_remove_all">Remove all</string>
     <string name="download.menu_remove_played_songs">Remove played chapters</string>
-    <string name="download.repeat_off">Repeat off</string>
-    <string name="download.repeat_all">Repeat all</string>
-    <string name="download.repeat_single">Repeat chapter</string>
     <string name="download.start_timer">Start Timer</string>
 	<string name="download.stop_time_remaining">Stop in %1$s</string>
 	<string name="download.need_download">Video needs to be downloaded first</string>
 	<string name="download.no_streaming_player">No player can play this stream</string>
-	<string name="download.playing_out_of">Playing: %1$d/%2$d</string>
-	<string name="download.save_bookmark_title">Create bookmark</string>
-	<string name="download.save_bookmark">Bookmark created</string>
+    <string name="download.save_bookmark">Bookmark created</string>
 	<string name="download.save_bookmark_failed">Failed to create bookmark</string>
 	<string name="download.downloading_title">Downloading %1$d chapters</string>
 	<string name="download.downloading_summary">Current: %1$s</string>
@@ -274,7 +266,6 @@
 	<string name="settings.disconnect_pause_neither">Do Nothing</string>
 	<string name="settings.gapless_playback">Gapless Playback</string>
 	<string name="settings.gapless_playback_summary">If you are seeing strange bugs during playback, turning this off may help.</string>
-	<string name="settings.chat_refresh">Chat Refresh Rate (Secs)</string>
     <string name="settings.downloads_screen_title">Download/Network</string>
 	<string name="settings.playback_title">Playback</string>
 	<string name="settings.hide_widget_title">Hide Widget</string>
@@ -335,11 +326,9 @@
 	<string name="settings.color_action_bar">Color Action Bar</string>
 	<string name="settings.color_action_bar.summary">Color the action bar and status bar or leave them alone</string>
 
-	<string name="shuffle.title">Shuffle By</string>
-	<string name="shuffle.startYear">Start Year:</string>
+    <string name="shuffle.startYear">Start Year:</string>
 	<string name="shuffle.endYear">End Year:</string>
-	<string name="shuffle.genre">Genre:</string>
-	<string name="shuffle.pick_genre">Pick a genre</string>
+    <string name="shuffle.pick_genre">Pick a genre</string>
 
 	<string name="admin.add_user_username">Username:</string>
 	<string name="admin.add_user_email">Email:</string>

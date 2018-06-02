@@ -9,8 +9,7 @@
 		compat:showAsAction="ifRoom|collapseActionView"/>
 	
 	<item
-		android:id="@+id/menu_global_shuffle"
-		android:icon="?attr/shuffle"
+        android:icon="?attr/shuffle"
 		android:title="@string/menu.shuffle"
 		compat:showAsAction="always|withText"
 		android:visible="false"/>

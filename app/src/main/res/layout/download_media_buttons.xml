@@ -9,8 +9,7 @@
 
     <ImageButton
             style="@style/PlaybackControl"
-            android:id="@+id/download_repeat"
-            android:src="?attr/media_button_repeat_off"
+        android:src="?attr/media_button_repeat_off"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:visibility="gone"

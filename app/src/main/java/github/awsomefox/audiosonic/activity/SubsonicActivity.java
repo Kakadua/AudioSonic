@@ -62,7 +62,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -110,10 +109,8 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	protected SubsonicFragment currentFragment;
 	protected View primaryContainer;
 	protected View secondaryContainer;
-	protected boolean tv = false;
 	protected boolean touchscreen = true;
 	protected Handler handler = new Handler();
-	Spinner actionBarSpinner;
 	ArrayAdapter<CharSequence> spinnerAdapter;
 	ViewGroup rootView;
 	DrawerLayout drawer;
@@ -147,7 +144,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		super.onCreate(bundle);
 		startService(new Intent(this, DownloadService.class));
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
 		if(getIntent().hasExtra(Constants.FRAGMENT_POSITION)) {
 			lastSelectedPosition = getIntent().getIntExtra(Constants.FRAGMENT_POSITION, 0);
 		}
@@ -923,13 +919,13 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		if(backStack.size() > 0) {
 
 			if(drawerToggle.isDrawerIndicatorEnabled() && getSupportActionBar() != null) {
+				getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+				drawerToggle.setDrawerIndicatorEnabled(false);
+//				drawerToggle.setHomeAsUpIndicator(android.R.drawable.ic_dialog_info);
 				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		} else {
 			if (getSupportActionBar() != null) {
-				getSupportActionBar().setDisplayShowTitleEnabled(true);
-				getSupportActionBar().setTitle(currentFragment.getTitle());
-				getSupportActionBar().setDisplayShowCustomEnabled(false);
 				drawerToggle.setDrawerIndicatorEnabled(true);
 			}
 		}

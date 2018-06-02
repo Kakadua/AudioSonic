@@ -16,6 +16,10 @@
 		compat:showAsAction="ifRoom|withText" />
 
 	<item
+		android:id="@+id/menu_toggle_timer"
+		android:title="@string/download.start_timer"/>
+
+	<item
 		android:id="@+id/menu_equalizer"
 		android:title="@string/equalizer.label"
 		android:checkable="true"/>

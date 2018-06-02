@@ -12,7 +12,6 @@
 	<string name="common.star">Favorit</string>
 	<string name="common.unstar">Inte favorit</string>
 	<string name="common.info">Detaljer</string>
-    <string name="common.comment">Kommentar</string>
     <string name="common.play_external">Spela video</string>
 	<string name="common.stream_external">Streama video</string>
 	<string name="common.confirm">Konfirmera</string>
@@ -123,21 +122,15 @@
     <string name="download.playerstate_downloading">Laddar ner - %s</string>
 	<string name="download.playerstate_mobile_disabled">Väntar på WiFi nätverk för att ladda ner</string>
     <string name="download.playerstate_buffering">Buffrar</string>
-    <string name="download.playerstate_playing_shuffle">Spelar slumpat</string>
     <string name="download.menu_show_album">Visa böcker</string>
     <string name="download.menu_lyrics">Texter</string>
 	<string name="download.menu_remove_all">Ta bort allt</string>
     <string name="download.menu_remove_played_songs">Ta bort spelade spår</string>
-    <string name="download.repeat_off">Upprepa inte</string>
-    <string name="download.repeat_all">Upprepa alla</string>
-    <string name="download.repeat_single">Upprepa spåret</string>
     <string name="download.start_timer">Starta timer</string>
 	<string name="download.stop_time_remaining">Stoppa om %1$s</string>
 	<string name="download.need_download">Videon måste laddas ner först</string>
 	<string name="download.no_streaming_player">Ingen spelare kan spela upp den här strömmen</string>
-	<string name="download.playing_out_of">Spelar: %1$d/%2$d</string>
-	<string name="download.save_bookmark_title">Skapa bokmärke</string>
-	<string name="download.save_bookmark">Bokmärke skapat</string>
+    <string name="download.save_bookmark">Bokmärke skapat</string>
 	<string name="download.save_bookmark_failed">Misslyckades med att skapa bokmärke</string>
 	<string name="download.downloading_title">Laddar ner %1$d spår</string>
 	<string name="download.downloading_summary">Nuvarande: %1$s</string>
@@ -269,7 +262,6 @@
 	<string name="settings.disconnect_pause_neither">Gör ingenting</string>
     <string name="settings.gapless_playback">Spela upp utan mellanrum</string>
 	<string name="settings.gapless_playback_summary">Om du märker några konstiga buggar när du lyssnar kan det hjälpa att slå av den här.</string>
-	<string name="settings.chat_refresh">Hur ofta ska chat uppdateras (sekunder)</string>
 
     <string name="settings.downloads_screen_title">Cache/Nätverk</string>
 	<string name="settings.playback_title">Uppspelning</string>
@@ -333,11 +325,9 @@
 	<string name="settings.color_action_bar">Färgad action bar</string>
 	<string name="settings.color_action_bar.summary">Om action baren ska färgas eller inte</string>
 
-    <string name="shuffle.title">Slumpa per</string>
-	<string name="shuffle.startYear">Start år:</string>
+    <string name="shuffle.startYear">Start år:</string>
 	<string name="shuffle.endYear">Slut år:</string>
-	<string name="shuffle.genre">Genre:</string>
-	<string name="shuffle.pick_genre">Välj en genre</string>
+    <string name="shuffle.pick_genre">Välj en genre</string>
 
 	<string name="admin.add_user_username">Användarnamn:</string>
 	<string name="admin.add_user_email">Email:</string>
@@ -448,7 +438,7 @@
 	<string name="details.year">År</string>
 	<string name="details.server_format">Server format</string>
 	<string name="details.server_bitrate">Server bitrate</string>
-	<string name="details.cached_format">Cachat format</string>
+	<string name="details.cached_format">Cachef format</string>
 	<string name="details.cached_bitrate">Cachad bitrate</string>
 	<string name="details.size">Storlek</string>
 	<string name="details.length">Längd</string>

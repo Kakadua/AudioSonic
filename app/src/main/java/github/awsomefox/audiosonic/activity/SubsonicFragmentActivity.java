@@ -27,6 +27,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -92,7 +95,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	private SubsonicFragment secondaryFragment;
 	private Toolbar mainToolbar;
 	private Toolbar nowPlayingToolbar;
-	private CharSequence currentDirectoryTitle;
 
 	private View bottomBar;
 	private ImageView coverArtView;
@@ -193,13 +195,21 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		panelSlideListener = new SlidingUpPanelLayout.PanelSlideListener() {
 			@Override
 			public void onPanelSlide(View panel, float slideOffset) {
+                drawerToggle.setDrawerIndicatorEnabled(true);
 				if (bottomBar.getVisibility() == View.GONE) bottomBar.setVisibility(View.VISIBLE);
 				if (nowPlayingToolbar.getVisibility() == View.GONE) {
 					nowPlayingToolbar.setVisibility(View.VISIBLE);
-					if (getSupportActionBar() != null) {
-                        currentDirectoryTitle = getSupportActionBar().getTitle();
+                    setSupportActionBar(nowPlayingToolbar);
+                    nowPlayingFragment.setPrimaryFragment(true);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     }
-					nowPlayingFragment.setupNowPlaying(getDownloadService().getCurrentPlaying());
+					nowPlayingFragment.setupNowPlaying(getDownloadService().getCurrentPlaying(), getDownloadService().getPlaybackSpeed());
+                    Drawable dr = getResources().getDrawable(R.drawable.ic_group_collapse_10);
+                    Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+                    Drawable d = new BitmapDrawable(getResources(),
+                            Bitmap.createScaledBitmap(bitmap, 150, 150, true));
+                    getSupportActionBar().setHomeAsUpIndicator(d);
 				}
 				coverArtView.setAlpha(1.0f - slideOffset);
 				trackView.setAlpha(1.0f - slideOffset);
@@ -221,9 +231,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				nowPlayingFragment.setPrimaryFragment(false);
 				setSupportActionBar(mainToolbar);
 				recreateSpinner();
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle(currentDirectoryTitle);
-                }
 			}
 
 			@SuppressWarnings("ConstantConditions")
@@ -231,20 +238,25 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			public void onPanelExpanded(View panel) {
 				isPanelClosing = false;
 				currentFragment.stopActionMode();
-                // Disable custom view before switching
-                getSupportActionBar().setDisplayShowCustomEnabled(false);
-                getSupportActionBar().setDisplayShowTitleEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
                 bottomBar.setVisibility(View.GONE);
                 nowPlayingToolbar.setVisibility(View.VISIBLE);
                 setSupportActionBar(nowPlayingToolbar);
 
-                if (secondaryFragment == null) {
-                    nowPlayingFragment.setPrimaryFragment(true);
-                } else {
-                    secondaryFragment.setPrimaryFragment(true);
-                }
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+				if (secondaryFragment == null) {
+					nowPlayingFragment.setPrimaryFragment(true);
+				} else {
+					secondaryFragment.setPrimaryFragment(true);
+				}
+
+				drawerToggle.setDrawerIndicatorEnabled(false);
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                Drawable dr = getResources().getDrawable(R.drawable.ic_group_collapse_10);
+                Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+                Drawable d = new BitmapDrawable(getResources(),
+                        Bitmap.createScaledBitmap(bitmap, 150, 150, true));
+                getSupportActionBar().setHomeAsUpIndicator(d);
 			}
 
 			@Override
@@ -561,7 +573,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 
 	@Override
 	public SubsonicFragment getCurrentFragment() {
-		if(slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+		if(slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING) {
 			if(secondaryFragment == null) {
 				return nowPlayingFragment;
 			} else {

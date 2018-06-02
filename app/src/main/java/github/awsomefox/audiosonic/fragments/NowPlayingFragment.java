@@ -938,7 +938,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 	}
 
 	@SuppressLint({"DefaultLocale", "SetTextI18n"})
-    public void setupNowPlaying(DownloadFile nowPlaying) {
+    public void setupNowPlaying(DownloadFile nowPlaying, Float speed) {
 		if (nowPlaying != null) {
             setControlsVisible();
             updateButtons();
@@ -950,7 +950,7 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
             if(albumArtImageView.getDrawable() == null) {
                 getImageLoader().loadImage(albumArtImageView, song, true, true);
             }
-			updateTitle();
+			updateTitle(speed);
 			statusTextView.setText(song.getAlbum());
 			statusTextView2.setText(song.getArtist());
 		} else {
@@ -1146,6 +1146,30 @@ public class NowPlayingFragment extends SubsonicFragment implements SectionAdapt
 		}
 		setTitle(title);
 	}
+
+    public void updateTitle(Float playbackSpeed) {
+        String title = context.getResources().getString(R.string.button_bar_now_playing);
+        int stringRes = -1;
+        if(playbackSpeed == 0.5f) {
+            stringRes = R.string.download_playback_speed_half;
+        } else if(playbackSpeed == 1.2f) {
+            stringRes = R.string.download_playback_speed_one_p_two;
+        } else if(playbackSpeed == 1.5f) {
+            stringRes = R.string.download_playback_speed_one_p_five;
+        } else if(playbackSpeed == 2.0f) {
+            stringRes = R.string.download_playback_speed_two;
+        }
+        String playbackSpeedText = null;
+        if(stringRes != -1) {
+            playbackSpeedText = context.getResources().getString(stringRes);
+        } else if(Math.abs(playbackSpeed - 1.0) > 0.01) {
+            playbackSpeedText = Float.toString(playbackSpeed) + "x";
+        }
+        if(playbackSpeedText != null) {
+            setSubtitle(playbackSpeedText);
+        }
+        setTitle(title);
+    }
 
 	@Override
 	protected List<MusicDirectory.Entry> getSelectedEntries() {
