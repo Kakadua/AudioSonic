@@ -16,6 +16,7 @@
 package github.awsomefox.audiosonic.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -64,7 +65,7 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(serialize) {
 			outState.putSerializable(Constants.FRAGMENT_LIST, (Serializable) objects);

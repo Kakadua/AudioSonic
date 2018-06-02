@@ -18,24 +18,23 @@
  */
 package github.awsomefox.audiosonic.activity;
 
-import android.app.UiModeManager;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.Manifest.permission;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -56,7 +55,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -82,7 +80,6 @@ import github.awsomefox.audiosonic.service.MusicServiceFactory;
 import github.awsomefox.audiosonic.util.DrawableTint;
 import github.awsomefox.audiosonic.util.ImageLoader;
 import github.awsomefox.audiosonic.util.KakaduaUtil;
-import github.awsomefox.audiosonic.util.Notifications;
 import github.awsomefox.audiosonic.util.SilentBackgroundTask;
 import github.awsomefox.audiosonic.util.ThemeUtil;
 import github.awsomefox.audiosonic.util.UserUtil;
@@ -97,7 +94,6 @@ import github.awsomefox.audiosonic.view.UpdateView;
 
 public class SubsonicActivity extends AppCompatActivity implements OnItemSelectedListener, SensorEventListener {
 	private static final String TAG = SubsonicActivity.class.getSimpleName();
-	private static ImageLoader IMAGE_LOADER;
 	protected static String theme;
 	protected static boolean fullScreen;
 	protected static boolean actionbarColored;
@@ -110,7 +106,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	private boolean drawerIdle = true;
 	private boolean destroyed = false;
 	private boolean finished = false;
-	protected List<SubsonicFragment> backStack = new ArrayList<SubsonicFragment>();
+	protected List<SubsonicFragment> backStack = new ArrayList<>();
 	protected SubsonicFragment currentFragment;
 	protected View primaryContainer;
 	protected View secondaryContainer;
@@ -132,7 +128,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	boolean showingTabs = true;
 	boolean drawerOpen = false;
 	SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
-	float x,y,z;
 
 	static {
 		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
@@ -141,10 +136,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	@Override
 	protected void onCreate(Bundle bundle) {
 
-		UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
-		if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION) {
-			// tv = true;
-		}
 		PackageManager pm = getPackageManager();
 		if(!pm.hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN)) {
 			touchscreen = false;
@@ -182,13 +173,11 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
 				// If request is cancelled, the result arrays are empty.
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-				} else {
+				if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 					Util.toast(this, R.string.permission_external_storage_failed);
 					finish();
 				}
@@ -203,8 +192,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		if(spinnerAdapter == null) {
 			createCustomActionBarView();
 		}
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setHomeButtonEnabled(true);
+		}
 
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		if(drawerToggle != null) {
@@ -224,13 +215,12 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
         if(!Util.isOffline(context)) {
             new Thread(new Runnable() {
                 public void run() {
-                    SharedPreferences prefs = Util.getPreferences(context);
-                    String url = Util.getRestUrl(context, "ping") + "&f=json";
+					String url = Util.getRestUrl(context, "ping") + "&f=json";
                     final String input = KakaduaUtil.http_get_contents_all_cert(url);
-                    final String ip = KakaduaUtil.http_get_contents("https://ip.awsomefox.com/api/");
-                    Log.w("pinging", input);
+					Log.w("pinging", input);
                     runOnUiThread(new Runnable() {
-                        @Override
+                        @SuppressLint("SetTextI18n")
+						@Override
                         public void run() {
 
                             try {
@@ -239,23 +229,29 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
                                 Log.w("outdated?", resp);
                                 TextView t = findViewById(R.id.msg);
                                 if (t != null) {
-                                    if (resp.equals("outdated")) {
-                                        Log.w(":/", ":/");
-                                        t.setText(context.getText(R.string.msg_server_outdated));
-                                        t.setVisibility(View.VISIBLE);
-                                    } else if (resp.equals("outdated_beta") || resp.equals("true")) { //early beta versions only returned "true"
-                                        Log.w(":(", ":(");
-                                        t.setText(context.getText(R.string.msg_server_outdated_beta));
-                                        t.setVisibility(View.VISIBLE);
-                                    } else {
-                                        Log.w(":)", ":)");
-                                        t.setVisibility(View.INVISIBLE);
-                                        try {
-                                            resp = json.getJSONObject("subsonic-response").getString("emulator");
-                                            t.setText("Server Emulator: "+resp.toString());
-                                            t.setVisibility(View.VISIBLE);
-                                        }catch(Exception e){}
-                                    }
+									switch (resp) {
+										case "outdated":
+											Log.w(":/", ":/");
+											t.setText(context.getText(R.string.msg_server_outdated));
+											t.setVisibility(View.VISIBLE);
+											break;
+										case "outdated_beta":
+										case "true":  //early beta versions only returned "true"
+											Log.w(":(", ":(");
+											t.setText(context.getText(R.string.msg_server_outdated_beta));
+											t.setVisibility(View.VISIBLE);
+											break;
+										default:
+											Log.w(":)", ":)");
+											t.setVisibility(View.INVISIBLE);
+											try {
+												resp = json.getJSONObject("subsonic-response").getString("emulator");
+												t.setText("Server Emulator: " + resp);
+												t.setVisibility(View.VISIBLE);
+											} catch (Exception ignored) {
+											}
+											break;
+									}
                                 }
                             } catch (Exception er) {
                                 TextView t = findViewById(R.id.msg);
@@ -263,9 +259,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
                                     Log.w("Network Error", er.toString());
                                     if(er.toString().contains("End of input at character 0")){
                                         try{
-                                            JSONObject ipJson = new JSONObject(ip);
-                                            String ipResp = ipJson.getString("ip");
-                                            t.setText(context.getText(R.string.msg_server_offline));
+											t.setText(context.getText(R.string.msg_server_offline));
                                         }catch(Exception e){
                                             t.setText(context.getText(R.string.msg_noInternet));
                                         }
@@ -285,17 +279,19 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
         }
     }
 
+	@SuppressLint({"InflateParams", "PrivateResource"})
 	protected void createCustomActionBarView() {
 		actionBarSpinner = (Spinner) getLayoutInflater().inflate(R.layout.actionbar_spinner, null);
 		if((this instanceof SubsonicFragmentActivity || this instanceof SettingsActivity) && (Util.getPreferences(this).getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true) || ThemeUtil.getThemeRes(this) != R.style.Theme_DSub_Light_No_Color)) {
 			actionBarSpinner.setBackgroundDrawable(DrawableTint.getTintedDrawableFromColor(this, R.drawable.abc_spinner_mtrl_am_alpha, android.R.color.white));
 		}
-		spinnerAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item);
+		spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		actionBarSpinner.setOnItemSelectedListener(this);
 		actionBarSpinner.setAdapter(spinnerAdapter);
-
-		getSupportActionBar().setCustomView(actionBarSpinner);
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setCustomView(actionBarSpinner);
+		}
 	}
 
 	@Override
@@ -348,13 +344,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		Util.disablePendingTransition(this);
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public void setContentView(int viewId) {
-		if(isTv()) {
-			super.setContentView(R.layout.static_drawer_activity);
-		} else {
-			super.setContentView(R.layout.abstract_activity);
-		}
+		super.setContentView(R.layout.abstract_activity);
 		rootView = findViewById(R.id.content_frame);
 
 		if(viewId != 0) {
@@ -365,7 +358,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		drawerList = findViewById(R.id.left_drawer);
 		drawerList.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 			@Override
-			public boolean onNavigationItemSelected(final MenuItem menuItem) {
+			public boolean onNavigationItemSelected(@NonNull final MenuItem menuItem) {
 				if(showingTabs) {
 					// Settings are on a different selectable track
 					if (menuItem.getItemId() != R.id.drawer_settings && menuItem.getItemId() != R.id.drawer_admin && menuItem.getItemId() != R.id.drawer_offline) {
@@ -440,43 +433,41 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		drawerUserAvatar = drawerHeader.findViewById(R.id.header_user_avatar);
 
 		updateDrawerHeader();
+		drawer = findViewById(R.id.drawer_layout);
 
-		if(!isTv()) {
-			drawer = findViewById(R.id.drawer_layout);
+		// Pass in toolbar if it exists
+		Toolbar toolbar = findViewById(R.id.main_toolbar);
+		drawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.common_appname, R.string.common_appname) {
+			@Override
+			public void onDrawerClosed(View view) {
+				drawerIdle = true;
+				drawerOpen = false;
 
-			// Pass in toolbar if it exists
-			Toolbar toolbar = findViewById(R.id.main_toolbar);
-			drawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.common_appname, R.string.common_appname) {
-				@Override
-				public void onDrawerClosed(View view) {
-					drawerIdle = true;
-					drawerOpen = false;
-
-					if(!showingTabs) {
-						populateTabs();
-					}
+				if(!showingTabs) {
+					populateTabs();
 				}
+			}
 
-				@Override
-				public void onDrawerOpened(View view) {
-					DownloadService downloadService = getDownloadService();
-					boolean downloadingVisible = downloadService != null && !downloadService.getBackgroundDownloads().isEmpty();
-					if(lastSelectedPosition == R.id.drawer_downloading) {
-						downloadingVisible = true;
-					}
-					setDrawerItemVisible(R.id.drawer_downloading, downloadingVisible);
-
-					drawerIdle = true;
-					drawerOpen = true;
+			@Override
+			public void onDrawerOpened(View view) {
+				DownloadService downloadService = getDownloadService();
+				boolean downloadingVisible = downloadService != null && !downloadService.getBackgroundDownloads().isEmpty();
+				if(lastSelectedPosition == R.id.drawer_downloading) {
+					downloadingVisible = true;
 				}
+				setDrawerItemVisible(R.id.drawer_downloading, downloadingVisible);
 
-				@Override
-				public void onDrawerSlide(View drawerView, float slideOffset) {
-					super.onDrawerSlide(drawerView, slideOffset);
-					drawerIdle = false;
-				}
+				drawerIdle = true;
+				drawerOpen = true;
+			}
+
+			@Override
+			public void onDrawerSlide(View drawerView, float slideOffset) {
+				super.onDrawerSlide(drawerView, slideOffset);
+				drawerIdle = false;
+			}
 			};
-			drawer.setDrawerListener(drawerToggle);
+			drawer.addDrawerListener(drawerToggle);
 			drawerToggle.setDrawerIndicatorEnabled(true);
 
 			drawer.setOnTouchListener(new View.OnTouchListener() {
@@ -488,7 +479,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 					}
 				}
 			});
-		}
 
 		// Check whether this is a tablet or not
 		secondaryContainer = findViewById(R.id.fragment_second_container);
@@ -518,16 +508,25 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		int size = savedInstanceState.getInt(Constants.MAIN_BACK_STACK_SIZE);
 		String[] ids = savedInstanceState.getStringArray(Constants.MAIN_BACK_STACK);
 		FragmentManager fm = getSupportFragmentManager();
-		currentFragment = (SubsonicFragment)fm.findFragmentByTag(ids[0]);
+		if (ids != null) {
+			currentFragment = (SubsonicFragment)fm.findFragmentByTag(ids[0]);
+		}
 		currentFragment.setPrimaryFragment(true);
-		currentFragment.setSupportTag(ids[0]);
+		if (ids != null) {
+			currentFragment.setSupportTag(ids[0]);
+		}
 		supportInvalidateOptionsMenu();
 		FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
 		for(int i = 1; i < size; i++) {
-			SubsonicFragment frag = (SubsonicFragment)fm.findFragmentByTag(ids[i]);
-			frag.setSupportTag(ids[i]);
+			SubsonicFragment frag = null;
+			if (ids != null) {
+				frag = (SubsonicFragment) fm.findFragmentByTag(ids[i]);
+				frag.setSupportTag(ids[i]);
+			}
 			if(secondaryContainer != null) {
-				frag.setPrimaryFragment(false, true);
+				if (frag != null) {
+					frag.setPrimaryFragment(false, true);
+				}
 			}
 			trans.hide(frag);
 			backStack.add(frag);
@@ -542,7 +541,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			getSupportFragmentManager().executePendingTransactions();
 
 			trans = getSupportFragmentManager().beginTransaction();
-			trans.add(R.id.fragment_container, currentFragment, ids[0]);
+			if (ids != null) {
+				trans.add(R.id.fragment_container, currentFragment, ids[0]);
+			}
 			trans.commit();
 		}
 		// Current fragment needs to be moved over to secondaryContainer
@@ -554,7 +555,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			getSupportFragmentManager().executePendingTransactions();
 
 			trans = getSupportFragmentManager().beginTransaction();
-			trans.add(R.id.fragment_second_container, currentFragment, ids[0]);
+			if (ids != null) {
+				trans.add(R.id.fragment_second_container, currentFragment, ids[0]);
+			}
 			trans.commit();
 
 			secondaryContainer.setVisibility(View.VISIBLE);
@@ -620,7 +623,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 	}
 	public void setSubtitle(CharSequence title) {
-		getSupportActionBar().setSubtitle(title);
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setSubtitle(title);
+		}
 	}
 
 	@Override
@@ -791,9 +796,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			if(backStack.size() > 1) {
 				// Move old right to left if there is a backstack already
 				SubsonicFragment newLeftFragment = backStack.get(backStack.size() - 1);
-				if(replaceCurrent) {
-					// trans.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-				}
 				trans.remove(newLeftFragment);
 
 				// Only move right to left if replaceCurrent is false
@@ -842,44 +844,46 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		currentFragment.setPrimaryFragment(true, false);
 		supportInvalidateOptionsMenu();
 
-		if(secondaryContainer == null || currentFragment.isAlwaysFullscreen() || oldFragment.isAlwaysStartFullscreen()) {
-			FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
-			trans.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-			trans.remove(oldFragment);
-			trans.show(currentFragment);
-			trans.commit();
-		} else {
-			FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+		if (oldFragment != null) {
+			if(secondaryContainer == null || currentFragment.isAlwaysFullscreen() || oldFragment.isAlwaysStartFullscreen()) {
+                FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+                trans.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                trans.remove(oldFragment);
+                trans.show(currentFragment);
+                trans.commit();
+            } else {
+                FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
 
-			// Remove old right fragment
-			trans.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-			trans.remove(oldFragment);
+                // Remove old right fragment
+                trans.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                trans.remove(oldFragment);
 
-			// Only switch places if there is a backstack, otherwise primary container is correct
-			if(backStack.size() > 0 && !backStack.get(backStack.size() - 1).isAlwaysFullscreen() && !currentFragment.isAlwaysStartFullscreen()) {
-				trans.setCustomAnimations(0, 0, 0, 0);
-				// Add current left fragment to right side
-				trans.remove(currentFragment);
+                // Only switch places if there is a backstack, otherwise primary container is correct
+                if(backStack.size() > 0 && !backStack.get(backStack.size() - 1).isAlwaysFullscreen() && !currentFragment.isAlwaysStartFullscreen()) {
+                    trans.setCustomAnimations(0, 0, 0, 0);
+                    // Add current left fragment to right side
+                    trans.remove(currentFragment);
 
-				// Make sure remove is finished before adding
-				trans.commit();
-				getSupportFragmentManager().executePendingTransactions();
+                    // Make sure remove is finished before adding
+                    trans.commit();
+                    getSupportFragmentManager().executePendingTransactions();
 
-				trans = getSupportFragmentManager().beginTransaction();
-				// trans.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
-				trans.add(R.id.fragment_second_container, currentFragment, currentFragment.getSupportTag() + "");
+                    trans = getSupportFragmentManager().beginTransaction();
+                    // trans.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left);
+                    trans.add(R.id.fragment_second_container, currentFragment, currentFragment.getSupportTag() + "");
 
-				SubsonicFragment newLeftFragment = backStack.get(backStack.size() - 1);
-				newLeftFragment.setSecondaryFragment(true);
-				trans.show(newLeftFragment);
-			} else {
-				secondaryContainer.startAnimation(AnimationUtils.loadAnimation(this, R.anim.exit_to_right));
-				secondaryContainer.setVisibility(View.GONE);
+                    SubsonicFragment newLeftFragment = backStack.get(backStack.size() - 1);
+                    newLeftFragment.setSecondaryFragment(true);
+                    trans.show(newLeftFragment);
+                } else {
+                    secondaryContainer.startAnimation(AnimationUtils.loadAnimation(this, R.anim.exit_to_right));
+                    secondaryContainer.setVisibility(View.GONE);
 
-				currentFragment.setIsOnlyVisible(true);
-			}
+                    currentFragment.setIsOnlyVisible(true);
+                }
 
-			trans.commit();
+                trans.commit();
+            }
 		}
 		recreateSpinner();
 	}
@@ -915,8 +919,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		if(currentFragment == null || currentFragment.getTitle() == null) {
 			return;
 		}
-		if(spinnerAdapter == null || getSupportActionBar().getCustomView() == null) {
-			createCustomActionBarView();
+		if (getSupportActionBar() != null) {
+			if (spinnerAdapter == null || getSupportActionBar().getCustomView() == null) {
+				createCustomActionBarView();
+			}
 		}
 
 		if(backStack.size() > 0) {
@@ -937,7 +943,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			}
 			spinnerAdapter.notifyDataSetChanged();
 			actionBarSpinner.setSelection(spinnerAdapter.getCount() - 1);
-			if(!isTv()) {
+			if (getSupportActionBar() != null) {
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
 				getSupportActionBar().setDisplayShowCustomEnabled(true);
 			}
@@ -947,7 +953,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 				drawerToggle.setDrawerIndicatorEnabled(false);
 				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			}
-		} else if(!isTv()) {
+		} else {
 			getSupportActionBar().setDisplayShowTitleEnabled(true);
 			getSupportActionBar().setTitle(currentFragment.getTitle());
 			getSupportActionBar().setDisplayShowCustomEnabled(false);
@@ -975,7 +981,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	private void applyTheme() {
 		theme = ThemeUtil.getTheme(this);
 
-		if(theme != null && theme.indexOf("fullscreen") != -1) {
+		if(theme != null && theme.contains("fullscreen")) {
 			theme = theme.substring(0, theme.indexOf("_fullscreen"));
 			ThemeUtil.setTheme(this, theme);
 		}
@@ -985,7 +991,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	}
 	private void applyFullscreen() {
 		fullScreen = Util.getPreferences(this).getBoolean(Constants.PREFERENCES_KEY_FULL_SCREEN, false);
-		if(fullScreen || isTv()) {
+		if(fullScreen) {
 			// Hide additional elements on higher Android versions
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 				int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
@@ -993,8 +999,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 						View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
 				getWindow().getDecorView().setSystemUiVisibility(flags);
-			} else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-				getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 			}
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
@@ -1005,16 +1009,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	}
 
 	public synchronized ImageLoader getImageLoader() {
-		if (IMAGE_LOADER == null) {
-			IMAGE_LOADER = new ImageLoader(this);
-		}
-		return IMAGE_LOADER;
+		return new ImageLoader(this);
 	}
 	public synchronized static ImageLoader getStaticImageLoader(Context context) {
-		if (IMAGE_LOADER == null) {
-			IMAGE_LOADER = new ImageLoader(context);
-		}
-		return IMAGE_LOADER;
+		return new ImageLoader(context);
 	}
 
 	public DownloadService getDownloadService() {
@@ -1029,11 +1027,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 				break;
 			}
 			Log.w(TAG, "DownloadService not running. Attempting to start it.");
-//			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//				startForegroundService(new Intent(this, DownloadService.class));
-//			} else {
-				startService(new Intent(this, DownloadService.class));
-//			}
+			startService(new Intent(this, DownloadService.class));
 			Util.sleepQuietly(50L);
 		}
 
@@ -1068,14 +1062,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			}
 			afterServiceAvailable.clear();
 		}
-	}
-
-	public static String getThemeName() {
-		return theme;
-	}
-
-	public boolean isTv() {
-		return tv;
 	}
 	public boolean isTouchscreen() {
 		return touchscreen;
@@ -1160,7 +1146,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			}
 		}
 
-		View checkBoxView = this.getLayoutInflater().inflate(R.layout.sync_dialog, null);
+		@SuppressLint("InflateParams") View checkBoxView = this.getLayoutInflater().inflate(R.layout.sync_dialog, null);
 		final CheckBox checkBox = checkBoxView.findViewById(R.id.sync_default);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1223,7 +1209,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		SharedPreferences.Editor offline = Util.getOfflineSync(this).edit();
 		offline.putInt(Constants.OFFLINE_SCROBBLE_COUNT, 0);
 		offline.putInt(Constants.OFFLINE_STAR_COUNT, 0);
-		offline.commit();
+		offline.apply();
 	}
 	
 	public int getDrawerItemId(String fragmentType) {
@@ -1293,8 +1279,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

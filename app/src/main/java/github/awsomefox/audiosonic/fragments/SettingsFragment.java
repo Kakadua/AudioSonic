@@ -17,7 +17,6 @@ package github.awsomefox.audiosonic.fragments;
 
 import android.Manifest;
 import android.accounts.Account;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -246,7 +245,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 			this.findPreference("clearCache").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					Util.confirmDialog(context, R.string.common_delete, R.string.common_confirm_message_cache, new DialogInterface.OnClickListener() {
+					Util.confirmDialog(context, R.string.common_delete, R.string.common_confirm_message_download, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							new LoadingTask<Void>(context, false) {

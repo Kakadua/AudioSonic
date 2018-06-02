@@ -253,7 +253,7 @@ public class DownloadService extends Service {
 	@Override
 	public void onTrimMemory(int level) {
 		ImageLoader imageLoader = SubsonicActivity.getStaticImageLoader(this);
-		if(imageLoader != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			Log.i(TAG, "Memory Trim Level: " + level);
 			if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
 				if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
@@ -2226,7 +2226,6 @@ public class DownloadService extends Service {
 		final int position = getPlayerPosition();
 		final int index = getCurrentPlayingIndex();
 		final int queueSize = size();
-		Util.broadcastNewTrackInfo(this, currentPlaying.getSong());
 
 		synchronized(onSongChangedListeners) {
 			for (final OnSongChangedListener listener : onSongChangedListeners) {

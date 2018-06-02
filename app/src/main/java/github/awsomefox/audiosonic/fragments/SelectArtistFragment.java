@@ -3,6 +3,7 @@ package github.awsomefox.audiosonic.fragments;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> implements ArtistAdapter.OnMusicFolderChanged {
-	private static final String TAG = SelectArtistFragment.class.getSimpleName();
 
 	private List<MusicFolder> musicFolders = null;
 	private List<MusicDirectory.Entry> entries;
@@ -52,7 +52,7 @@ public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> i
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(Constants.FRAGMENT_LIST2, (Serializable) musicFolders);
 	}

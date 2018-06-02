@@ -216,7 +216,7 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 				details.add("tonyanderson526@gmail.com");
 
                 headers.add(R.string.details_fork);
-                details.add("Booksonic");
+                details.add("AudioSonic");
 
                 try {
 					headers.add(R.string.details_version);
@@ -228,9 +228,6 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 				Resources res = context.getResources();
 				headers.add(R.string.details_files_cached);
 				details.add(Long.toString(used[0]));
-
-				headers.add(R.string.details_files_permanent);
-				details.add(Long.toString(used[1]));
 
 				headers.add(R.string.details_used_space);
 				details.add(res.getString(R.string.details_of, Util.formatLocalizedBytes(used[2], context), Util.formatLocalizedBytes(Util.getCacheSizeMB(context) * 1024L * 1024L, context)));

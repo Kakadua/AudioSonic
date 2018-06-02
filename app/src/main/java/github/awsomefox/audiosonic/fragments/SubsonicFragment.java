@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.media.MediaMetadataRetriever;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.content.Context;
@@ -140,7 +141,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(title != null) {
 			outState.putString(Constants.FRAGMENT_NAME, title.toString());
@@ -163,7 +164,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
+	public void onAttach(Context activity) {
 		super.onAttach(activity);
 		context = (SubsonicActivity)activity;
 	}
@@ -175,9 +176,12 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	protected void onFinishSetupOptionsMenu(final Menu menu) {
 		searchItem = menu.findItem(R.id.menu_global_search);
 		if(searchItem != null) {
-			searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+			searchView = (SearchView) searchItem.getActionView();
 			SearchManager searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
-			SearchableInfo searchableInfo = searchManager.getSearchableInfo(context.getComponentName());
+			SearchableInfo searchableInfo = null;
+			if (searchManager != null) {
+				searchableInfo = searchManager.getSearchableInfo(context.getComponentName());
+			}
 			if(searchableInfo == null) {
 				Log.w(TAG, "Failed to get SearchableInfo");
 			} else {
@@ -212,7 +216,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				new FileChooser(context).setFileListener(new FileChooser.FileSelectedListener() {
 					@Override
 					public void fileSelected(final File file) {
-						importExport.importData(context, file.getPath().toString());
+						importExport.importData(context, file.getPath());
 					}
 				}).showDialog();
 				return true;
@@ -232,10 +236,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				playNow(true, false);
 				return true;
 			case R.id.menu_download:
-				downloadBackground(false);
-				clearSelected();
-				return true;
-			case R.id.menu_cache:
 				downloadBackground(true);
 				clearSelected();
 				return true;
@@ -542,9 +542,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 	protected synchronized ImageLoader getImageLoader() {
 		return context.getImageLoader();
 	}
-	public synchronized static ImageLoader getStaticImageLoader(Context context) {
-		return SubsonicActivity.getStaticImageLoader(context);
-	}
 
 	public void setTitle(CharSequence title) {
 		this.title = title;
@@ -808,7 +805,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		dialog.show();
 	}
 
-	
+
 	protected void downloadRecursively(final String id, final boolean save, final boolean append, final boolean autoplay, final boolean shuffle, final boolean background) {
 		downloadRecursively(id, "", true, save, append, autoplay, shuffle, background);
 	}
@@ -992,7 +989,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			}
 		}
 		if(song.getTrack() != null && song.getTrack() != 0) {
-			headers.add(R.string.details_track);
+			headers.add(R.string.details_chapter);
 			details.add(Integer.toString(song.getTrack()));
 		}
 		if(song.getGenre() != null && !"".equals(song.getGenre())) {

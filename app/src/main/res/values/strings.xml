@@ -7,8 +7,7 @@
     <string name="common.cancel">Cancel</string>
     <string name="common.play_now">Play Now</string>
     <string name="common.play_next">Play Next</string>
-    <string name="common.download">Cache</string>
-    <string name="common.pin">Permanent Cache</string>
+    <string name="common.download">Download</string>
     <string name="common.delete">Delete</string>
 	<string name="common.star">Star</string>
 	<string name="common.unstar">Unstar</string>
@@ -18,7 +17,7 @@
 	<string name="common.stream_external">Stream Video</string>
 	<string name="common.confirm">Confirm</string>
 	<string name="common.confirm_message">Do you want to %1$s %2$s?</string>
-	<string name="common.confirm_message_cache">cache</string>
+	<string name="common.confirm_message_download">download</string>
 	<string name="common.empty">No data</string>
 	<string name="common.warning">Warning</string>
 	<string name="common.close">Close</string>
@@ -38,8 +37,6 @@
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
-		<font color="red">Cache vs Permanent Cache</font>
-		<br/>When tracks are downloaded by AudioSonic, they can be deleted to make room for new downloads.  Permanently cached tracks on the other hand will never be automatically deleted.
 		<p/><font color="red">First level in Library are actually groups of authors</font>:
 		<br/>In the option menu, deselect "First level authors".  This will make it so that the entire first level of directories shown will be treated like groups of authors instead of the authors themselves.
 	]]>
@@ -79,11 +76,10 @@
 	<string name="menu.set_timer">Set Timer</string>
     <string name="menu.show_all">Show all songs</string>
 	<string name="menu.show_artist">Show Author</string>
-	<string name="menu.delete_cache">Delete Cache</string>
+	<string name="menu.delete_download">Delete Download</string>
 	<string name="menu.faq">FAQ</string>
 	<string name="menu.add_user">Add User</string>
 	<string name="menu.rescan">Rescan Server</string>
-	<string name="menu.top_tracks">Last.FM Top Tracks</string>
 	<string name="menu.similar_artists">Similar Author</string>
 	<string name="menu.similar_artists.missing">Missing Artists</string>
 	<string name="menu.start_radio">Start Radio</string>
@@ -92,7 +88,7 @@
     <string name="search.title">Search</string>
     <string name="search.artists">Authors</string>
     <string name="search.albums">Books</string>
-    <string name="search.songs">Tracks</string>
+    <string name="search.songs">Chapters</string>
 
 	<string name="progress.wait">Please wait...</string>
 	<string name="progress.artist_info">Loading Author Bio</string>
@@ -108,17 +104,17 @@
     <string name="select_album.donate_dialog_later">Later</string>
     <string name="select_album.donate_dialog_0_trial_days_left">Trial period is over</string>
 
-    <string name="offline.sync_dialog_title">Offline tracks waiting to be synced</string>
+    <string name="offline.sync_dialog_title">Offline Chapters waiting to be synced</string>
     <string name="offline.sync_dialog_message">Process %1$d offline scrobbles?
 		\nProcess %2$d offline stars?
 	</string>
 	<string name="offline.sync_dialog_default">Use action as default</string>
-	<string name="offline.sync_success">Successfully synced %1$d tracks</string>
-	<string name="offline.sync_partial">Successfully synced %1$d of %2$d tracks</string>
-	<string name="offline.sync_error">Failed to sync tracks</string>
+	<string name="offline.sync_success">Successfully synced %1$d chapters</string>
+	<string name="offline.sync_partial">Successfully synced %1$d of %2$d chapters</string>
+	<string name="offline.sync_error">Failed to sync chapters</string>
 
 	<string name="select_genre.blank">Blank</string>
-	<string name="select_genre.songs">%d tracks</string>
+	<string name="select_genre.songs">%d chapters</string>
 	<string name="select_genre.albums">%d books</string>
 
 	<string name="download.empty">Download is empty</string>
@@ -131,10 +127,10 @@
     <string name="download.menu_show_album">Show Book</string>
     <string name="download.menu_lyrics">Lyrics</string>
 	<string name="download.menu_remove_all">Remove all</string>
-    <string name="download.menu_remove_played_songs">Remove played tracks</string>
+    <string name="download.menu_remove_played_songs">Remove played chapters</string>
     <string name="download.repeat_off">Repeat off</string>
     <string name="download.repeat_all">Repeat all</string>
-    <string name="download.repeat_single">Repeat track</string>
+    <string name="download.repeat_single">Repeat chapter</string>
     <string name="download.start_timer">Start Timer</string>
 	<string name="download.stop_time_remaining">Stop in %1$s</string>
 	<string name="download.need_download">Video needs to be downloaded first</string>
@@ -143,7 +139,7 @@
 	<string name="download.save_bookmark_title">Create bookmark</string>
 	<string name="download.save_bookmark">Bookmark created</string>
 	<string name="download.save_bookmark_failed">Failed to create bookmark</string>
-	<string name="download.downloading_title">Downloading %1$d tracks</string>
+	<string name="download.downloading_title">Downloading %1$d chapters</string>
 	<string name="download.downloading_summary">Current: %1$s</string>
 	<string name="download.downloading_summary_expanded">Current: %1$s
 		\nEstimated Size: %2$s</string>
@@ -155,7 +151,7 @@
     <string name="download.playback_speed">Playback Speed</string>
 	<string name="download.play_list">Toggle Chapterlist</string>
 	<string name="sync.new_albums">New books available</string>
-	<string name="sync.new_starred">New starred tracks available</string>
+	<string name="sync.new_starred">New starred chapters available</string>
 
 	<string name="starring_content_starred">Starred \"%s\"</string>
 	<string name="starring_content_unstarred">Unstarred \"%s\"</string>
@@ -191,7 +187,7 @@
 	<string name="settings.server_open_browser">Open in browser</string>
 	<string name="settings.server_sync_summary">Whether or not syncing is enabled for this server</string>
 	<string name="settings.server_sync">Sync Enabled</string>
-    <string name="settings.cache_title">Cache</string>
+    <string name="settings.download_title">Downloads</string>
 
     <string name="settings.preload_wifi">Tracks to preload (Wifi)</string>
 	<string name="settings.preload_mobile">Tracks to preload (Mobile)</string>
@@ -217,7 +213,7 @@
 	<string name="settings.theme_fullscreen_summary">Hide as many UI elements as Android will allow</string>
 	<string name="settings.track_title">Display Track #</string>
 
-	<string name="settings.track_summary">Display Track # in front of tracks if one exists</string>
+	<string name="settings.track_summary">Display Track # in front of chapters if one exists</string>
 	<string name="settings.custom_sort">Sort By Year</string>
 	<string name="settings.custom_sort_summary">Sort books by year, or by alphabetical</string>
 	<string name="settings.open_to_tab">Open To Tab</string>
@@ -245,19 +241,19 @@
 	<string name="settings.network_timeout_30000">30 seconds</string>
 	<string name="settings.network_timeout_45000">45 seconds</string>
 	<string name="settings.network_timeout_60000">60 seconds</string>
-    <string name="settings.preload_0">0 tracks</string>
+    <string name="settings.preload_0">0 chapters</string>
     <string name="settings.preload_1">1 track</string>
-    <string name="settings.preload_2">2 tracks</string>
-    <string name="settings.preload_3">3 tracks</string>
-    <string name="settings.preload_5">5 tracks</string>
-    <string name="settings.preload_10">10 tracks</string>
+    <string name="settings.preload_2">2 chapters</string>
+    <string name="settings.preload_3">3 chapters</string>
+    <string name="settings.preload_5">5 chapters</string>
+    <string name="settings.preload_10">10 chapters</string>
 	<string name="settings.preload_unlimited">Unlimited</string>
     <string name="settings.other_title">Other settings</string>
     <string name="settings.scrobble_title">Scrobble to Last.fm</string>
 
     <string name="settings.scrobble_summary">Remember to set up your Last.fm user and password on the server</string>
     <string name="settings.hide_media_title">Hide from other</string>
-    <string name="settings.hide_media_summary">Hide tracks from other apps.</string>
+    <string name="settings.hide_media_summary">Hide chapters from other apps.</string>
     <string name="settings.hide_media_toast">Takes effect next time Android scans your phone for music.</string>
     <string name="settings.media_button_title">Media buttons</string>
     <string name="settings.media_button_summary">Respond to phone, headset and Bluetooth media buttons</string>
@@ -268,18 +264,18 @@
 	<string name="settings.temp_loss_pause_lower">Pause, lower volume when requested</string>
 	<string name="settings.temp_loss_lower">Always lower volume</string>
 	<string name="settings.temp_loss_nothing">Do Nothing</string>
-	<string name="settings.keep_played_count_title">Keep played tracks</string>
-	<string name="settings.keep_played_count_none">Remove all played tracks</string>
-	<string name="settings.keep_played_count_one">Keep last played tracks</string>
-	<string name="settings.keep_played_count_two">Keep 2 played tracks</string>
-	<string name="settings.keep_played_count_three">Keep 3 played tracks</string>
+	<string name="settings.keep_played_count_title">Keep played chapters</string>
+	<string name="settings.keep_played_count_none">Remove all played chapters</string>
+	<string name="settings.keep_played_count_one">Keep last played chapters</string>
+	<string name="settings.keep_played_count_two">Keep 2 played chapters</string>
+	<string name="settings.keep_played_count_three">Keep 3 played chapters</string>
 	<string name="settings.disconnect_pause_title">Pause on Disconnect</string>
 	<string name="settings.disconnect_pause_both">Pause</string>
 	<string name="settings.disconnect_pause_neither">Do Nothing</string>
 	<string name="settings.gapless_playback">Gapless Playback</string>
 	<string name="settings.gapless_playback_summary">If you are seeing strange bugs during playback, turning this off may help.</string>
 	<string name="settings.chat_refresh">Chat Refresh Rate (Secs)</string>
-    <string name="settings.cache_screen_title">Cache/Network</string>
+    <string name="settings.downloads_screen_title">Download/Network</string>
 	<string name="settings.playback_title">Playback</string>
 	<string name="settings.hide_widget_title">Hide Widget</string>
 	<string name="settings.hide_widget_summary">Hide widget after exiting app</string>
@@ -302,13 +298,12 @@
 	<string name="settings.sync_most_recent">Sync Recently Added</string>
 	<string name="settings.sync_most_recent_summary">Automatically cache newly added books</string>
 	<string name="settings.sync_starred">Sync Starred</string>
-	<string name="settings.sync_starred_summary">Automatically cache tracks, books, and authors which are starred</string>
+	<string name="settings.sync_starred_summary">Automatically cache chapters, books, and authors which are starred</string>
 	<string name="settings.sync_notification">Show Sync Notification</string>
 	<string name="settings.sync_notification_summary">Show a notification after new media has been synced</string>
 	<string name="settings.menu_options.title">Optional Menu Options</string>
 	<string name="settings.menu_options.play_now_summary">Show Now in menus</string>
     <string name="settings.menu_options.download_summary">Show Download in menus</string>
-	<string name="settings.menu_options.pin_summary">Show Permanent Cache in menus</string>
 	<string name="settings.menu_options.delete_summary">Show Delete in menus</string>
 	<string name="settings.menu_options.star_summary">Show Star in menus</string>
     <string name="settings.disable_exit_prompt">Disable Exit Prompt</string>
@@ -332,9 +327,9 @@
 	<string name="settings.replay_gain_type.album">Book tags</string>
 	<string name="settings.replay_gain_type.track">Track tags</string>
 	<string name="settings.replay_gain_bump">Replay Gain Pre-amp</string>
-	<string name="settings.replay_gain_untagged">Tracks without Replay Gain</string>
-	<string name="settings.rename_duplicates">Rename duplicate tracks</string>
-	<string name="settings.rename_duplicates_summary">Rename duplicate tracks to the original filename so you can tell them apart.</string>
+	<string name="settings.replay_gain_untagged">chapters without Replay Gain</string>
+	<string name="settings.rename_duplicates">Rename duplicate chapters</string>
+	<string name="settings.rename_duplicates_summary">Rename duplicate chapters to the original filename so you can tell them apart.</string>
 	<string name="settings.start_on_headphones">Start on headphones</string>
 	<string name="settings.start_on_headphones_summary">Start when headphones are plugged in.  This requires the use of a service which starts on boot up to check for the headphone plug event even when AudioSonic is not running.</string>
 	<string name="settings.color_action_bar">Color Action Bar</string>
@@ -446,11 +441,11 @@
 	<string name="tasker.edit_server_offline">Toggle offline: </string>
 	<string name="tasker.edit_do_nothing">Do Nothing</string>
 
-	<string name="details.title.song">Track Details</string>
+	<string name="details.title.song">Chapter Details</string>
 	<string name="details.title.album">Book Details</string>
     <string name="details.artist">Author</string>
 	<string name="details.album">Book</string>
-	<string name="details.track">Track</string>
+	<string name="details.chapter">Chapter</string>
 	<string name="details.genre">Genre</string>
 	<string name="details.year">Year</string>
 	<string name="details.server_format">Server Format</string>
@@ -467,11 +462,10 @@
 	<string name="details.email">Email</string>
 	<string name="details.version">Version</string>
 	<string name="details.files_cached">Files Cached</string>
-	<string name="details.files_permanent">Permanent Cached</string>
 	<string name="details.used_space">Used Space</string>
 	<string name="details.available_space">Available Space</string>
 	<string name="details.of">%1$s of %2$s</string>
-	<string name="details.song">Track</string>
+	<string name="details.song">chapter</string>
 	<string name="details.position">Position</string>
 	<string name="details.updated">Updated</string>
 	<string name="details.starred">Starred</string>
@@ -480,17 +474,17 @@
     <string name="permission.external_storage.failed">Audiosonic cannot function without the ability to write to storage</string>
 
     <plurals name="select_album_n_songs">
-        <item quantity="zero">No tracks</item>
-        <item quantity="one">One track</item>
-        <item quantity="other">%d track</item>
+        <item quantity="zero">No chapters</item>
+        <item quantity="one">One chapter</item>
+        <item quantity="other">%d chapter</item>
     </plurals>
     <plurals name="select_album_n_songs_downloading">
-        <item quantity="one">One track scheduled for download.</item>
-        <item quantity="other">%d track scheduled for download.</item>
+        <item quantity="one">One chapter scheduled for download.</item>
+        <item quantity="other">%d chapter scheduled for download.</item>
     </plurals>
     <plurals name="select_album_n_songs_added">
-        <item quantity="one">One track added to play queue.</item>
-        <item quantity="other">%d tracks added to play queue.</item>
+        <item quantity="one">One chapter added to play queue.</item>
+        <item quantity="other">%d chapters added to play queue.</item>
     </plurals>
     <plurals name="select_album_donate_dialog_n_trial_days_left">
         <item quantity="one">One day left of trial period</item>
@@ -522,4 +516,5 @@
 	<string name="login.hint.password">Password</string>
 	<string name="login.button.demo">Demo server</string>
 	<string name="login.button.signin">Sign in</string>
+	<string name="common.pin">Downloaded</string>
 </resources>

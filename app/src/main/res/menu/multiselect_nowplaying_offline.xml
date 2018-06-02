@@ -3,7 +3,7 @@
 	  xmlns:compat="http://schemas.android.com/apk/res-auto">
 	<item
 		android:id="@+id/menu_delete"
-		android:title="@string/menu.delete_cache"
+		android:title="@string/menu.delete_download"
 		android:icon="?attr/remove"
 		compat:showAsAction="ifRoom|withText"/>
 </menu>

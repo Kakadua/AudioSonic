@@ -36,7 +36,7 @@
 	<group android:id="@+id/hide_delete">
 		<item
 			android:id="@+id/song_menu_delete"
-			android:title="@string/menu.delete_cache"/>
+			android:title="@string/menu.delete_download"/>
 	</group>
 
 	<group android:id="@+id/hide_star">

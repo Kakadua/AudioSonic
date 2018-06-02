@@ -89,6 +89,11 @@
             android:launchMode="singleTask" />
 
         <activity
+            android:name="github.awsomefox.audiosonic.activity.SubsonicActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+
+        <activity
             android:name="github.awsomefox.audiosonic.activity.VoiceQueryReceiverActivity"
             android:launchMode="singleTask">
             <intent-filter>

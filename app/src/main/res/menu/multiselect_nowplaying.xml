@@ -9,13 +9,9 @@
 
 	<item
 		android:id="@+id/menu_delete"
-		android:title="@string/menu.delete_cache"
+		android:title="@string/menu.delete_download"
 		android:icon="?attr/remove"
 		compat:showAsAction="ifRoom|withText"/>
-
-	<item
-		android:id="@+id/menu_cache"
-		android:title="@string/common.pin"/>
 
 	<item android:title="@string/menu.add_playlist"/>
 

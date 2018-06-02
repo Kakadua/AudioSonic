@@ -50,7 +50,7 @@
     </release>
     <release version="1.0.4" versioncode="6" releasedate="2016-01-29">
         <change>Heard status can now be imported/exported</change>
-        <change>Keeping track of played tracks should be much more reliable.</change>
+        <change>Keeping chapter of played chapters should be much more reliable.</change>
         <change>Updated DSub sources to 5.1.4</change>
         <change>Other small bugfixes</change>
     </release>
@@ -63,7 +63,7 @@
         <change>Bugfixes</change>
     </release>
     <release version="1.0.1" versioncode="2" releasedate="2015-11-20">
-        <change>The app keeps track of what you have listened to</change>
+        <change>The app keeps chapter of what you have listened to</change>
         <change>Improved tablet dual pane behavior (DSub update)</change>
         <change>Bugfixes</change>
     </release>

@@ -9,6 +9,6 @@
 	<group android:id="@+id/hide_delete">
 		<item
 			android:id="@+id/artist_menu_delete"
-			android:title="@string/menu.delete_cache"/>
+			android:title="@string/menu.delete_download"/>
 	</group>
 </menu>

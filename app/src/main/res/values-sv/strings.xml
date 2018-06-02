@@ -8,7 +8,6 @@
     <string name="common.play_now">Spela nu</string>
     <string name="common.play_next">Spela nästa</string>
     <string name="common.download">Cache</string>
-    <string name="common.pin">Permanent cache</string>
     <string name="common.delete">Ta Bort</string>
 	<string name="common.star">Favorit</string>
 	<string name="common.unstar">Inte favorit</string>
@@ -18,7 +17,7 @@
 	<string name="common.stream_external">Streama video</string>
 	<string name="common.confirm">Konfirmera</string>
 	<string name="common.confirm_message">Vill du %1$s %2$s?</string>
-	<string name="common.confirm_message_cache">cache</string>
+	<string name="common.confirm_message_download">cache</string>
 	<string name="common.empty">Ingen data</string>
 	<string name="common.warning">Varning</string>
 	<string name="common.close">Stäng</string>
@@ -38,9 +37,6 @@
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
-		<font color="red">Cache vs Permanent Cache</font>:
-		<br/>När filer laddas ner av Booksonic kan de senare raderas för att lämna rum åt nya filer.  Permanent cache kan aldrig raderas utan ett aktivt val av dig.
-		
 		<p/><font color="red">Första steget i biblioteket är grupper med författare</font>:
 		<br/>Avmarkera "Första steget författare" i inställningsmenyn.  Det kommer göra så att hela första steget kommer att hanteras som forfattar grupper istället för som enstaka författare.
 	]]>
@@ -79,7 +75,7 @@
 	<string name="menu.set_timer">Starta timer</string>
     <string name="menu.show_all">Visa all media</string>
 	<string name="menu.show_artist">Visa Författare</string>
-	<string name="menu.delete_cache">Rensa cache</string>
+	<string name="menu.delete_download">Rensa cache</string>
 	<string name="menu.faq">FAQ</string>
 	<string name="menu.add_user">Lägg till användare</string>
 	<string name="menu.rescan">Skanna servern igen</string>
@@ -188,7 +184,7 @@
 	<string name="settings.server_open_browser">Öppna i webbläsare</string>
 	<string name="settings.server_sync_summary">Om synkronisering ska vara aktiverat på den här servern</string>
 	<string name="settings.server_sync">Synkronisering aktiverad</string>
-    <string name="settings.cache_title">Cache</string>
+    <string name="settings.download_title">Cache</string>
     <string name="settings.preload_wifi">Spår att ladda in i förväg (Wifi)</string>
 	<string name="settings.preload_mobile">Spår att ladda in i förväg (Mobil data)</string>
     <string name="settings.cache_size">Cache storlek</string>
@@ -275,7 +271,7 @@
 	<string name="settings.gapless_playback_summary">Om du märker några konstiga buggar när du lyssnar kan det hjälpa att slå av den här.</string>
 	<string name="settings.chat_refresh">Hur ofta ska chat uppdateras (sekunder)</string>
 
-    <string name="settings.cache_screen_title">Cache/Nätverk</string>
+    <string name="settings.downloads_screen_title">Cache/Nätverk</string>
 	<string name="settings.playback_title">Uppspelning</string>
 	<string name="settings.hide_widget_title">Dölj widget</string>
 	<string name="settings.hide_widget_summary">Dölj widget efter att jag lämnat appen</string>
@@ -305,7 +301,6 @@
 	<string name="settings.menu_options.title">Valfria menyalternativ</string>
 	<string name="settings.menu_options.play_now_summary">Visa nu i menyer</string>
     <string name="settings.menu_options.download_summary">Visa ladda ner i menyer</string>
-	<string name="settings.menu_options.pin_summary">Visa permanent cache i menyer</string>
 	<string name="settings.menu_options.delete_summary">Visa ta bort i menyer</string>
 	<string name="settings.menu_options.star_summary">Visa favorit i menyer</string>
 
@@ -448,7 +443,7 @@
 
     <string name="details.artist">Författare</string>
 	<string name="details.album">Bok</string>
-	<string name="details.track">Spår</string>
+	<string name="details.chapter">Spår</string>
 	<string name="details.genre">Genre</string>
 	<string name="details.year">År</string>
 	<string name="details.server_format">Server format</string>
@@ -466,7 +461,6 @@
 	<string name="details.fork">Forked från</string>
 	<string name="details.version">Version</string>
 	<string name="details.files_cached">Filer cachade</string>
-	<string name="details.files_permanent">Permanent cachade</string>
 	<string name="details.used_space">Använt utrymme</string>
 	<string name="details.available_space">Tillgängligt utrymme</string>
 	<string name="details.of">%1$s av %2$s</string>

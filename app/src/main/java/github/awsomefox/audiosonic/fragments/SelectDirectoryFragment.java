@@ -1,6 +1,7 @@
 package github.awsomefox.audiosonic.fragments;
 
 import android.annotation.TargetApi;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
@@ -161,7 +162,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(Constants.FRAGMENT_LIST, (Serializable) entries);
 		outState.putSerializable(Constants.FRAGMENT_LIST2, (Serializable) albums);

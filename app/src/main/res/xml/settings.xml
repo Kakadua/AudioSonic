@@ -19,8 +19,8 @@
 	</PreferenceScreen>
 
 	<PreferenceScreen
-		android:title="@string/settings.cache_screen_title"
-		android:key="cache">
+		android:title="@string/settings.downloads_screen_title"
+		android:key="download">
 	</PreferenceScreen>
 
 	<PreferenceScreen

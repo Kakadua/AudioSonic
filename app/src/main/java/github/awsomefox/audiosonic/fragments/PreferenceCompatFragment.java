@@ -29,6 +29,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -209,7 +210,7 @@ public abstract class PreferenceCompatFragment extends SubsonicFragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle bundle) {
+	public void onSaveInstanceState(@NonNull Bundle bundle) {
 		super.onSaveInstanceState(bundle);
 		PreferenceScreen screen = getPreferenceScreen();
 		if (screen != null) {
