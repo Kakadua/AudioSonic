@@ -132,7 +132,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 			xml = R.xml.settings_appearance;
 		} else if("drawer".equals(name)) {
 			xml = R.xml.settings_drawer;
-		} else if("cache".equals(name)) {
+		} else if("download".equals(name)) {
 			xml = R.xml.settings_cache;
 		} else if("sync".equals(name)) {
 			xml = R.xml.settings_sync;
