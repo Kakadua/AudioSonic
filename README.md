@@ -1,4 +1,4 @@
-Audi0Sonic Client
+AudioSonic Client
 ===================
 
 AudioSonic Connects to booksonic server to play audiobooks.
