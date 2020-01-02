@@ -301,7 +301,7 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 
 						OutputStream os = urlConnection.getOutputStream();
 						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, Constants.UTF_8));
-						writer.write("api_dev_key=" + URLEncoder.encode(EnvironmentVariables.PASTEBIN_DEV_KEY, Constants.UTF_8) + "&api_option=paste&api_paste_private=1&api_paste_code=");
+						writer.write("api_dev_key=" + URLEncoder.encode(EnvironmentVariables.PASTEBIN_DEV_KEY, Constants.UTF_8) + "&client=audiosonic&api_option=paste&api_paste_private=1&api_paste_code=");
 
 						BufferedReader reader = null;
 						try {
@@ -369,8 +369,8 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 					footer += "\nBuild Number: " + packageInfo.versionCode;
 
 					Intent email = new Intent(Intent.ACTION_SENDTO,
-							Uri.fromParts("mailto", "patrik@ptjwebben.se", null));
-					email.putExtra(Intent.EXTRA_SUBJECT, "Booksonic " + packageInfo.versionName + " Error Logs");
+							Uri.fromParts("mailto", "tonyanderson526@gmail.com", null));
+					email.putExtra(Intent.EXTRA_SUBJECT, "Audiosonic " + packageInfo.versionName + " Error Logs");
 					email.putExtra(Intent.EXTRA_TEXT, "Describe the problem here\n\n\n" + footer);
 					startActivity(email);
 				}
